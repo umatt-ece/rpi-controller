@@ -1,0 +1,35 @@
+version: "3.7"
+
+services:
+
+  store:
+    image: redis
+    ports:
+      - "6379:6379"
+    restart: always
+
+  server:
+    build:
+      dockerfile: DockerfileServer
+      context: .
+    ports:
+      - "8577:8577"
+    volumes:
+      - "./server:/server"
+      - "./display/dist:/server/vue-app"
+    depends_on:
+      - store
+    restart: always
+
+  display:
+    build:
+      dockerfile: DockerfileDisplay
+      context: .
+    expose:
+      - "8080"
+    volumes:
+      - "./display:/display"
+      - "./display/dist:/display/dist"
+    depends_on:
+      - server
+    restart: always

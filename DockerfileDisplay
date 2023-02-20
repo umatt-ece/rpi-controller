@@ -1,0 +1,11 @@
+FROM node
+
+# copy both 'package.json' and 'package-lock.json' (if available)
+COPY display/package*.json .
+
+WORKDIR /display
+
+# install project dependencies
+RUN npm install
+
+CMD ["http-server", "dist"]
