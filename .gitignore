@@ -1,0 +1,9 @@
+# The .gitignore file contains a list of directories that should be excluded from the git repository. This is helpful
+# for configurations files, libraries, or scripts that are unique to the user and their local machine. To learn more
+# about .gitignore files, check out [https://git-scm.com/docs/gitignore].
+
+# JetBrains configuration files (PyCharm, WebStorm, etc...)
+.idea/*
+
+# VSCode configuration files
+vscode/*
