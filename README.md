@@ -11,10 +11,20 @@ The rpi-controller project is structured into 4 parts:
 - redis parameter store (database)
 - logic and sensor/output control (controller)
 
-For additional information about the project, please refer to the [documentation](./documents).
+For additional information, see [project structure](./documents/ProjectStructure.md) documentation.
 
-## Contancts
+## Development
 
-For additional information/questions, feel free to reac out to the following contributors:
+See [setup](./documents/Setup.md) documentation.
 
-- Kameron R. (ronaldk1@myumanitoba.ca)
+## Contacts
+
+> __Svan B.__  
+> _Team Lead 2023_
+> 
+
+> __Kameron R.__  
+> _Software Lead 2023_  
+> ronaldk1@myumanitoba.ca
+
+>

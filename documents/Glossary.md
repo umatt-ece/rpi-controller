@@ -6,6 +6,8 @@ some insight.
 
 ## Terms:
 
+__Endpoint:__ A function that is associated with a particular route in a web server.
+
 __Virtual Machine:__ A sandbox version of an OS or some computing system that is run by software rather than physical
 hardware. Basically an 'emulator' if you're familiar with that terminology.
 

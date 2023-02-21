@@ -63,7 +63,7 @@ system can be found in the corresponding sections that follow.
 
 ## Frontend Web Application
 
-### VueJS Introduction
+### VueJS
 
 The frontend web application is our web-based GUI allowing the user to view information about the tractor and interact
 with its operation. This web-app is built using the VueJS framework. The GUI part of the web app consists of a number
@@ -95,15 +95,13 @@ export default {
     }
   },
   mounted: {
-    /*
-    code to run when the view/component is mounted. Other lifecycle hooks include:
-     - beforeCreated
-     - created
-     - beforeMounted
-     - mounted
-     - beforeUpdate
-     - updated
-     */
+    // code to run when the view/component is mounted. Other lifecycle hooks include:
+    //  - beforeCreated
+    //  - created
+    //  - beforeMounted
+    //  - mounted
+    //  - beforeUpdate
+    //  - updated
   },
   methods: {
     // list of JavaScript methods which can be called by event handlers
@@ -127,13 +125,15 @@ In order to actually 'create' the VueJS app, the [main.js](../display/src/main.j
 application and mounts the applications at the file [App.vue](../display/src/App.vue) (our entry point).
 
 The [Router](../display/src/router/index.js) sets up a list of various views/components that can be accessed by various
-paths (ie. http://site/path). Then, by inserting the <router-view> html element into our app (provided by the VueJS
-framework), we are able to have views/components that change depending on our current path (ie. think different
+paths (ie. http://site/your-path-here). Then, by inserting the <router-view> html element into our app (provided by the
+VueJS framework), we are able to have views/components that change depending on our current path (ie. think different
 pages on a website).
 
 The [Vuex Store](../display/src/store/index.js) provides central access to locally stored variables. It consists of
 individual _modules_ that each have _state_ (variables), _getters_, _mutations_, and _actions_ (functions). This store
-can be imported into our views/components and thus allow multiple views/components access to the same variables.
+can be imported into our views/components and thus allow multiple views/components access to the same variables. For
+our project, the Vuex store is more or less a copy of the Redis database that gets stored locally (in the browser) to
+quick and easy access. These values are constantly updated by backend (via websocket) and occasionally by the user.
 
 We also have various other [Services](../display/src/services) that let us write functions once and then import them
 into multiple views/components.
@@ -149,8 +149,18 @@ The configuration of NPM for the project is stored in the [package.json](../disp
 
 ## Backend Web Server
 
-...
+The backend web server facilitates communication between the frontend web-application and the controller logic and I/O.
 
+Using the python library FASTAPI, it hosts a API server on port 8577. This server contains a number of endpoints that
+called be called by the frontend (via a http websocket) and services these requests asynchronously. The various
+functions of these endpoints vary, more detailed information can be found [here](../server/ServerInfo.md).
+
+Additionally, the backend server has a separate thread that runs the _ClientManager_ python class. This class handles
+the various websocket connections made to the server (at the moment just one) and keeps track of the 'meta-data'
+information about the server. Also, this manager continuously updates the frontend with the current information stored
+in Redis.
+
+For additional information regarding FASTAPI, check out its [documentation](https://fastapi.tiangolo.com/).
 
 ## Redis Database
 
