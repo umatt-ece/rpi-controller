@@ -1,5 +1,7 @@
 # rpi-controller
 
+__version: 0.0.1__
+
 This repository contains all the Raspberry Pi controller code for the UMATT Tiny Tractor.
 
 ## Overview
