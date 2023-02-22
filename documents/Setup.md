@@ -23,7 +23,9 @@ tool, _JetBrains Toolbox_, from [here](https://www.jetbrains.com/lp/toolbox/).
 
 ## Git
 
-
+We use git and GitHub to manage code our code base, track tickets, and provide a centralized location for all our
+software resources. If you are not familiar with git, or felling a little rusty, check out these [resources]
+(https://github.com/umatt-software/new-member-resources).
 
 ## Docker
 

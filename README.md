@@ -27,4 +27,10 @@ See [setup](./documents/Setup.md) documentation.
 > _Software Lead 2023_  
 > ronaldk1@myumanitoba.ca
 
->
+> __Marco G.__  
+> _Backend Server 2023_
+> 
+
+> __Jacob B.__  
+> _Logic & I/O System 2023_
+> 
