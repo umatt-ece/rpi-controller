@@ -1,24 +1,23 @@
 # display
 
-## Project setup
-```
-npm install
+## Setup
+
+See [Setup.md](../documents/Setup.md) for information regarding installing Node.js.
+
+To install all the required node packages, run:
+```shell
+npm i
 ```
 
-### Compiles and hot-reloads for development
+### Compile for development
 ```
 npm run serve
 ```
+This can be used for easy local testing. 
 
-### Compiles and minifies for production
+### Build for production
+
 ```
 npm run build
 ```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+By default, the project gets compiled into the directory [dist](./dist).

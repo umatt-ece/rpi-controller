@@ -113,7 +113,28 @@ select _install all packages_.
 ![install-all-packages.png](./images/install-all-packages.png)
 
 Alternatively, if you are on Windows, there is a batch file,
-[install-pip-requirements.bat](./scripts/install-pip-requirements.bat), to do this automatically for you.
+[install-pip-requirements.bat](../scripts/install-pip-requirements.bat), to do this automatically for you.
 
 ## Node.js and NPM
 
+The frontend web application is written in JavaScript, Node.js is a JavaScript runtime environment we use to run it.
+You can download and install Node.js [here](https://nodejs.org/en/download/). As of version 0.0.1 we are using Node
+version 16.18.0. Again, don't worry if you download a newer version, it just means that version hasn't been fully
+tested with our project.
+
+In order to manage packages, Node,js comes with a default Node Package Manager (NPM). NPM installs packages based on
+the [package.json](../display/package.json) file. To actually install the required packages run the following command
+from inside the `./display` directory.
+
+```shell
+npm i
+```
+
+NPM will create a `./node_modules` directory that contains all the code for the installed node packages.
+
+[package.json](./package.json) also defines a number of commands that can be run by NPM, these include:
+
+```shell
+npm run serve  # compiles a hot-reloaded server for local development
+npm run build  # compiles and minifies the project for production
+```
