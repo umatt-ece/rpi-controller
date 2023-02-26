@@ -201,9 +201,9 @@ To learn more about docker, check out its [documentation](https://docs.docker.co
 
 Each of the 4 major components (display, server, database, and controller) are each run in a separate Docker container.
 The configuration for these containers can be found in the [docker-compose.yml](../docker-compose.yml) file. These
-files aren't written in any particular language, but follow a specific structure (see the [documentation]
-(https://docs.docker.com/compose/) for further details). Additionally, for the containers we set up ourselves there are
-separate files that specify the instructions each container should execute, these can be found at:
+files aren't written in any particular language, but follow a specific structure (see the
+[documentation](https://docs.docker.com/compose/) for further details). Additionally, for the containers we set up
+ourselves there are separate files that specify the instructions each container should execute, these can be found at:
 
 - [DockerfileDisplay](../DockerfileDisplay)
 - [DockerfileServer](../DockerfileServer)

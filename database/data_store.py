@@ -10,11 +10,18 @@ class DataStore:
         self._stored_redis = redis.Redis(host="localhost", port=6379, db=1)
         # self._logger  # TODO: implement logging
 
+        # Initialize
+        self.initialize_database()
+
     def initialize_database(self):
-        for entry in LiveData:
-            self._live_redis.set(entry.name, entry.datatype())
-        for entry in StoredData:
-            pass
+        # Initialize the Live Data Store if it has not been yet.
+        if not self.get(LiveData.INITIALIZED):
+            for entry in LiveData:
+                self.set(entry, entry.datatype())
+        # Initialize the Stored Data Store if it has not been yet.
+        if not self.get(StoredData.INITIALZED):
+            for entry in StoredData:
+                self.set(entry, entry.datatype())
 
     def set(self, key: Union[LiveData, StoredData], value: Any):
         if isinstance(key, LiveData):
@@ -37,3 +44,8 @@ class DataStore:
 
     def set_many(self, key_values: dict):
         pass
+
+
+# FOR TESTING...
+if __name__ == "__main__":
+    dataStore = DataStore()
