@@ -2,7 +2,7 @@ from collections import namedtuple
 from enum import Enum
 
 
-class StoredData(namedtuple("stored_data", "datatype default unit description"), Enum):
+class StoredData(namedtuple("storedData", "datatype default unit description"), Enum):
     """
     ...
     """
