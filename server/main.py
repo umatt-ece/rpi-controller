@@ -21,7 +21,7 @@ def create_app() -> FastAPI:
     )
     new_app.include_router(data_router)
     new_app.include_router(system_router)
-    new_app.mount("/vue-app", StaticFiles(directory="vue-app"), name="VueJS App")
+    new_app.mount("/", StaticFiles(directory="vue-app"), name="VueJS App")
     return new_app
 
 
