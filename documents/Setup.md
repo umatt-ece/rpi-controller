@@ -1,10 +1,25 @@
 # Setup
 
+## Contents
+
+- [Code Editors](#code-editors)
+- [Git](#git)
+- [Docker](#docker)
+- [Python](#python)
+- [JavaScript](#javascript)
+- [Hardware](#hardware)
+
 ## Code Editors
 
-There are lots of good code editors out there. Pycharm, Visual Studio Code, and Sublime Text are just some of
-the many great tools out there that can be used completely free. However, for the purposes of these tutorials, I will
-be demonstrating everything using Pycharm. I highly recommend PyCharm, as well as all the other JetBrain products for
+There are lots of good code editors out there. Pycharm, Visual Studio Code, and Sublime Text are just some of the many
+great tools out there that can be used completely free. Below I outline a few different options and some advantages
+that come which each, feel free to use whatever you like; however, for the purposes of these tutorials, I
+will be demonstrating everything using Pycharm.
+
+### PyCharm
+
+I highly recommend PyCharm, as well as all the other JetBrain products. They are a little more on the 'heavy' side as
+far as memory and CPU usage go, for
 a few key reasons:
 
 1. Professional versions of all their products (PyCharm, WebStorm, DataGrip, and CLion just to name a couple) can be
@@ -20,6 +35,10 @@ your workflow.
 
 If you plan to go the route of JetBrain products (ie. PyCharm) I recommend first downloading their software management
 tool, _JetBrains Toolbox_, from [here](https://www.jetbrains.com/lp/toolbox/).
+
+### Visual Studio Code
+
+Coming Soon...
 
 ## Git
 
@@ -115,7 +134,7 @@ select _install all packages_.
 Alternatively, if you are on Windows, there is a batch file,
 [install-pip-requirements.bat](../scripts/install-pip-requirements.bat), to do this automatically for you.
 
-## Node.js and NPM
+## JavaScript
 
 The frontend web application is written in JavaScript, Node.js is a JavaScript runtime environment we use to run it.
 You can download and install Node.js [here](https://nodejs.org/en/download/). As of version 0.0.1 we are using Node
@@ -138,3 +157,10 @@ NPM will create a `./node_modules` directory that contains all the code for the 
 npm run serve  # compiles a hot-reloaded server for local development
 npm run build  # compiles and minifies the project for production
 ```
+
+## Hardware
+
+The following steps will walk you through how to set up the *rpi-controller* project on a Raspberrry Pi Controller for
+the first time.
+
+Coming Soon...
