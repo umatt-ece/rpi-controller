@@ -13,14 +13,6 @@ please adhere to the following:
     - description
 """
 
-live_data = {
-    "initialized": (
-        bool,
-        False,
-        "unitless",
-        "flag to determine if the redis database has been initialized yet"
-    )
-}
 
 class LiveData(namedtuple("live_data", "datatype default unit description"), enum.Enum):
     """
@@ -29,7 +21,7 @@ class LiveData(namedtuple("live_data", "datatype default unit description"), enu
 
     INITIALIZED = (
         bool,
-        False,
+        True,
         "unitless",
         "flag to determine if the redis database has been initialized yet"
     )
@@ -117,3 +109,4 @@ class LiveData(namedtuple("live_data", "datatype default unit description"), enu
         "",
         "",
     )
+

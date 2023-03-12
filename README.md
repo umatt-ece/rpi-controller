@@ -17,7 +17,10 @@ For additional information, see [project structure](./documents/ProjectStructure
 
 ## Development
 
-See [setup](./documents/Setup.md) documentation.
+Please use **development** branch (or feel free to make your own off of it). Any changes to **main** should be done via
+*pull request*.
+
+See [setup](./documents/Setup.md) documentation for more details.
 
 ## Contacts
 
