@@ -1,28 +1,27 @@
-from database import DataStore
+
+from controller import StateMachine
+from database import DataStore, LiveData as lD
 
 
-class Controller: # this might not need to be a Class (to be determined later)
-
+class Controller:
     def __init__(self):
-        # Initialize global variables
-        self.datastore = DataStore()
-        # Setup
-        pass
+        self.data_store = DataStore()
+        self.state_machine = StateMachine()
+
     def run(self):
 
         try:
-
+            self.data_store.set(lD.CONTROLLER_ONLINE, True)
             while True:
-                # execute code (spin up threads ?)
-                pass
+                self.state_machine.run()
+                # TODO: add other run functions...
 
         except Exception as e:
-            # log exceptions
-
-            # raise the error anyway so the system can crash
-            raise e
+            # TODO: log exceptions first...
+            self.data_store.set(lD.CONTROLLER_ONLINE, False)
+            raise e  # raise the error anyway so the system can crash
 
 
 if __name__ == "__main__":
-    umatt_controller = Controller()
-    umatt_controller.run()
+    umatt_controller_application = Controller()
+    umatt_controller_application.run()

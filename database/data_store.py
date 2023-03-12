@@ -25,26 +25,26 @@ class DataStore:
             for entry in StoredData:
                 self.set(entry, entry.default)
 
-    def set(self, key: Union[LiveData, StoredData], value: Any):
-        if isinstance(key, LiveData):
-            return self._live_redis.set(key.name, self._convert_pre_redis(value))
-        elif isinstance(key, StoredData):
-            return self._stored_redis.set(key.name, self._convert_pre_redis(value))
+    def get(self, param: Union[LiveData, StoredData]):
+        if isinstance(param, LiveData):
+            return self._convert_post_redis(param, self._live_redis.get(key.name))
+        elif isinstance(param, StoredData):
+            return self._convert_post_redis(param, self._stored_redis.get(key.name))
         else:
-            raise KeyError(f"'{key}' is not a valid parameter")
+            raise KeyError(f"'{param}' is not a valid parameter")
 
-    def get(self, key: Union[LiveData, StoredData]):
-        if isinstance(key, LiveData):
-            return self._convert_post_redis(key, self._live_redis.get(key.name))
-        elif isinstance(key, StoredData):
-            return self._convert_post_redis(key, self._stored_redis.get(key.name))
+    def set(self, param: Union[LiveData, StoredData], value: Any):
+        if isinstance(param, LiveData):
+            return self._live_redis.set(param.name, self._convert_pre_redis(value))
+        elif isinstance(param, StoredData):
+            return self._stored_redis.set(param.name, self._convert_pre_redis(value))
         else:
-            raise KeyError(f"'{key}' is not a valid parameter")
+            raise KeyError(f"'{param}' is not a valid parameter")
 
-    def get_many(self, keys: list):
+    def get_many(self, params: list) -> dict:
         pass
 
-    def set_many(self, key_values: dict):
+    def set_many(self, params: dict):
         pass
 
     @staticmethod
@@ -55,11 +55,11 @@ class DataStore:
             return value
 
     @staticmethod
-    def _convert_post_redis(key, value):
-        if isinstance(key.datatype, bool):
+    def _convert_post_redis(param, value):
+        if isinstance(param.datatype, bool):
             return value.decode('utf-8') == 'True'
         else:
-            return key.datatype(value)
+            return param.datatype(value)
 
 
 # FOR TESTING...
