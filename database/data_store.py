@@ -27,9 +27,9 @@ class DataStore:
 
     def get(self, param: Union[LiveData, StoredData]):
         if isinstance(param, LiveData):
-            return self._convert_post_redis(param, self._live_redis.get(key.name))
+            return self._convert_post_redis(param, self._live_redis.get(param.name))
         elif isinstance(param, StoredData):
-            return self._convert_post_redis(param, self._stored_redis.get(key.name))
+            return self._convert_post_redis(param, self._stored_redis.get(param.name))
         else:
             raise KeyError(f"'{param}' is not a valid parameter")
 

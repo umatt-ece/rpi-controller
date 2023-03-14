@@ -25,7 +25,7 @@ export default {
   components: {ControlsButton},
   methods: {
     OnButton1Clicked() {
-      BaseService.get("data/all")
+      BaseService.get("data/get")
           .then((value) => {
             console.log(value)
           })

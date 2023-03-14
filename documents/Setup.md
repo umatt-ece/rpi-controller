@@ -160,7 +160,39 @@ npm run build  # compiles and minifies the project for production
 
 ## Hardware
 
-The following steps will walk you through how to set up the *rpi-controller* project on a Raspberrry Pi Controller for
-the first time.
+The following steps will walk you through how to set up the *rpi-controller* project on a Raspberry Pi Controller for the first time.
 
-Coming Soon...
+### Required Hardware
+
+- Raspberry Pi (& required cabling)
+- Computer
+- SD card (16GB minimum is recommended)
+- SD card reader
+
+### Installing Raspberry Pi OS
+
+An in-depth tutorial on how to install Raspberry Pi OS onto a SD card can be found in the [Raspberry Pi Documentation](https://www.raspberrypi.com/documentation/computers/getting-started.html). However, I will also briefly outline the steps here.
+
+1. Install [Raspberry Pi Imager](https://www.raspberrypi.com/software/)
+2. Connect the SD card to your PC and launch _Raspberry Pi Imager_.
+3. Select the following Options
+   - Operating System: _RASPBERRY PI OS (32-BIT)_
+   - Storage: select the _SD Card_ storage location
+4. Select the following Advanced Options
+   - Hostname: _umatt-rpi_
+   - SSH Username: _umatt_
+   - SSH Password: _umatt_
+   - Network SSID: _umatt-rpi_
+   - Network Password: _umatt123_
+   - Network Country: _CA_
+5. Select _write_ (this might take a while)
+
+### Connecting to the Raspberry Pi
+
+Insert SD card into Raspberry Pi and plug in the power. If you want to use the Raspberry Pi desktop environment, make sure you  connect a display and keyboard/mouse.
+
+To connect to the Raspberry Pi using SSH, first open your wifi settings and connect to ___. Then, open up a terminal session (on Windows Ctrl+R -> 'cmd' -> Enter) and run the following command
+
+```shell
+
+```
