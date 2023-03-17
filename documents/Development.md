@@ -58,6 +58,8 @@ Once you're done, you can de-activate your virtual environment.
 deactivate
 ```
 
+Note: Sometimes python can have some issues finding our custom packages (ie. any folder with a `__init__.py` file). If you having issues with this check out the section [adding-rpi-controller-to-python-path](Setup.md#adding-rpi-controller-to-python-path) in [Setup.md](Setup.md).
+
 ### Redis
 
 ...
