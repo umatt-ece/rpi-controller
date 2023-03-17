@@ -83,6 +83,43 @@ Currently, as of version _0.0.1_ we are using Python version 3.10, which can be 
 completely fine, it just means not everything has been tested with the latest version, and therefore we cannot
 guarantee everything will work flawlessly in that version. It should... but you never know lol.
 
+### Adding rpi-controller to Python PATH
+
+Sometimes Python is dumb and has trouble finding packages (folders that contain a *\_\_init__.py* file) that aren't in what it views as its "current working directory" (or CWD) which is basically the folder from which the script was initiated. In order to allow python to find and import our custom packages (*database*, *server*, etc...) we need to add the project folder **rpi-controller** to our Python PATH.
+
+**Note:** If you are using PyCharm and your `./venv` folder is directly under the root, this doesn't seem to be an issue.
+
+1. Navigate to System Properties > Advanced > Environment Variables.
+
+![edit-env-variables.png](./images/edit-env-variables.png)
+
+2. Under *System variables* look for PYTHONPATH. If it exists select it and *Edit...*. However, it is likely that the variables does not exist unless you have done this before. In which case, select *New...*.
+
+![new-env-variable.png](./images/new-env-variable.png)
+
+3. Enter the following information:
+
+**Variable Name:** PYTHONPATH
+**Variable Value:** *path to rpi-controller folder*;*path to python venv*;*path to python venv libraries*
+
+The **variable value** is a little more tricky. We need to find and add a number of paths to this variable. The first is our project folder (ie. rpi-controller). The second is the path to our python venv. Lastly, we need the path to our venv standard libraries.
+
+The actual paths with differ depending on the setup of your machine, but as an example, here's what mine look like:
+
+```
+C:\Users\kamer\University\UMATT\rpi-controller           # path to project
+C:\Users\kamer\University\UMATT\rpi-controller\venv      # path to python venv
+C:\Users\kamer\University\UMATT\rpi-controller\venv\Lib  # path to venv libraries
+```
+
+Thus my *variable value* would be
+
+C:\Users\kamer\University\UMATT\rpi-controller;C:\Users\kamer\University\UMATT\rpi-controller\venv;C:\Users\kamer\University\UMATT\rpi-controller\venv\Lib
+
+4. Select *OK* for all 3 open windows.
+
+In order for these changes to take affect, you will need to restart your computer.
+
 ### Python Virtual Environment
 
 Once you have Python installed, we need to set you up a python virtual environment (or venv for short). The reason we
