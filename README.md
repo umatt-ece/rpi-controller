@@ -20,7 +20,7 @@ For additional information, see [project structure](./documents/ProjectStructure
 Please use **development** branch (or feel free to make your own off of it). Any changes to **main** should be done via
 *pull request*.
 
-See [setup](./documents/Setup.md) documentation for more details.
+See development [documentation](./documents/README.md) for more details.
 
 ## Contacts
 

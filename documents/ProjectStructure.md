@@ -1,5 +1,16 @@
 # Project Structure
 
+## Contents
+
+- [Introduction](#introduction)
+- [Frontend Web Application](#frontend-web-application)
+- [Backend Web Server](#backend-web-server)
+- [Redis Database](#redis-database)
+- [Logic Controller](#logic-controller)
+- [Additional Information](#additional-information)
+
+## Introduction
+
 The rPi-controller system is broken up into 4 major components:
 
 - Frontend Web Application (GUI) `./display`
@@ -181,7 +192,7 @@ to _get_ and _set_ values in Redis.
 For more information see the Redis [documentation](https://redis.io/docs/).
 
 
-## Logic Controller & I/O
+## Logic Controller
 
 ...
 
