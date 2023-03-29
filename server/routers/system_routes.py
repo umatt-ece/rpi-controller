@@ -9,7 +9,7 @@ sys_route = "/sys"  # prefix to add to all routes
 
 # Example router class
 @cbv(router)  # Class Based View router (cbv) uses python class structure
-class DataRoutes:
+class SystemRoutes:
     def __init__(self):
         # TODO: need to do dependency injection to get DataStore class instance here
         pass

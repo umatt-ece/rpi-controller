@@ -3,6 +3,8 @@ from starlette.endpoints import WebSocketEndpoint
 from starlette.types import Scope, Receive, Send
 from starlette.websockets import WebSocket
 
+from server import ClientManager
+
 router = APIRouter()
 
 
@@ -14,13 +16,14 @@ class WebsocketRoutes(WebSocketEndpoint):
         super().__init__(scope, receive, send)
 
         self._client_id = None
-        # self._client_manager = client_manager # TODO: dependency inject the ClientManager in here
+        self._client_manager = ClientManager()  # TODO: dependency inject the ClientManager in here
 
     async def on_connect(self, websocket):
         """
         handle new connection
         """
         # self._client_id = str(uuid.uuid4())  # TODO: uuids???
+        print("new websocket connection...")
         await websocket.accept()
         await self._client_manager.add_client(self._client_id, websocket)
 

@@ -6,7 +6,7 @@ from starlette.responses import FileResponse
 from starlette.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
 
-from routers import data_router, system_router
+from routers import WebsocketRoutes, data_router, system_router
 from services import ClientManager
 
 
@@ -21,7 +21,8 @@ def create_app() -> FastAPI:
     )
     new_app.include_router(data_router)
     new_app.include_router(system_router)
-    new_app.mount("/vue-app", StaticFiles(directory="vue-app"), name="VueJS App")
+    new_app.add_websocket_route('/ws', WebsocketRoutes)
+    new_app.mount("/", StaticFiles(directory="vue-app", html=True), name="VueJS App")
     return new_app
 
 
@@ -49,7 +50,7 @@ async def app_startup():
 
 def main():
     # initialization
-    print('starting up UMATT server application...')
+    print('Starting UMATT Server Application')
     uvicorn.run(app, host="localhost", port=8577)
 
 
