@@ -1,0 +1,19 @@
+/* Colors */
+
+// UMATT
+$umattYellow: #E4BA00;
+$umattBrown: #5d5757;
+$umattBlue: #60AFFF;
+$umattWhite: #F9F9F6;
+$umattRed: #C63130;
+
+// Text
+$textColor: darken($umattBrown, 50);
+
+// App Header
+$headerBackground: $umattWhite;
+
+// BasicButton
+$buttonBorder: $umattBrown;
+$buttonBackground: #dadad4;
+$buttonHover: darken($buttonBackground, 10);

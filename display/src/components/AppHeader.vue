@@ -1,22 +1,37 @@
 <template>
   <div class="header-container">
-    <span class="header-logo">
-      <img src="../assets/umatt-logo-bad.png" class="umatt-logo" alt="UMATT logo">
-    </span>
-    <span class="header-text">
-      UMATT
-    </span>
-    <span class="header-link-container">
-      <router-link to="/" class="header-link">
-        Home
+
+    <!-- UMATT Logo -->
+    <div class="logo-container">
+      <img src="../assets/images/umatt-logo.png" class="umatt-logo" alt="UMATT logo">
+    </div>
+
+    <!-- UMATT Text -->
+    <div class="header-text">
+      <h1 class="umatt-text">
+        UMATT Controller 2023
+      </h1>
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="navbar-container umatt-text">
+      <router-link to="/" class="navbar-item">
+        <h1 class="umatt-text navbar-text">
+          Home
+        </h1>
       </router-link>
-      <router-link to="/settings" class="header-link">
-        Settings
+      <router-link to="/settings" class="navbar-item">
+        <h1 class="umatt-text navbar-text">
+          Settings
+        </h1>
       </router-link>
-      <router-link to="/diagnostics" class="header-link">
-        Diagnostics
+      <router-link to="/diagnostics" class="navbar-item">
+        <h1 class="umatt-text navbar-text">
+          Diagnostics
+        </h1>
       </router-link>
-    </span>
+    </div>
+
   </div>
 </template>
 
@@ -26,46 +41,72 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+@import "@/assets/styling.scss";
 
 .header-container {
-  display: flex;
-  align-items: center;
+  // grid properties
+  display: grid;
+  grid-template-columns: 1fr 4fr 6fr;
+  gap: 0 0;
+  // color
+  background-color: $headerBackground;
 }
 
-.header-text {
-  margin: auto 10px auto 10px;
-  font-family: sans-serif;
-  font-size: 30px;
-  font-weight: bold;
-}
-
-.header-logo {
+/* logo styling */
+.logo-container {
+  // grid properties
+  grid-column: 1;
+  // align content horizontally & vertically to the center
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-left: 5px;
 }
-
 .umatt-logo {
-  height: 3.5em;
-  width: 3.5em;
+  height: 4.5em;  // will maintain aspect ratio by specifying only height
 }
 
-.header-link-container {
+/* header text styling */
+.header-text {
+  // grid properties
+  grid-column: 2;
+  // margin & padding
+  margin: auto 10px auto 10px;
+}
+
+/* top navigation (nav) bar styling */
+.navbar-container {
+  // grid properties
+  grid-column: 3;
+  // align content horizontally to the right
   display: flex;
   justify-content: flex-end;
-  width: 100%;
-  margin-right: 10px;
+  // margin & padding
+  padding-right: 2em;
 }
-
-.header-link {
-  text-align: center;
-  padding: 15px 15px;
+.navbar-item {
+  // remove router-link styling
   text-decoration: none;
-  color: black;
-  font-family: sans-serif;
-  font-size: 25px;
+  // align content horizontally & vertically to the center
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  // margin & padding
+  width: 20%;
+  padding: 0 2em;
 }
-
+.navbar-text {
+  // font styling
+  font-weight: normal;  // over-ride h1 font-weight
+}
+/* navbar-text styling on hover */
+.navbar-text:hover {
+  // font styling
+  font-weight: bold;  // over-ride h1 font-weight
+}
+/* navbar-text styling when active view (TODO: Not Working) */
+.navbar-text.router-link-active {
+  // font styling
+  font-weight: bold; // over-ride h1 font-weight
+}
 </style>

@@ -94,7 +94,7 @@ export default {
       // view/component specific variables
     }
   },
-  mounted: {
+  mounted() {
     // code to run when the view/component is mounted. Other lifecycle hooks include:
     //  - beforeCreated
     //  - created
