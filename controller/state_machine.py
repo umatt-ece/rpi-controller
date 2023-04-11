@@ -14,7 +14,7 @@ class StateMachine:
 
     def update_values(self):
         self.values = self.data_store.get_many([
-            lD.GEAR,  # TODO: fetch the values we want from redis for ech step...
+            lD.GEAR,  # TODO: fetch the values we want from redis for each step...
         ])
 
     def step(self):

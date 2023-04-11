@@ -1,12 +1,12 @@
 <template>
   <div class="button-container">
 
-    <!-- button image -->
-    <div class="button-icon" v-if="icon">
-      <img :src="require('../assets/images/icons/' + icon + '')" class="icon" alt="?"/>
+    <!-- Button Icon -->
+    <div class="button-icon-container" v-if="icon">
+      <img :src="require('../assets/images/icons/' + icon + '')" class="button-icon" alt="?"/>
     </div>
 
-    <!-- button text -->
+    <!-- Button Text -->
     <div class="button-text umatt-text" v-if="text">
       <h3>{{ text }}</h3>
     </div>
@@ -37,7 +37,7 @@ export default {
   // color
   background-color: $buttonBackground;
   // border styling
-  border: 2px solid $buttonBorder;
+  border: 3px solid $buttonBorder;
   border-radius: 5px;
   // align content horizontally & vertically to the center
   display: flex;
@@ -50,13 +50,13 @@ export default {
 }
 
 /* icon styling */
-.button-icon {
+.button-icon-container {
   // align content horizontally & vertically to the center
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.icon {
+.button-icon {
   // image sizing
   max-height: 60px;
   max-width: 60px;
@@ -65,6 +65,6 @@ export default {
 /* text styling */
 .button-text {
   // margin & padding
-  margin: auto 2em;
+  margin-left: 0.5em;
 }
 </style>

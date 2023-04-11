@@ -33,10 +33,10 @@
                    @click="RightIndicatorButtonClicked"/>
     </div>
 
-    <!-- Button 4: ? -->
+    <!-- Button 4: Transmission State (?) -->
     <div class="controls-button-container grid-full-button">
       <BasicButton class="controls-button-full"
-                   text="button 4"
+                   text="Transmission State"
                    icon="arrow-cycle.png"
                    @click="TestButton"/>
     </div>
@@ -57,28 +57,6 @@
                    @click="DiffLockButtonClicked"/>
     </div>
 
-
-    <!--     Cycle Button -->
-    <!--        <div class="button-container-controls" @click="OnButton1Clicked">-->
-    <!--          <div class="button-styling-controls">-->
-    <!--            <fa icon="recycle" class="button-icon-controls" />-->
-    <!--            <p class="button-text-controls">-->
-    <!--              Cycle-->
-    <!--            </p>-->
-    <!--          </div>-->
-    <!--        </div>-->
-
-
-    <!--
-    <ControlsButton text="cycle (?)" button-icon="recycle" class="controls-button" @click="OnButton1Clicked"/>
-    <ControlsButton text="high beams" button-icon="lightbulb" class="controls-button" @click="OnButton2Clicked"/>
-    <ControlsButton text="auto (?)" button-icon="gear" class="controls-button" @click="OnButton3Clicked"/>
-    <ControlsButton text="lock (?)" button-icon="lock" class="controls-button" @click="OnButton4Clicked"/>
-    <ControlsButton text="left (?)" button-icon="angle-left" class="controls-button" @click="OnButton5Clicked"/>
-    <ControlsButton text="right (?)" button-icon="angle-right" class="controls-button" @click="OnButton6Clicked"/>
-    <ControlsButton text="unused" button-icon="question" class="controls-button" @click="OnButton7Clicked"/>
-    <ControlsButton text="unused" button-icon="question" class="controls-button" @click="OnButton8Clicked"/>
-    -->
   </div>
 </template>
 
@@ -180,7 +158,7 @@ export default {
 @import "@/assets/styling.scss";
 
 .controls-container {
-
+  background-color: $controlsBackground;
 }
 
 /* grid layout */
@@ -199,6 +177,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  // text styling
+  font-size: 20px;
 }
 .controls-button-full {
   // width & height
