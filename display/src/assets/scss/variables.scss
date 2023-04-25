@@ -1,0 +1,37 @@
+/* Colors */
+
+// UMATT Colors
+$umattYellow: #E4BA00;
+$umattBrown: #5d5757;
+$umattBlue: #60AFFF;
+$umattWhite: #F9F9F6;
+$umattRed: #C63130;
+
+// Text
+$textColor: darken($umattBrown, 50);
+
+// App Header
+$headerBackground: $umattWhite;
+// App Controls
+$controlsBackground: $umattWhite;
+
+// Home View
+$homeBackground: $umattWhite;
+$homeBorder: $umattBrown;
+// Settings View
+$settingsBackground: $umattWhite;
+$settingsBorder: $umattBrown;
+// Diagnostics View
+$diagnosticsBackground: $umattWhite;
+$diagnosticsBorder: $umattBrown;
+
+// BasicButton
+$buttonBorder: $umattBrown;
+$buttonBackground: #dadad4;
+$buttonHover: darken($buttonBackground, 10);
+// BasicInfo
+$infoBorder: $umattBrown;
+$infoBackground: #f1f1ec;
+// BasicModal
+$modalBorder: $umattBrown;
+$modalBackground: $umattWhite

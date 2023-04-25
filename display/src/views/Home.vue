@@ -1,38 +1,206 @@
 <template>
-  <div class="home-grid">
-    <div class="home-grid-item">
-      <GenericInfo/>
+  <div class="home-container">
+
+    <!-- Primary Info --------------------------------------------->
+    <div class="home-primary-grid home-primary-container">
+      <!-- Speed Info -->
+      <div class="home-primary-grid-item">
+        <span class="umatt-text speed-info">
+          {{ speed }}
+        </span>
+        <span class="umatt-text speed-unit">
+          Km/Hr
+        </span>
+      </div>
+
+      <!-- Torque Info -->
+      <div class="home-primary-grid-item">
+        <span class="umatt-text torque-info">
+          {{ torque }}
+        </span>
+        <span class="umatt-text torque-unit">
+          RPM
+        </span>
+      </div>
+
+      <!-- Gear Info -->
+      <div class="home-primary-grid-item">
+        <span class="home-primary-info gear-info">
+          {{ GearText }}
+        </span>
+        <img src="../assets/images/icons/tractor.png" class="gear-icon" alt="?"/>
+      </div>
     </div>
-    <div class="home-grid-item">
-      <ImportantInfo/>
+
+    <!-- Secondary Info ------------------------------------------->
+    <div class="home-secondary-grid home-secondary-container">
+      <!-- Engine Temperature Info -->
+      <div class="home-secondary-grid-item">
+        <BasicInfo icon="temp-half.png" description="Engine Temperature" :value="engineTemp" unit="°C" class="home-basic-info"/>
+      </div>
+
+      <!-- Engine Power Info -->
+      <div class="home-secondary-grid-item">
+        <BasicInfo icon="engine-battery.png" description="Engine Power" :value="enginePower" unit="%" class="home-basic-info"/>
+      </div>
+
+      <!-- Engine Speed Info -->
+      <div class="home-secondary-grid-item">
+        <BasicInfo icon="engine-belt.png" description="Engine Speed" :value="engineSpeed" unit="RPM" class="home-basic-info"/>
+      </div>
+
+      <!-- Power Info -->
+      <div class="home-secondary-grid-item">
+        <BasicInfo icon="power-bolt.png" description="Power" :value="power" unit="V" class="home-basic-info"/>
+      </div>
+
+      <!-- Drive Hours Info -->
+      <div class="home-secondary-grid-item">
+        <BasicInfo icon="hourglass.png" description="Drive Hours" :value="driveHours" unit="Hr" class="home-basic-info"/>
+      </div>
+
+      <!-- System Time Info -->
+      <div class="home-secondary-grid-item">
+        <BasicInfo icon="time.png" description="System Time" :value="systemTime" class="home-basic-info"/>
+      </div>
     </div>
+
   </div>
 </template>
 
 <script>
-import GenericInfo from "@/components/HomeGenericInfo.vue";
-import ImportantInfo from "@/components/HomeImportantInfo.vue";
+import BasicInfo from "@/components/BasicInfo.vue";
+
 export default {
-  name: "UMATT-Home",
-  components: { GenericInfo, ImportantInfo}
+  name: "UmattHome",
+  components: { BasicInfo },
+  data() {
+    return {
+      /* Primary Info */
+      speed: 14.3,
+      torque: 1847,
+      gear: 1,  // 0: 'park', 1: 'drive', 2: 'reverse'
+      /* Secondary Info */
+      engineTemp: 182,
+      enginePower: 32,
+      engineSpeed: 194,
+      power: 13.6,
+      driveHours: 7.8,
+      systemTime: "09:36",
+    }
+  },
+  computed: {
+    GearText() {
+      if (this.gear === 0) {
+        return "P"
+      } else if (this.gear === 1) {
+        return "D"
+      } else if (this.gear === 2) {
+        return "R"
+      } else {
+        return ""
+      }
+    },
+  }
 }
 </script>
 
-<style>
+<style lang="scss">
+@import "@/assets/styling.scss";
 
-.home-grid {
-  /* grid properties */
+/* container layouts */
+.home-container {
+  // color
+  background-color: $homeBackground;
+  // border styling
+  border: 3px solid $infoBorder;
+  border-radius: 5px;
+  // margin & padding
+  margin: 10px;
+  padding: 10px;
+}
+.home-primary-container {
+  // color
+  background-color: $homeBackground;
+  // border styling
+  border: 3px solid $homeBorder;
+  border-radius: 5px;
+  // size
+  height: 38%;
+  // margin & padding
+  margin: 10px;
+  padding: 10px;
+}
+.home-secondary-container {
+  // color
+  background-color: $homeBackground;
+  // border styling
+  //border: 3px solid $infoBorder;
+  //border-radius: 5px;
+  // margin & padding
+  margin: 10px;
+  padding: 10px;
+}
+
+/* grid layout */
+.home-primary-grid {
   display: grid;
-  grid-template-rows: 1fr 3fr;
-  grid-template-columns: auto;
+  grid-template-columns: 3fr 3fr 2fr;
   gap: 5px 5px;
 }
+.home-secondary-grid {
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+  gap: 5px 5px;
+}
+.home-primary-grid-item {
+  // align content horizontally & vertically to the center
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.home-secondary-grid-item {
 
-.home-grid-item {
-  /* background and border */
-  background-color: lightblue;
-  border: 2px solid black;
-  border-radius: 5px;
 }
 
+/* info styling */
+.speed-info {
+  // text styling
+  font-size: 8em;
+  font-weight: bold;
+}
+.speed-unit {
+  // text styling
+  font-size: 32px;
+  font-weight: bold;
+  // margin & padding
+  margin-left: 10px;
+}
+.torque-info {
+  // text styling
+  font-size: 6em;
+  font-weight: bold;
+}
+.torque-unit {
+  // text styling
+  font-size: 32px;
+  font-weight: bold;
+  // margin & padding
+  margin-left: 10px;
+}
+.gear-info {
+  // text styling
+  font-size: 9em;
+  font-weight: bold;
+}
+.gear-icon {
+  // image sizing
+  max-height: 70px;
+  max-width: 70px;
+  // margin & padding
+  margin-left: 15px;
+}
+.home-basic-info {
+
+}
 </style>
