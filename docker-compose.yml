@@ -15,7 +15,7 @@ services:
     ports:
       - "8577:8577"
     environment:
-      REDIS_HOST: "database"
+      REDIS_HOST: "localhost"
       REDIS_PORT: "6379"
     volumes:
       - "~/rpi-controller/server:/server"
@@ -30,7 +30,7 @@ services:
       dockerfile: DockerfileController
       context: .
     environment:
-      REDIS_HOST: "database"
+      REDIS_HOST: "localhost"
       REDIS_PORT: "6379"
     volumes:
       - "~/rpi-controller/controller:/controller"
