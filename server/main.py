@@ -6,8 +6,7 @@ from starlette.responses import FileResponse
 from starlette.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
 
-from routers import WebsocketRoutes, data_router, system_router
-from services import ClientManager
+from server import ClientManager, WebsocketRoutes, data_router, system_router
 
 
 def create_app() -> FastAPI:

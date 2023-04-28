@@ -3,7 +3,11 @@ FROM python:3.9
 # Install requirements
 COPY server/requirements.txt .
 RUN pip install -r requirements.txt
+COPY database/requirements.txt .
+RUN pip install -r requirements.txt
 
 WORKDIR /server
+
+COPY . .
 
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8577"]

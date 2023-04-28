@@ -8,27 +8,19 @@ services:
       - "6379:6379"
     restart: always
 
-  display:
-    build:
-      dockerfile: DockerfileDisplay
-      context: .
-    expose:
-      - "8080"
-    volumes:
-      - "./display:/display"
-      - "./display/dist:/display/dist"
-    depends_on:
-      - server
-    restart: always
-
   server:
     build:
       dockerfile: DockerfileServer
       context: .
     ports:
       - "8577:8577"
+    environment:
+      REDIS_HOST: "database"
+      REDIS_PORT: "6379"
     volumes:
       - "./server:/server"
+      - "./server:/server/server"
+      - "./database:/server/database"
     depends_on:
       - database
     restart: always
@@ -37,8 +29,13 @@ services:
     build:
       dockerfile: DockerfileController
       context: .
+    environment:
+      REDIS_HOST: "database"
+      REDIS_PORT: "6379"
     volumes:
       - "./controller:/controller"
+      - "./controller:/controller/controller"
+      - "./database:/controller/database"
     depends_on:
       - database
     restart: always

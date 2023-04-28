@@ -1,8 +1,8 @@
 from enum import Enum
 # TODO: the old controller used this library
-import RPi.GPIO as GPIO
+# import RPi.GPIO as GPIO
 # TODO: this library supports SPI, maybe also consider pigpio which supports SPI, I2C, and UART
-import gpiozero as gpio
+# import gpiozero as gpio
 
 
 class GpioPin(Enum):

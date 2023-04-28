@@ -14,10 +14,10 @@ class SystemRoutes:
         # TODO: need to do dependency injection to get DataStore class instance here
         pass
 
-    @router.get(f"{sys_route}/get", tags=["data"])
+    @router.get(f"{sys_route}/get", tags=["system"])
     async def get_all_data(self):
         return [{"boolean": True}, {"string": "Success"}, {"list": [1, 2, 3]}]
 
-    @router.post(f"{sys_route}/post", tags=["data"])
+    @router.post(f"{sys_route}/post", tags=["system"])
     async def do_something(self, value: dict = Body(...)):
         print(f"value: {value}")

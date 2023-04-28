@@ -1,0 +1,13 @@
+FROM python:3.9
+
+# Install requirements
+COPY controller/requirements.txt .
+RUN pip install -r requirements.txt
+COPY database/requirements.txt .
+RUN pip install -r requirements.txt
+
+WORKDIR /controller
+
+COPY . .
+
+CMD ["python", "main.py"]

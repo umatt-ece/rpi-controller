@@ -1,4 +1,3 @@
-
 from controller import StateMachine
 from database import DataStore, LiveData as lD
 
@@ -13,6 +12,13 @@ class Controller:
         try:
             self.data_store.set(lD.CONTROLLER_ONLINE, True)
             while True:
+
+                # TODO: add initialization functions...
+                # initGPIO()
+                # initXPNDR()
+                # initPot()
+
+                # self.state_machine.init()
                 self.state_machine.run()
                 # TODO: add other run functions...
 

@@ -12,12 +12,17 @@ class StateMachine:
         self.last_run = time.perf_counter()
         self.values = {}
 
+        # test:
+        self.i = 0
+
     def update_values(self):
         self.values = self.data_store.get_many([
             lD.GEAR,  # TODO: fetch the values we want from redis for each step...
         ])
 
     def step(self):
+        print(f"step: {self.i}")
+        self.i += 1
         pass  # TODO: state machine logic here...
 
     def run(self):
