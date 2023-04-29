@@ -8,4 +8,4 @@ npm install
 npm run build
 mv dist/* ../server/vue-app
 
-echo rebuild successful!
+echo build successful!
