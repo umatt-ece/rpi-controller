@@ -4,6 +4,7 @@
 echo building frontend...
 
 cd display
+npm install
 npm run build
 mv dist/* ../server/vue-app
 
