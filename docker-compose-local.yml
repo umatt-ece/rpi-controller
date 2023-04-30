@@ -32,6 +32,7 @@ services:
     environment:
       REDIS_HOST: "database"
       REDIS_PORT: "6379"
+      LOCAL: "true"
     volumes:
       - "./controller:/controller"
       - "./controller:/controller/controller"

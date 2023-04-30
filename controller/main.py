@@ -1,10 +1,13 @@
-from controller import StateMachine
+import os
+
+from controller import StateMachine, GPIOHandler
 from database import DataStore, LiveData as lD
 
 
 class Controller:
     def __init__(self):
         self.data_store = DataStore()
+        self.gpio = GPIOHandler()
         self.state_machine = StateMachine()
 
     def run(self):
@@ -12,13 +15,11 @@ class Controller:
         try:
             self.data_store.set(lD.CONTROLLER_ONLINE, True)
             while True:
-
                 # TODO: add initialization functions...
-                # initGPIO()
-                # initXPNDR()
-                # initPot()
+                self.gpio.init_gpio()
+                self.gpio.init_xpndr()
+                self.gpio.init_pot()
 
-                # self.state_machine.init()
                 self.state_machine.run()
                 # TODO: add other run functions...
 

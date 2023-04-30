@@ -1,6 +1,6 @@
 #!/bin/sh
+# USAGE: run 'bash scripts/rebuild-frontend.sh' from ./rpi-controller
 
-# NOTE: to run this script use 'bash scripts/rebuild-frontend.sh' from ./rpi-controller
 echo installing dependencies...
 
 cd display
@@ -17,4 +17,5 @@ mv dist/* ../server/vue-app
 
 echo rebuild finished!
 
-# If you have issues with 'git pull' after using this script you can use 'git reset --hard' to hopefully fix it
+# NOTE: If you have issues with 'git pull' after using this script due to the package-lock.json being updated, you
+# can use 'git reset --hard' to reset the repository (may affect frontend build tho).
