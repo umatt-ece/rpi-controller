@@ -52,6 +52,7 @@ class ClientManager:
                 await asyncio.sleep(INTERVAL)
             except Exception as e:
                 print(f'Exception: {e}')
+                raise e
 
 
 INTERVAL = 0.1  # seconds

@@ -25,7 +25,7 @@ class Controller:
 
         except Exception as e:
             # TODO: log exceptions first...
-            self.data_store.set(lD.CONTROLLER_ONLINE, False)
+            self.data_store.set(lD.CONTROLLER_ONLINE, False)  # this may fail
             raise e  # raise the error anyway so the system can crash
 
 

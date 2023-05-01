@@ -1,2 +1,6 @@
-# static files (display) for server when running locally
+# static files (display) when running locally
 vue-app/*
+
+# docker mapped files (volumes) when running locally
+database
+server

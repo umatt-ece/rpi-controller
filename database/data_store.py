@@ -9,8 +9,16 @@ from database import LiveData, StoredData
 class DataStore:
 
     def __init__(self):
-        self._live_redis = redis.Redis(host=os.environ.get("REDIS_HOST", "localhost"), port=int(os.environ.get("REDIS_PORT", "6379")), db=0)
-        self._stored_redis = redis.Redis(host=os.environ.get("REDIS_HOST", "localhost"), port=int(os.environ.get("REDIS_PORT", "6379")), db=1)
+        self._live_redis = redis.Redis(
+            host=os.environ.get("REDIS_HOST", "localhost"),
+            port=int(os.environ.get("REDIS_PORT", "6379")),
+            db=0,
+        )
+        self._stored_redis = redis.Redis(
+            host=os.environ.get("REDIS_HOST", "localhost"),
+            port=int(os.environ.get("REDIS_PORT", "6379")),
+            db=1
+        )
         # self._logger  # TODO: implement logging
 
         # Initialize
@@ -45,22 +53,73 @@ class DataStore:
             raise KeyError(f"'{param}' is not a valid parameter")
 
     def get_many(self, params: list) -> dict:
-        pass
+        live_params = []
+        stored_params = []
+        results = {}
+
+        for entry in params:
+            if isinstance(entry, LiveData):
+                live_params.append(entry)
+            elif isinstance(entry, StoredData):
+                stored_params.append(entry)
+            else:
+                raise KeyError(f"'{entry}' is not a valid parameter")
+
+        if live_params:
+            live_values = self._live_redis.mget([data.name for data in live_params])
+            for i in range(len(live_params)):
+                results[live_params[i].name] = self._convert_post_redis(live_params[i], live_values[i])
+        if stored_params:
+            stored_values = self._stored_redis.mget([data.name for data in stored_params])
+            for i in range(len(stored_params)):
+                results[stored_params[i].name] = self._convert_post_redis(stored_params[i], stored_values[i])
+
+        return results
 
     def set_many(self, params: dict):
-        pass
+        live_params = {}
+        stored_params = {}
+
+        for entry, value in params.items():
+            if isinstance(entry, LiveData):
+                live_params[entry] = self._convert_pre_redis(value)
+            elif isinstance(entry, StoredData):
+                stored_params[entry] = self._convert_pre_redis(value)
+            else:
+                raise KeyError(f"'{entry}' is not a valid parameter")
+
+        if live_params:
+            self._live_redis.mset(live_params)
+        if live_params:
+            self._live_redis.mset(live_params)
 
     @staticmethod
     def _convert_pre_redis(value):
         if isinstance(value, bool):
             return str(value)
+        elif isinstance(value, list):
+            return str(value)
         else:
             return value
 
     @staticmethod
-    def _convert_post_redis(param, value):
-        if isinstance(param.datatype, bool):
-            return value.decode('utf-8') == 'True'
+    def _convert_post_redis(param: Union[LiveData, StoredData], value):
+        if param.datatype == bool:
+            return value.decode("utf-8") == "True"
+        elif param.datatype == list:
+            # covert list from string to list of strings
+            value_list = value.decode("utf-8").strip("[]").split(",").strip()
+            print(value_list)
+            # attempt to cast values into their datatype (supports: bool, int, str)
+            for i in range(len(value_list)):
+                if value_list[i] == "False" or value_list == "True":
+                    value_list[i] = value_list[i] == "True"
+                elif value_list[i].isdigit():
+                    value_list[i] = int(value_list[i])
+                else:
+                    pass  # already string
+            print(value_list)
+            return value_list
         else:
             return param.datatype(value)
 

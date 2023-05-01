@@ -1,66 +1,135 @@
 import math
 import time
+from enum import Enum
 
 from controller import GPIOHandler, GpioPin, binary_to_decimal
-from database import DataStore, LiveData as lD
+from database import DataStore, LiveData as lD, StoredData as sD
 
 
 # TODO: create functions for state machine logic, break up into 'states'/'transitions'
 # TODO: replace time.time() with time.perf_counter() for accuracy
+# TODO: further abstraction, state_machine.py should be purely logic, no reference to specific GPIO pins
+
+
+class Values(Enum):
+    INTERNAL = "internal"
+    EXTERNAL = "external"
+    CONSTANTS = "constants"
+    ALL = "all"
 
 
 class StateMachine:
     def __init__(self):
+        # external class
         self.data_store = DataStore()
         self.gpio = GPIOHandler()
 
+        # timer values
         self.last_run = time.perf_counter()
-        self.values = {}
+        self.diff_last_time = time.perf_counter()
 
-        self.acc_pwr = 1
-        self.bounce_time_thresh_n = 1
-        self.bounce_time_thresh = 1
-        self.motor_enable_success = 0
-        self.acceptable_joystick_maps = [0]
-        self.accel_max = 1
-        self.accel_min = 1
-        self.diff_min_time = 0.5
+        # data values
+        self.external = {}
+        self.internal = {}
+        self.constants = {}
+
+        # initialize data values
+        self.update_values(Values.ALL)
+
+        # self.acc_pwr = 1
+        # self.bounce_time_thresh_n = 1
+        # self.bounce_time_thresh = 1
+        # self.motor_enable_success = 0
+        # self.acceptable_joystick_maps = [0]
+        # self.accel_max = 1
+        # self.accel_min = 1
+        # self.diff_min_time = 0.5
 
         # internally calculated
-        self.inching = 0
-        self.brake = 0
-        self.clutch = 0
-        self.throttle = 0
-        self.enable_motor = 0
-        self.forwards = 0
-        self.reverse = 0
-        self.neutral = 1
-        self.gear_lockout = [0, 0]
-        self.fans = 0
-        self.pump = 0
-        self.la_extend = 0
-        self.la_retract = 0
-        self.bounce_timer = 0
-        self.diff_speed = 0
+        # self.inching = 0
+        # self.brake = 0
+        # self.clutch = 0
+        # self.throttle = 0
+        # self.enable_motor = 0
+        # self.forwards = 0
+        # self.reverse = 0
+        # self.neutral = 1
+        # self.gear_lockout = [0, 0]
+        # self.fans = 0
+        # self.pump = 0
+        # self.la_extend = 0
+        # self.la_retract = 0
+        # self.bounce_timer = 0
+        # self.diff_speed = 0
 
         # externally set
-        self.mode_maneuverability = 1
-        self.mode_pulling = 0
-        self.diff_lock_request = 0
-        self.joystick_mapping = 0  # 0 = linear
-        self.acceleration = 0  # 0 = no limitation
-        self.deceleration = 0  # 0 = no limitation
-        self.interlock_override = 0
+        # self.mode_maneuverability = 1
+        # self.mode_pulling = 0
+        # self.diff_lock_request = 0
+        # self.joystick_mapping = 0  # 0 = linear
+        # self.acceleration = 0  # 0 = no limitation
+        # self.deceleration = 0  # 0 = no limitation
+        # self.interlock_override = 0
 
-        self.gpio.write_gpio(GpioPin.GPIO3_SELECT, [1, 1, 1, 1, 1, 1, 1, 1], "A")
+        self.gpio.write_gpio(GpioPin.GPIO3_SELECT, [1, 1, 1, 1, 1, 1, 1, 1], "A")  # TODO: should be further abstracted
         self.gpio.write_gpio(GpioPin.GPIO3_SELECT, [0, 0, 0, 0, 0, 0, 0, 0], "A")
 
-        self.diff_last_time = time.time()
+    def update_values(self, values: Values):
+        """
+        Update the data values for the State Machine. Categories for values are determined by enum `Values`.
+        """
 
-    def update_values(self):
-        self.values = self.data_store.get_many([
-            lD.GEAR,  # TODO: fetch the values we want from redis for each step...
-        ])
+        if values == Values.INTERNAL or values == Values.ALL:
+            self.internal = self.data_store.get_many([
+                lD.INCHING,
+                lD.BRAKE,
+                lD.CLUTCH,
+                lD.THROTTLE,
+                lD.ENABLE_MOTOR,
+                lD.FORWARDS,
+                lD.REVERSE,
+                lD.NEUTRAL,
+                lD.GEAR_LOCKOUT,
+                lD.FANS,
+                lD.PUMP,
+                lD.LA_EXTEND,
+                lD.LA_RETRACT,
+                lD.BOUNCE_TIMER,
+                lD.DIFF_SPEED,
+            ])
+
+        if values == Values.EXTERNAL or values == Values.ALL:
+            self.external = self.data_store.get_many([
+                lD.MODE_MANEUVERABILITY,
+                lD.MODE_PULLING,
+                lD.DIFF_LOCK_REQUEST,
+                lD.JOYSTICK_MAPPING,
+                lD.ACCELERATION,
+                lD.DECELERATION,
+                lD.INTERLOCK_OVERRIDE,
+            ])
+
+        if values == Values.CONSTANTS or values == Values.ALL:
+            self.constants = self.data_store.get_many([
+                sD.ACC_POWER,
+                sD.BOUNCE_TIME_THRESHOLD_N,
+                sD.BOUNCE_TIME_THRESHOLD,
+                sD.MOTOR_ENABLE_SUCCESS,
+                sD.ACCEPTABLE_JOYSTICK_MAPS,
+                sD.ACCELERATION_MAX,
+                sD.ACCELERATION_MIN,
+                sD.DIFF_MIN_TIME,
+            ])
+
+    def set_values(self, values: Values):
+        """
+        Set the current data values to the Redis Data Store. Categories for values are determined by enum `Values`.
+
+        NOTE: Care should be taken as to when this function is called to ensure externally updated values are not
+        accidentally overwritten.
+        """
+
+        pass
 
     def step(self):
         gpio_values_1a = self.gpio.read_gpio(GpioPin.GPIO1_SELECT, "A")
