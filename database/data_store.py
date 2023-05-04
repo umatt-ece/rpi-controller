@@ -105,11 +105,14 @@ class DataStore:
     @staticmethod
     def _convert_post_redis(param: Union[LiveData, StoredData], value):
         if param.datatype == bool:
+            if (param == LiveData.INITIALIZED and value is None) or (param == StoredData.INITIALIZED and value is None):
+                return False
             return value.decode("utf-8") == "True"
         elif param.datatype == list:
             # covert list from string to list of strings
-            value_list = value.decode("utf-8").strip("[]").split(",").strip()
-            print(value_list)
+            value_list = value.decode("utf-8").strip("[]").split(",")
+            for i in range(len(value_list)):
+                value_list[i] = value_list[i].strip()
             # attempt to cast values into their datatype (supports: bool, int, str)
             for i in range(len(value_list)):
                 if value_list[i] == "False" or value_list == "True":
@@ -118,7 +121,6 @@ class DataStore:
                     value_list[i] = int(value_list[i])
                 else:
                     pass  # already string
-            print(value_list)
             return value_list
         else:
             return param.datatype(value)
@@ -128,17 +130,17 @@ class DataStore:
 if __name__ == "__main__":
     print("testing data store...")
     data_store = DataStore()
-    print(
-        f'live parameters initialized: {data_store.get(LiveData.INITIALIZED)} {type(data_store.get(LiveData.INITIALIZED))}')
-    print(
-        f'stored parameters initialized: {data_store.get(LiveData.INITIALIZED)} {type(data_store.get(StoredData.INITIALIZED))}')
-
-    print(f'speed: {data_store.get(LiveData.SPEED)} {type(data_store.get(LiveData.SPEED))}')
-    data_store.set(LiveData.SPEED, 123.0)
-    print(f'speed: {data_store.get(LiveData.SPEED)} {type(data_store.get(LiveData.SPEED))}')
-    data_store.set(LiveData.SPEED, 321)
-    print(f'speed: {data_store.get(LiveData.SPEED)} {type(data_store.get(LiveData.SPEED))}')
-
-    print(f'speed: {data_store.get(LiveData.GEAR)} {type(data_store.get(LiveData.GEAR))}')
-    data_store.set(LiveData.GEAR, 3)
-    print(f'speed: {data_store.get(LiveData.GEAR)} {type(data_store.get(LiveData.GEAR))}')
+    # print(
+    #     f'live parameters initialized: {data_store.get(LiveData.INITIALIZED)} {type(data_store.get(LiveData.INITIALIZED))}')
+    # print(
+    #     f'stored parameters initialized: {data_store.get(LiveData.INITIALIZED)} {type(data_store.get(StoredData.INITIALIZED))}')
+    #
+    # print(f'speed: {data_store.get(LiveData.SPEED)} {type(data_store.get(LiveData.SPEED))}')
+    # data_store.set(LiveData.SPEED, 123.0)
+    # print(f'speed: {data_store.get(LiveData.SPEED)} {type(data_store.get(LiveData.SPEED))}')
+    # data_store.set(LiveData.SPEED, 321)
+    # print(f'speed: {data_store.get(LiveData.SPEED)} {type(data_store.get(LiveData.SPEED))}')
+    #
+    # print(f'speed: {data_store.get(LiveData.GEAR)} {type(data_store.get(LiveData.GEAR))}')
+    # data_store.set(LiveData.GEAR, 3)
+    # print(f'speed: {data_store.get(LiveData.GEAR)} {type(data_store.get(LiveData.GEAR))}')

@@ -7,11 +7,7 @@ be initialized properly. To do this, with the redis container running in docker 
 to change 'rpi-controller_database_1' depending on how exactly docker names your containers on startup.
 
 docker exec -it rpi-controller_database_1 redis-cli FLUSHALL
-
-After that, stop the Redis container, delete the mapped volumes (can easily be done through Docker Desktop GUI) and
-restart the container.
 """
-
 
 
 class LiveData(namedtuple("live_data", "datatype default"), enum.Enum):
