@@ -7,7 +7,7 @@ from database import DataStore, LiveData as lD, StoredData as sD
 
 # TODO: create functions for state machine logic, break up into 'states'/'transitions'
 # TODO: replace time.time() with time.perf_counter() for accuracy
-# TODO: further abstraction, state_machine.py should be purely logic, no reference to specific GPIO pins
+# TODO: further abstraction, drive_state_machine.py should be purely logic, no reference to specific GPIO pins
 
 
 class Values(Enum):
@@ -17,7 +17,7 @@ class Values(Enum):
     ALL = "all"
 
 
-class StateMachine:
+class DriveStateMachine:
     def __init__(self):
         # external class
         self.data_store = DataStore()
