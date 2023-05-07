@@ -12,8 +12,9 @@ RUN pip install -r requirements.txt
 COPY database/requirements.txt .
 RUN pip install -r requirements.txt
 
+COPY /controller/password.txt
 WORKDIR /controller
 
 COPY . .
 
-CMD ["sudo", "python", "main.py"]
+CMD ["sudo", "-S", "python", "main.py", "<", "password.txt"]
