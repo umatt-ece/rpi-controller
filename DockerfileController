@@ -12,7 +12,7 @@ RUN pip install -r requirements.txt
 COPY database/requirements.txt .
 RUN pip install -r requirements.txt
 
-COPY /controller/password.txt
+COPY /controller/password.txt .
 WORKDIR /controller
 
 COPY . .
