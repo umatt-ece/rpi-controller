@@ -14,8 +14,8 @@ class GPIOHandler:
         print("Initializing GPIO Handler...")
         self.data_store = DataStore()
 
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setwarnings(False)
+        GPIO.setmode(GPIO.BCM)  # use BCM mapping
+        GPIO.setwarnings(False)  # ignore warnings
 
     @staticmethod
     def init_input(pin: Pin):
