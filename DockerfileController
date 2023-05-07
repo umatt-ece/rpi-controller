@@ -1,12 +1,12 @@
 FROM python:3.9
 
-RUN apt-get update && apt-get -y install sudo
-
-RUN adduser --disabled-password --gecos '' docker
-RUN adduser docker sudo
-RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-
-USER docker
+#RUN apt-get update && apt-get -y install sudo
+#
+#RUN adduser --disabled-password --gecos '' docker
+#RUN adduser docker sudo
+#RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+#
+#USER docker
 
 # Install requirements
 COPY controller/requirements.txt .
@@ -14,7 +14,6 @@ RUN pip install -r requirements.txt
 COPY database/requirements.txt .
 RUN pip install -r requirements.txt
 
-COPY /controller/password.txt .
 WORKDIR /controller
 
 COPY . .
