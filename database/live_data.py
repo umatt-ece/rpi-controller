@@ -15,6 +15,11 @@ class LiveData(namedtuple("live_data", "datatype default"), enum.Enum):
     ...
     """
 
+    TEST_PARAM = (
+        bool,
+        True,
+    )
+
     INITIALIZED = (
         bool,
         True,

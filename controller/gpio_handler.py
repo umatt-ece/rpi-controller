@@ -1,6 +1,6 @@
 from enum import Enum
 
-from controller import int_to_binary
+from controller import int_to_binary, binary_to_decimal
 
 try:
     # TODO: the old controller used this library
@@ -23,6 +23,8 @@ class GpioPin(Enum):
     GPIO3_SELECT = 11
     GPIO4_SELECT = 6
     ACCESSORY_POWER = 16
+
+    TEST_PIN = 17
 
 
 class GPIOHandler:
@@ -67,6 +69,8 @@ class GPIOHandler:
         GPIO.setup(GpioPin.GPIO4_SELECT, GPIO.OUT)
         GPIO.setup(GpioPin.ACCESSORY_POWER, GPIO.IN)
 
+        GPIO.setup(GpioPin.TEST_PIN, GPIO.OUT)
+
         GPIO.output(GpioPin.CLK, 0)
         GPIO.output(GpioPin.MOSI, 0)
         GPIO.output(GpioPin.POT_SELECT, 1)
@@ -76,6 +80,11 @@ class GPIOHandler:
         GPIO.output(GpioPin.GPIO3_SELECT, 1)
         GPIO.output(GpioPin.GPIO4_SELECT, 1)
         GPIO.output(GpioPin.POWER_DOWN, 0)
+
+        GPIO.output(GpioPin.TEST_PIN, 0)
+
+    def toggle_test(self, value):
+        GPIO.output(GpioPin.TEST_PIN, 1 if value else 0)
 
     def write_gpio(self, slave, byte, gpio: str):
         # TODO: should probably make some sort of GPIO class abstraction...

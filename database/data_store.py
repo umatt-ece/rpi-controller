@@ -26,10 +26,10 @@ class DataStore:
 
     def initialize_database(self):
         # Initialize the Live Data Store if it has not been yet.
-        if not self.get(LiveData.INITIALIZED):
-            print('Initializing Live Redis Database')
-            for entry in LiveData:
-                self.set(entry, entry.default)
+        # if not self.get(LiveData.INITIALIZED):
+        #     print('Initializing Live Redis Database')
+        for entry in LiveData:
+            self.set(entry, entry.default)
         # Initialize the Stored Data Store if it has not been yet.
         if not self.get(StoredData.INITIALIZED):
             print('Initializing Stored Redis Database')

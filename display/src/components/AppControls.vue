@@ -84,6 +84,16 @@ export default {
       console.log("headlights toggled")
       // cycle values between 0 -> 1 -> 2 -> 0 ...
       this.headlightState = (this.headlightState + 1) % 3
+
+      // test
+      BaseService.post("sys/test")
+          .then(() => {
+            console.log("success!")
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+
     },
     LeftIndicatorButtonClicked() {
       console.log("left indicator toggled")
@@ -106,7 +116,7 @@ export default {
       this.diffLock = !this.diffLock
     },
     TestButton() {
-      BaseService.post("data/do", {"value": "helloooooo"})
+      BaseService.get("sys/get", {"value": "helloooooo"})
           .then(() => {
             console.log("success!")
           })
