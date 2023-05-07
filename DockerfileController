@@ -10,4 +10,4 @@ WORKDIR /controller
 
 COPY . .
 
-CMD ["python", "main.py"]
+CMD ["sudo", "python", "main.py"]
