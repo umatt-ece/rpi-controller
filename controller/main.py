@@ -7,6 +7,7 @@ from database import DataStore, LiveData as lD
 
 class Controller:
     def __init__(self):
+        time.sleep(100)
         self.data_store = DataStore()
         self.gpio = GPIOHandler()
         self.spi = SerialPeripheralInterface()
