@@ -1,8 +1,6 @@
 # NOTE: order of imports is important to avoid circular references
 import os
 
-from .utils import int_to_binary, binary_to_decimal
-
 if os.getenv("LOCAL", "true") == "false":
     from .gpio_handler import GPIOHandler
 else:

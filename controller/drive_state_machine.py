@@ -1,20 +1,13 @@
 import math
 import time
-from enum import Enum
 
-from controller import GPIOHandler, GpioPin, binary_to_decimal
+from controller import GPIOHandler
 from database import DataStore, LiveData as lD, StoredData as sD
+from common import binary_to_decimal
 
 # TODO: create functions for state machine logic, break up into 'states'/'transitions'
 # TODO: replace time.time() with time.perf_counter() for accuracy
 # TODO: further abstraction, drive_state_machine.py should be purely logic, no reference to specific GPIO pins
-
-
-class Values(Enum):
-    INTERNAL = "internal"
-    EXTERNAL = "external"
-    CONSTANTS = "constants"
-    ALL = "all"
 
 
 class DriveStateMachine:
