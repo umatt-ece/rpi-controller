@@ -9,7 +9,7 @@ class Controller:
     def __init__(self):
         self.data_store = DataStore()
         self.gpio = GPIOHandler()
-        self.state_machine = StateMachine()
+        # self.state_machine = StateMachine()
 
     def run(self):
 
