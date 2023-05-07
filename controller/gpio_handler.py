@@ -92,7 +92,7 @@ class GPIOHandler:
     def test_run(self):
         if self.test != self.data_store.get(lD.TEST_PARAM):
             self.test = self.data_store.get(lD.TEST_PARAM)
-            GPIO.output(GpioPin.TEST_PIN, 1 if self.test else 0)
+            GPIO.output(GpioPin.TEST_PIN.value, 1 if self.test else 0)
 
     def write_gpio(self, slave, byte, gpio: str):
         # TODO: should probably make some sort of GPIO class abstraction...
