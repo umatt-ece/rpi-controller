@@ -56,21 +56,12 @@ class GPIOHandler:
         # self.write_spi(GpioPin.GPIO4_SELECT.value, (0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1))
         pass
 
-    @staticmethod
-    def init_gpio():
-        # GPIO.init()
-
-        GPIO.setup(Pin.CLK.value, GPIO.OUT)
-        GPIO.setup(Pin.MOSI.value, GPIO.OUT)
-        GPIO.setup(Pin.MISO.value, GPIO.IN)
-        GPIO.setup(Pin.POT_SELECT.value, GPIO.OUT)
-        GPIO.setup(Pin.ADC_SELECT.value, GPIO.OUT)
-        GPIO.setup(Pin.POWER_DOWN.value, GPIO.OUT)
-        GPIO.setup(Pin.GPIO1_SELECT.value, GPIO.OUT)
-        GPIO.setup(Pin.GPIO2_SELECT.value, GPIO.OUT)
-        GPIO.setup(Pin.GPIO3_SELECT.value, GPIO.OUT)
-        GPIO.setup(Pin.GPIO4_SELECT.value, GPIO.OUT)
-        GPIO.setup(Pin.ACCESSORY_POWER.value, GPIO.IN)
+    def init_pins(self):
+        # initial
+        for pin in [Pin.CLK, Pin.MOSI, Pin.POT_SELECT, Pin.ADC_SELECT, Pin.POWER_DOWN, Pin.GPIO1_SELECT, Pin.GPIO2_SELECT, Pin.GPIO3_SELECT, Pin.GPIO4_SELECT]:
+            self.init_output(pin)
+        for pin in [Pin.MISO, Pin.ACCESSORY_POWER]:
+            self.init_input(pin)
 
         GPIO.output(Pin.CLK.value, 0)
         GPIO.output(Pin.MOSI.value, 0)

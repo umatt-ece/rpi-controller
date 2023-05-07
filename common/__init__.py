@@ -1,1 +1,1 @@
-from enums import RpiPin
+from .enums import RpiPin
