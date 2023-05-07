@@ -2,97 +2,70 @@ from enum import Enum
 
 from controller import int_to_binary, binary_to_decimal
 from database import DataStore, LiveData as lD
-
-try:
-    # TODO: the old controller used this library
-    import RPi.GPIO as GPIO
-    # TODO: this library supports SPI, maybe also consider pigpio which supports SPI, I2C, and UART
-    # import gpiozero as gpio
-except ModuleNotFoundError:
-    print("ERROR: Could not import RPi.GPIO")
+from common import RpiPin as Pin
 
 
-class GpioPin(Enum):
-    CLK = 23  # clock for Serial Peripheral Interface (communication protocol) I think...
-    MOSI = 10  # 'master out slave in' for SPI
-    MISO = 25  # 'master in slave out' for SPI
-    POT_SELECT = 8  # Potentiometer (???)
-    ADC_SELECT = 5  # Analog Digital Converter
-    POWER_DOWN = 12  # Tractor Power
-    GPIO1_SELECT = 24
-    GPIO2_SELECT = 9
-    GPIO3_SELECT = 11
-    GPIO4_SELECT = 6
-    ACCESSORY_POWER = 16
-
-    TEST_PIN = 17
+# TODO: the old controller used this library
+import RPi.GPIO as GPIO
+# TODO: this library supports SPI, maybe also consider pigpio which supports SPI, I2C, and UART
+# import gpiozero as gpio
 
 
 class GPIOHandler:
     def __init__(self):
         print("Initializing GPIO Handler...")
-
         self.data_store = DataStore()
-        self.test = self.data_store.get(lD.TEST_PARAM)
+
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setwarnings(False)
+
+    def init_input(self, pin: pin):
 
     def init_pot(self):
         value = 1.0
         message = [0, 0, 0, 1, 0, 0, 0, 1] + int_to_binary(int(value * 255))
-        self.write_spi(GpioPin.POT_SELECT, message)
+        self.write_spi(pin.POT_SELECT.value, message)
 
     def init_xpndr(self):
-        self.write_spi(GpioPin.GPIO1_SELECT, (0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1))  # write IODIRA
-        self.write_spi(GpioPin.GPIO1_SELECT, (0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0))  # write IODIRB
+        self.write_spi(GpioPin.GPIO1_SELECT.value, (0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1))  # write IODIRA
+        self.write_spi(GpioPin.GPIO1_SELECT.value, (0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0))  # write IODIRB
 
-        self.write_gpio(GpioPin.GPIO1_SELECT, [0, 0, 0, 0, 0, 0, 0, 0], "B")
+        self.write_gpio(GpioPin.GPIO1_SELECT.value, [0, 0, 0, 0, 0, 0, 0, 0], "B")
 
-        self.write_spi(GpioPin.GPIO2_SELECT, (0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1))  # write IODIRA
-        self.write_spi(GpioPin.GPIO2_SELECT, (0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1))  # write IODIRB
+        self.write_spi(GpioPin.GPIO2_SELECT.value, (0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1))  # write IODIRA
+        self.write_spi(GpioPin.GPIO2_SELECT.value, (0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1))  # write IODIRB
 
-        self.write_spi(GpioPin.GPIO3_SELECT, (0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))  # write IODIRA
-        self.write_spi(GpioPin.GPIO3_SELECT, (0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1))  # write IODIRB
+        self.write_spi(GpioPin.GPIO3_SELECT.value, (0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))  # write IODIRA
+        self.write_spi(GpioPin.GPIO3_SELECT.value, (0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1))  # write IODIRB
 
-        self.write_spi(GpioPin.GPIO4_SELECT, (0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1))  # write IODIRA
-        self.write_spi(GpioPin.GPIO4_SELECT, (0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1))
+        self.write_spi(GpioPin.GPIO4_SELECT.value, (0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1))  # write IODIRA
+        self.write_spi(GpioPin.GPIO4_SELECT.value, (0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1))
 
     @staticmethod
     def init_gpio():
         # GPIO.init()
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setwarnings(False)
 
-        GPIO.setup(GpioPin.CLK, GPIO.OUT)
-        GPIO.setup(GpioPin.MOSI, GPIO.OUT)
-        GPIO.setup(GpioPin.MISO, GPIO.IN)
-        GPIO.setup(GpioPin.POT_SELECT, GPIO.OUT)
-        GPIO.setup(GpioPin.ADC_SELECT, GPIO.OUT)
-        GPIO.setup(GpioPin.POWER_DOWN, GPIO.OUT)
-        GPIO.setup(GpioPin.GPIO1_SELECT, GPIO.OUT)
-        GPIO.setup(GpioPin.GPIO2_SELECT, GPIO.OUT)
-        GPIO.setup(GpioPin.GPIO3_SELECT, GPIO.OUT)
-        GPIO.setup(GpioPin.GPIO4_SELECT, GPIO.OUT)
-        GPIO.setup(GpioPin.ACCESSORY_POWER, GPIO.IN)
+        GPIO.setup(Pin.CLK.value, GPIO.OUT)
+        GPIO.setup(Pin.MOSI.value, GPIO.OUT)
+        GPIO.setup(Pin.MISO.value, GPIO.IN)
+        GPIO.setup(Pin.POT_SELECT.value, GPIO.OUT)
+        GPIO.setup(Pin.ADC_SELECT.value, GPIO.OUT)
+        GPIO.setup(Pin.POWER_DOWN.value, GPIO.OUT)
+        GPIO.setup(Pin.GPIO1_SELECT.value, GPIO.OUT)
+        GPIO.setup(Pin.GPIO2_SELECT.value, GPIO.OUT)
+        GPIO.setup(Pin.GPIO3_SELECT.value, GPIO.OUT)
+        GPIO.setup(Pin.GPIO4_SELECT.value, GPIO.OUT)
+        GPIO.setup(Pin.ACCESSORY_POWER.value, GPIO.IN)
 
-        GPIO.output(GpioPin.CLK, 0)
-        GPIO.output(GpioPin.MOSI, 0)
-        GPIO.output(GpioPin.POT_SELECT, 1)
-        GPIO.output(GpioPin.ADC_SELECT, 1)
-        GPIO.output(GpioPin.GPIO1_SELECT, 1)
-        GPIO.output(GpioPin.GPIO2_SELECT, 1)
-        GPIO.output(GpioPin.GPIO3_SELECT, 1)
-        GPIO.output(GpioPin.GPIO4_SELECT, 1)
-        GPIO.output(GpioPin.POWER_DOWN, 0)
-
-    def test_setup(self):
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setwarnings(False)
-        GPIO.setup(GpioPin.TEST_PIN.value, GPIO.OUT)
-        GPIO.output(GpioPin.TEST_PIN.value, 0)
-
-    def test_run(self):
-        if self.test != self.data_store.get(lD.TEST_PARAM):
-            self.test = self.data_store.get(lD.TEST_PARAM)
-            GPIO.output(GpioPin.TEST_PIN.value, 1 if self.test else 0)
+        GPIO.output(Pin.CLK.value, 0)
+        GPIO.output(Pin.MOSI.value, 0)
+        GPIO.output(Pin.POT_SELECT.value, 1)
+        GPIO.output(Pin.ADC_SELECT.value, 1)
+        GPIO.output(Pin.GPIO1_SELECT.value, 1)
+        GPIO.output(Pin.GPIO2_SELECT.value, 1)
+        GPIO.output(Pin.GPIO3_SELECT.value, 1)
+        GPIO.output(Pin.GPIO4_SELECT.value, 1)
+        GPIO.output(Pin.POWER_DOWN.value, 0)
 
     def write_gpio(self, slave, byte, gpio: str):
         # TODO: should probably make some sort of GPIO class abstraction...

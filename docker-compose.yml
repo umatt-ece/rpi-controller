@@ -21,6 +21,7 @@ services:
       - "~/rpi-controller/server:/server"
       - "~/rpi-controller/server:/server/server"
       - "~/rpi-controller/database:/server/database"
+      - "~/rpi-controller/common:/server/common"
     depends_on:
       - database
     restart: always
@@ -37,6 +38,7 @@ services:
       - "~/rpi-controller/controller:/controller"
       - "~/rpi-controller/controller:/controller/controller"
       - "~/rpi-controller/database:/controller/database"
+      - "~/rpi-controller/common:/controller/common"
     depends_on:
       - database
     restart: always

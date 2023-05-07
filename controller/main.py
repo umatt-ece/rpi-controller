@@ -20,9 +20,8 @@ class Controller:
                 # self.gpio.init_gpio()
                 # self.gpio.init_xpndr()
                 # self.gpio.init_pot()
-                self.gpio.test_setup()
+                print("stuff... things... etc...")
 
-                self.gpio.test_run()
                 time.sleep(0.1)
                 # self.state_machine.run()
                 # TODO: add other run functions...
