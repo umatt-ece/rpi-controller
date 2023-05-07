@@ -7,6 +7,7 @@ from database import DataStore, LiveData as lD
 
 class Controller:
     def __init__(self):
+        print("sleeping for 100 seconds...")
         time.sleep(100)
         self.data_store = DataStore()
         self.gpio = GPIOHandler()
