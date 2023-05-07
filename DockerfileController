@@ -10,9 +10,9 @@ USER docker
 
 # Install requirements
 COPY controller/requirements.txt .
-RUN pip install -r requirements.txt
+RUN sudo pip install -r requirements.txt
 COPY database/requirements.txt .
-RUN pip install -r requirements.txt
+RUN sudo pip install -r requirements.txt
 
 WORKDIR /controller
 
