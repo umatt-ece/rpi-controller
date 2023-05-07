@@ -89,7 +89,7 @@ class GPIOHandler:
         GPIO.setup(GpioPin.TEST_PIN, GPIO.OUT)
         GPIO.output(GpioPin.TEST_PIN, 0)
 
-    def test_run(self, value):
+    def test_run(self):
         if self.test != self.data_store.get(lD.TEST_PARAM):
             self.test = self.data_store.get(lD.TEST_PARAM)
             GPIO.output(GpioPin.TEST_PIN, 1 if self.test else 0)

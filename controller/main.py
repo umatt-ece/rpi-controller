@@ -1,4 +1,5 @@
 import os
+import time
 
 from controller import StateMachine, GPIOHandler
 from database import DataStore, LiveData as lD
@@ -21,8 +22,9 @@ class Controller:
                 # self.gpio.init_pot()
                 self.gpio.test_setup()
 
-                self.check_toggle()
-                self.state_machine.run()
+                self.gpio.test_run()
+                time.sleep(0.1)
+                # self.state_machine.run()
                 # TODO: add other run functions...
 
         except Exception as e:
