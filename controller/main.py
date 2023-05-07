@@ -1,7 +1,7 @@
 import os
 import time
 
-from controller import DriveStateMachine, GPIOHandler
+from controller import GPIOHandler, SerialPeripheralInterface
 from database import DataStore, LiveData as lD
 
 
@@ -9,9 +9,10 @@ class Controller:
     def __init__(self):
         self.data_store = DataStore()
         self.gpio = GPIOHandler()
-        # self.state_machine = StateMachine()
+        self.spi = SerialPeripheralInterface()
 
     def run(self):
+        # initialize GpioHandler
 
         try:
             self.data_store.set(lD.CONTROLLER_ONLINE, True)
@@ -21,6 +22,8 @@ class Controller:
                 # self.gpio.init_xpndr()
                 # self.gpio.init_pot()
                 print("stuff... things... etc...")
+
+
 
                 time.sleep(0.1)
                 # self.state_machine.run()

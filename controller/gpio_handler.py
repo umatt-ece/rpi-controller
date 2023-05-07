@@ -56,21 +56,16 @@ class GPIOHandler:
         pass
 
     def init_pins(self):
-        # initial
+        # initialize pins
         for pin in [Pin.CLK, Pin.MOSI, Pin.POT_SELECT, Pin.ADC_SELECT, Pin.POWER_DOWN, Pin.GPIO1_SELECT, Pin.GPIO2_SELECT, Pin.GPIO3_SELECT, Pin.GPIO4_SELECT]:
             self.init_output(pin)
         for pin in [Pin.MISO, Pin.ACCESSORY_POWER]:
             self.init_input(pin)
-
-        GPIO.output(Pin.CLK.value, 0)
-        GPIO.output(Pin.MOSI.value, 0)
-        GPIO.output(Pin.POT_SELECT.value, 1)
-        GPIO.output(Pin.ADC_SELECT.value, 1)
-        GPIO.output(Pin.GPIO1_SELECT.value, 1)
-        GPIO.output(Pin.GPIO2_SELECT.value, 1)
-        GPIO.output(Pin.GPIO3_SELECT.value, 1)
-        GPIO.output(Pin.GPIO4_SELECT.value, 1)
-        GPIO.output(Pin.POWER_DOWN.value, 0)
+        # set default values
+        for pin in [Pin.POT_SELECT, Pin.ADC_SELECT, Pin.GPIO1_SELECT, Pin.GPIO2_SELECT, Pin.GPIO3_SELECT, Pin.GPIO4_SELECT]:
+            self.set_pin(pin, 1)
+        for pin in [Pin.CLK, Pin.MOSI, Pin.POWER_DOWN]:
+            self.set_pin(pin, 0)
 
     def write_gpio(self, slave, byte, gpio: str):
         # # TODO: should probably make some sort of GPIO class abstraction...

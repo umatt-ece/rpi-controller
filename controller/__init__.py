@@ -7,4 +7,5 @@ else:
     # If we are running locally, import a dummy GpioHandler class
     from .gpio_handler import GPIOHandlerDummy as GPIOHandler
 
-from .drive_state_machine import DriveStateMachine
+# from .drive_state_machine import DriveStateMachine
+from .serial_peripheral_interface import SerialPeripheralInterface
