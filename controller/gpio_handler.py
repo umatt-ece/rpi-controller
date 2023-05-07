@@ -86,8 +86,8 @@ class GPIOHandler:
     def test_setup(self):
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
-        GPIO.setup(GpioPin.TEST_PIN, GPIO.OUT)
-        GPIO.output(GpioPin.TEST_PIN, 0)
+        GPIO.setup(GpioPin.TEST_PIN.value, GPIO.OUT)
+        GPIO.output(GpioPin.TEST_PIN.value, 0)
 
     def test_run(self):
         if self.test != self.data_store.get(lD.TEST_PARAM):
