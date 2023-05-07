@@ -16,10 +16,12 @@ class Controller:
             self.data_store.set(lD.CONTROLLER_ONLINE, True)
             while True:
                 # TODO: add initialization functions...
-                self.gpio.init_gpio()
-                self.gpio.init_xpndr()
-                self.gpio.init_pot()
+                # self.gpio.init_gpio()
+                # self.gpio.init_xpndr()
+                # self.gpio.init_pot()
+                self.gpio.test_setup()
 
+                self.check_toggle()
                 self.state_machine.run()
                 # TODO: add other run functions...
 

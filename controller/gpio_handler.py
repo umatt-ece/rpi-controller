@@ -1,6 +1,7 @@
 from enum import Enum
 
 from controller import int_to_binary, binary_to_decimal
+from database import DataStore, LiveData as lD
 
 try:
     # TODO: the old controller used this library
@@ -30,6 +31,9 @@ class GpioPin(Enum):
 class GPIOHandler:
     def __init__(self):
         print("Initializing GPIO Handler...")
+
+        self.data_store = DataStore()
+        self.test = self.data_store.get(lD.TEST_PARAM)
 
     def init_pot(self):
         value = 1.0
@@ -69,8 +73,6 @@ class GPIOHandler:
         GPIO.setup(GpioPin.GPIO4_SELECT, GPIO.OUT)
         GPIO.setup(GpioPin.ACCESSORY_POWER, GPIO.IN)
 
-        GPIO.setup(GpioPin.TEST_PIN, GPIO.OUT)
-
         GPIO.output(GpioPin.CLK, 0)
         GPIO.output(GpioPin.MOSI, 0)
         GPIO.output(GpioPin.POT_SELECT, 1)
@@ -81,10 +83,16 @@ class GPIOHandler:
         GPIO.output(GpioPin.GPIO4_SELECT, 1)
         GPIO.output(GpioPin.POWER_DOWN, 0)
 
+    def test_setup(self):
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setwarnings(False)
+        GPIO.setup(GpioPin.TEST_PIN, GPIO.OUT)
         GPIO.output(GpioPin.TEST_PIN, 0)
 
-    def toggle_test(self, value):
-        GPIO.output(GpioPin.TEST_PIN, 1 if value else 0)
+    def test_run(self, value):
+        if self.test != self.data_store.get(lD.TEST_PARAM):
+            self.test = self.data_store.get(lD.TEST_PARAM)
+            GPIO.output(GpioPin.TEST_PIN, 1 if self.test else 0)
 
     def write_gpio(self, slave, byte, gpio: str):
         # TODO: should probably make some sort of GPIO class abstraction...

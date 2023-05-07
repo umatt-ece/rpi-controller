@@ -378,10 +378,6 @@ class StateMachine:
         #             # GPIO.output(p_powerDown, 1)
         #             pass
 
-        if self.test != self.data_store.get(lD.TEST_PARAM):
-            self.test = self.data_store.get(lD.TEST_PARAM)
-            self.gpio.toggle_test(self.test)
-
     def run(self):
         if self.last_run + STEP_INTERVAL < time.perf_counter():
             self.last_run = time.perf_counter()
