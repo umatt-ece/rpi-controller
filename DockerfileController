@@ -2,7 +2,9 @@ FROM python:3.9
 
 RUN apt-get update && apt-get -y install sudo
 
-RUN useradd -m docker && echo "docker:docker" | chpasswd && adduser docker sudo
+RUN adduser --disabled-password --gecos '' docker
+RUN adduser docker sudo
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 USER docker
 
@@ -17,4 +19,4 @@ WORKDIR /controller
 
 COPY . .
 
-CMD ["sudo", "-S", "python", "main.py", "<", "password.txt"]
+CMD ["sudo", "python", "main.py"]
