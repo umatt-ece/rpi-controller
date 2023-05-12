@@ -1,3 +1,5 @@
+import time
+
 from controller import GPIOHandler
 from common import RpiPin as Pin
 
@@ -10,16 +12,16 @@ class SerialPeripheralInterface():
     def write_message(self, channel: Pin, message: list[int]):
         print(f"sending message: {message}")
         self.gpio.set_pin(channel, 0)
-        # time.sleep(0.005)
+        time.sleep(0.005)
         for entry in message:
             self.gpio.set_pin(Pin.MOSI, entry)
             self.gpio.set_pin(Pin.CLK, 1)
-            # time.sleep(0.005)
+            time.sleep(0.005)
             self.gpio.set_pin(Pin.CLK, 0)
-            # time.sleep(0.005)
+            time.sleep(0.005)
         self.gpio.set_pin(Pin.MOSI, 0)
         self.gpio.set_pin(channel, 1)
-        # time.sleep(0.005)
+        time.sleep(0.005)
 
     def read_message(self, channel: Pin, message: list[int], bits: int) -> list:
         read = []
