@@ -265,6 +265,37 @@ class DriveStateMachine:
     def test_step(self):
         print("Testing...")
 
+        print("GPIO1: A-side input, B-side output, (blink & read)")
+        self._xpndr.write_gpio(1, "B", [1, 1, 1, 1, 1, 1, 1, 1])
+        self._xpndr.read_gpio(1, "A")
+        time.sleep(1)
+        self._xpndr.write_gpio(1, "B", [0, 0, 0, 0, 0, 0, 0, 0])
+        self._xpndr.read_gpio(1, "A")
+        time.sleep(1)
+
+        print("GPIO2: A-side input, B-side input, (read)")
+        self._xpndr.read_gpio(2, "A")
+        self._xpndr.read_gpio(2, "B")
+        time.sleep(1)
+
+        print("GPIO3: A-side output, B-side input, (blink & read)")
+        self._xpndr.write_gpio(3, "A", [1, 1, 1, 1, 1, 1, 1, 1])
+        self._xpndr.read_gpio(3, "B")
+        time.sleep(1)
+        self._xpndr.write_gpio(3, "A", [0, 0, 0, 0, 0, 0, 0, 0])
+        self._xpndr.read_gpio(3, "B")
+        time.sleep(1)
+
+        print("GPIO4: A-side [I, I, O, O, O, O, O, O], B-side input, (blink & read)")
+        self._xpndr.write_gpio(1, "A", [1, 1, 0, 0, 0, 0, 0, 0])
+        self._xpndr.read_gpio(1, "A")
+        self._xpndr.read_gpio(1, "B")
+        time.sleep(1)
+        self._xpndr.write_gpio(1, "A", [0, 0, 0, 0, 0, 0, 0, 0])
+        self._xpndr.read_gpio(1, "A")
+        self._xpndr.read_gpio(1, "B")
+        time.sleep(1)
+
 # def run(Quodi, Quido):
 #     initGPIO()
 #     initXPNDR()

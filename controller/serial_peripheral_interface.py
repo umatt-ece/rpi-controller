@@ -6,9 +6,15 @@ from controller import GpioHandler
 
 
 class SpiByte(Enum):
-    READ = []
-    WRITE = []
-    FFFF = []
+    GPIO_OPCODE_WRITE = [0, 1, 0, 0, 0, 0, 0, 0]
+    GPIO_OPCODE_READ = [0, 1, 0, 0, 0, 0, 0, 1]
+    GPIO_SELECT_IOCON = [0, 0, 0, 0, 1, 0, 1, 0]
+    GPIO_SELECT_DIRA = [0, 0, 0, 0, 0, 0, 0, 0]
+    GPIO_SELECT_DIRB = [0, 0, 0, 0, 0, 0, 0, 1]
+    GPIO_SELECT_PORTA = [0, 0, 0, 1, 0, 0, 1, 0]
+    GPIO_SELECT_PORTB = [0, 0, 0, 1, 0, 0, 1, 1]
+    ALL_OUTPUT = [0, 0, 0, 0, 0, 0, 0, 0]
+    ALL_INPUT = [1, 1, 1, 1, 1, 1, 1, 1]
 
 
 class SerialPeripheralInterface:
@@ -26,18 +32,14 @@ class SerialPeripheralInterface:
         self._gpio.set(Pin.MOSI, 0)
 
     def write(self, channel: Pin, message: list[int]):
-        print(f"sending message: {message}")
+        print(f"SPI: sending message: {message}")
         self._gpio.set(channel, 0)
-        time.sleep(0.005)
         for entry in message:
             self._gpio.set(Pin.MOSI, entry)
             self._gpio.set(Pin.CLK, 1)
-            time.sleep(0.005)
             self._gpio.set(Pin.CLK, 0)
-            time.sleep(0.005)
         self._gpio.set(Pin.MOSI, 0)
         self._gpio.set(channel, 1)
-        time.sleep(0.005)
 
     def read(self, channel: Pin, message: list[int], bits: int) -> list:
         read = []
@@ -50,6 +52,7 @@ class SerialPeripheralInterface:
             self._gpio.set(Pin.CLK, 1)
             read.append(self._gpio.read(Pin.MISO))
             self._gpio.set(Pin.CLK, 0)
-
         self._gpio.set(channel, 1)
-        return message
+        # read.reverse()  # ?
+        print(f"SPI: reading message: {read}")
+        return read

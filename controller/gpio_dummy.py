@@ -2,29 +2,31 @@ from typing import Union
 
 
 class GpioDummy:
-    BCM = None
-    IN = None
-    OUT = None
+    BCM = "BCM"
+    IN = "IN"
+    OUT = "OUT"
 
     def __init__(self):
         print("WARNING: This is a dummy Gpio class for testing")
+        self.inputs = {}
+        self.outputs = {}
 
     @staticmethod
-    def setmode(bcm: BCM):
-        pass
+    def setmode(mode: BCM):
+        print(f"GPIO: Mode: {mode}")
 
     @staticmethod
     def setwarnings(warnings: bool):
-        pass
+        print(f"GPIO: Warnings: {warnings}")
 
     @staticmethod
     def setup(pin: int, pin_type: Union[IN, OUT]):
-        pass
+        print(f"GPIO: Initializing pin {pin} to type '{pin_type}'")
 
     @staticmethod
     def input(pin: int):
         return 0
 
     @staticmethod
-    def output(pin: int, value: int):
+    def output(spin: int, value: int):
         pass
