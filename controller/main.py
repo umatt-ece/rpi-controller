@@ -1,38 +1,25 @@
-import os
-import time
-
-from controller import GPIOHandler, SerialPeripheralInterface
-from database import DataStore, LiveData as lD
+from controller import DriveStateMachine, LightsStateMachine
+from database import DataStore, Parameters
 
 
-class Controller:
-    def __init__(self):
+def main():
+    try:
         print("Controller starting up...")
-        self.data_store = DataStore()
-        self.gpio = GPIOHandler()
-        self.spi = SerialPeripheralInterface()
+        data_store = DataStore()
+        drive_state_machine = DriveStateMachine()
+        lights_state_machine = LightsStateMachine()
 
-    def run(self):
-        # initialize GpioHandler
+        data_store.set(Parameters.CONTROLLER_ONLINE, True)
+        print("Controller ONLINE")
+        while True:
+            drive_state_machine.run()
+            lights_state_machine.run()
 
-        try:
-            self.data_store.set(lD.CONTROLLER_ONLINE, True)
-            while True:
-                # TODO: add initialization functions...
-                # self.gpio.init_gpio()
-                # self.gpio.init_xpndr()
-                # self.gpio.init_pot()
-                print("stuff... things... etc...")
-                time.sleep(100)
-                # self.state_machine.run()
-                # TODO: add other run functions...
-
-        except Exception as e:
-            # TODO: log exceptions first...
-            self.data_store.set(lD.CONTROLLER_ONLINE, False)  # this may fail
-            raise e  # raise the error anyway so the system can crash
+    except Exception as e:
+        # TODO: log exceptions first...
+        data_store.set(Parameters.CONTROLLER_ONLINE, False)  # this may fail
+        raise e  # raise the error anyway so the system can crash
 
 
 if __name__ == "__main__":
-    umatt_controller_application = Controller()
-    umatt_controller_application.run()
+    main()

@@ -1,3 +1,5 @@
+
+
 def int_to_binary(integer: int) -> bin:
     binary_text = bin(integer)[2:]
     binary = []

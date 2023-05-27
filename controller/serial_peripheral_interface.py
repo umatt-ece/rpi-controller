@@ -1,43 +1,55 @@
 import time
+from enum import Enum
 
-from controller import GPIOHandler
-from common import RpiPin as Pin
+from controller import RpiPin as Pin
+from controller import GpioHandler
 
 
-class SerialPeripheralInterface():
+class SpiByte(Enum):
+    READ = []
+    WRITE = []
+    FFFF = []
+
+
+class SerialPeripheralInterface:
     def __init__(self):
-        self.gpio = GPIOHandler()
-        self.gpio.init_pins()
+        self._gpio = GpioHandler()
 
-    def write_message(self, channel: Pin, message: list[int]):
+        self.initialize()
+
+    def initialize(self):
+        self._gpio.init_output(Pin.CLK)
+        self._gpio.init_output(Pin.MOSI)
+        self._gpio.init_input(Pin.MISO)
+
+        self._gpio.set(Pin.CLK, 0)
+        self._gpio.set(Pin.MOSI, 0)
+
+    def write(self, channel: Pin, message: list[int]):
         print(f"sending message: {message}")
-        self.gpio.set_pin(channel, 0)
+        self._gpio.set(channel, 0)
         time.sleep(0.005)
         for entry in message:
-            self.gpio.set_pin(Pin.MOSI, entry)
-            self.gpio.set_pin(Pin.CLK, 1)
+            self._gpio.set(Pin.MOSI, entry)
+            self._gpio.set(Pin.CLK, 1)
             time.sleep(0.005)
-            self.gpio.set_pin(Pin.CLK, 0)
+            self._gpio.set(Pin.CLK, 0)
             time.sleep(0.005)
-        self.gpio.set_pin(Pin.MOSI, 0)
-        self.gpio.set_pin(channel, 1)
+        self._gpio.set(Pin.MOSI, 0)
+        self._gpio.set(channel, 1)
         time.sleep(0.005)
 
-    def read_message(self, channel: Pin, message: list[int], bits: int) -> list:
+    def read(self, channel: Pin, message: list[int], bits: int) -> list:
         read = []
-        self.gpio.set_pin(channel, 0)
+        self._gpio.set(channel, 0)
         for entry in message:
-            self.gpio.set_pin(Pin.MOSI, entry)
-            self.gpio.set_pin(Pin.CLK, 1)
-            # time.sleep(0.005)
-            self.gpio.set_pin(Pin.CLK, 0)
-            # time.sleep(0.005)
+            self._gpio.set(Pin.MOSI, entry)
+            self._gpio.set(Pin.CLK, 1)
+            self._gpio.set(Pin.CLK, 0)
         for entry in range(bits):
-            self.gpio.set_pin(Pin.CLK, 1)
-            # time.sleep(0.005)
-            read.append(self.gpio.read_pin(Pin.MISO))
-            self.gpio.set_pin(Pin.CLK, 0)
-            # time.sleep(0.005)
-        self.gpio.set_pin(channel, 1)
-        # time.sleep(0.005)
+            self._gpio.set(Pin.CLK, 1)
+            read.append(self._gpio.read(Pin.MISO))
+            self._gpio.set(Pin.CLK, 0)
+
+        self._gpio.set(channel, 1)
         return message
