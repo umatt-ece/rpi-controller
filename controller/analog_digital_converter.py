@@ -32,4 +32,6 @@ class AnalogDigitalConverter:
             read.append(self._gpio.read(Pin.MISO))
 
         self._gpio.set(Pin.ADC_SELECT, 1)
-        return binary_to_decimal(read)
+        result = binary_to_decimal(read)
+        print(f"ADC: reading: {result}")
+        return result

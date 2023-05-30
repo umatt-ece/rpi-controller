@@ -296,6 +296,24 @@ class DriveStateMachine:
         self._xpndr.read_gpio(1, "B")
         time.sleep(1)
 
+        print("POT: 0.0 to 1.0 (increase)")
+        self._pot.set(0.0)
+        time.sleep(1)
+        self._pot.set(0.2)
+        time.sleep(1)
+        self._pot.set(0.4)
+        time.sleep(1)
+        self._pot.set(0.6)
+        time.sleep(1)
+        self._pot.set(0.8)
+        time.sleep(1)
+        self._pot.set(1.0)
+        time.sleep(1)
+
+        print("ADC: reading channel 1")
+        self._adc.read(1)
+        time.sleep(1)
+
 # def run(Quodi, Quido):
 #     initGPIO()
 #     initXPNDR()
