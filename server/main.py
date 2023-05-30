@@ -6,7 +6,7 @@ from starlette.responses import FileResponse
 from starlette.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
 
-from server import ClientManager, WebsocketRoutes, data_router, system_router
+from server import ClientManager, WebsocketRoutes, system_router
 
 
 def create_app() -> FastAPI:
@@ -18,7 +18,6 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    new_app.include_router(data_router)
     new_app.include_router(system_router)
     new_app.add_websocket_route('/ws', WebsocketRoutes)
     new_app.mount("/", StaticFiles(directory="vue-app", html=True), name="VueJS App")
@@ -37,14 +36,6 @@ async def vuejs_app():
 async def app_startup():
     client_manager = ClientManager()
     asyncio.create_task(client_manager.run())
-
-
-# def counting():
-#     value = 0
-#     while True:
-#         time.sleep(1)
-#         print(value)
-#         value += 1
 
 
 def main():
