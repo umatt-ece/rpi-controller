@@ -10,7 +10,7 @@ def int_to_binary(integer: int) -> bin:
     return binary
 
 
-def binary_to_decimal(message: bin) -> float:
+def binary_to_decimal(message: list) -> float:
     number = 0
     for ii in range(len(message)):
         number += message[len(message) - 1 - ii] * (2 ** ii)
