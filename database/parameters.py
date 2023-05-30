@@ -74,11 +74,6 @@ class Parameters(namedtuple("parameter", "datatype default"), enum.Enum):
         True,
     )
 
-    GEAR_LOCKOUT = (
-        list,
-        [False, False],
-    )
-
     FANS = (
         bool,
         False,
@@ -235,11 +230,6 @@ class Parameters(namedtuple("parameter", "datatype default"), enum.Enum):
     MOTOR_ENABLE_SUCCESS = (
         bool,
         False,
-    )
-
-    ACCEPTABLE_JOYSTICK_MAPS = (
-        list,
-        [0],
     )
 
     ACCELERATION_MAX = (
