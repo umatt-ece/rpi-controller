@@ -32,6 +32,11 @@
       </router-link>
     </div>
 
+    <!-- Toggle Fullscreen Button -->
+    <div class="fullscreen-button" @click="$emit('toggleFullscreen')">
+      <img :src="require('../assets/images/icons/fullscreen.png')" class="fullscreen-button" alt="Toggle Fullscreen"/>
+    </div>
+
   </div>
 </template>
 
@@ -47,7 +52,7 @@ export default {
 .header-container {
   // grid properties
   display: grid;
-  grid-template-columns: 1fr 4fr 6fr;
+  grid-template-columns: 1fr 4fr 6fr 1fr;
   gap: 0 0;
   // color
   background-color: $headerBackground;
@@ -82,7 +87,7 @@ export default {
   display: flex;
   justify-content: flex-end;
   // margin & padding
-  padding-right: 2em;
+  padding-right: 1em;
 }
 .navbar-item {
   // remove router-link styling
@@ -108,5 +113,16 @@ export default {
 .navbar-text.router-link-active {
   // font styling
   font-weight: bold; // over-ride h1 font-weight
+}
+
+/* toggle-fullscreen button */
+.fullscreen-button {
+  // grid properties
+  grid-column: 4;
+  // margin & padding
+  margin: auto 10px auto 10px;
+  // image sizing
+  max-height: 40px;
+  max-width: 40px;
 }
 </style>

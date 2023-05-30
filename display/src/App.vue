@@ -1,6 +1,8 @@
 <template>
+  <div id="app">
+  </div>
   <div class="app-grid app-container">
-    <AppHeader class="app-grid-item app-grid-header"/>
+    <AppHeader class="app-grid-item app-grid-header" @toggle-fullscreen="ToggleFullscreen"/>
     <AppControls class="app-grid-item app-grid-controls"/>
     <router-view class="app-grid-item app-grid-view"/>
     <BasicModal v-show="serviceReminder" icon="caution.png" title="Service Reminder" :description="serviceReminderText"/>
@@ -12,19 +14,38 @@ import AppHeader from "@/components/AppHeader.vue"
 import AppControls from "@/components/AppControls.vue"
 import BasicModal from "@/components/BasicModal.vue"
 import {useStore} from "vuex";
+
+let app = document.documentElement;
+
 export default {
   name: "App",
   components: { AppHeader, AppControls, BasicModal },
   data() {
     return {
+      fullscreen: false,
       serviceReminder: false,
       serviceTimeNext: 4,
       serviceTimeLast: 96,
     }
   },
+  methods: {
+    ToggleFullscreen() {
+      console.log("fullscreen toggled")
+      if (this.fullscreen) {
+        app.requestFullscreen()
+      }
+      else {
+        document.exitFullscreen()
+      }
+      this.fullscreen = !this.fullscreen
+    }
+  },
   setup() {
     const store = useStore()
     store.dispatch("liveData/update")
+  },
+  mounted() {
+    this.ToggleFullscreen()
   },
   computed: {
     serviceReminderText() {
@@ -48,7 +69,7 @@ body {
 .app-container {
   background-color: $umattWhite;
   height: 100vh;
-  width: 100vw;
+  width: 99vw;
 }
 
 /* grid layout */
