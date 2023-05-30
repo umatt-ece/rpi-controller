@@ -310,14 +310,8 @@ class DriveStateMachine:
         # self._pot.set(1.0)
         # time.sleep(1)
 
-        print("ADC: reading channel 0")
-        self._adc.read(0)
-        time.sleep(1)
         print("ADC: reading channel 1")
         self._adc.read(1)
-        time.sleep(1)
-        print("ADC: reading channel 2")
-        self._adc.read(2)
         time.sleep(1)
 
 # def run(Quodi, Quido):
