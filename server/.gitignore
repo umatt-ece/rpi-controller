@@ -1,5 +1,5 @@
 # static files (display) when running locally
-vue-app/*
+#vue-app/*
 
 # docker mapped files (volumes) when running locally
 database
