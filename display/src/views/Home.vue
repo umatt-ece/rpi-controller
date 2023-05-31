@@ -77,16 +77,16 @@ export default {
   data() {
     return {
       /* Primary Info */
-      speed: 14.3,
-      torque: 1847,
-      gear: 1,  // 0: 'park', 1: 'drive', 2: 'reverse'
+      speed: this.$store.state.speed,
+      torque: this.$store.state.torque,
+      gear: this.$store.state.gear,  // 0: 'park', 1: 'drive', 2: 'reverse'
       /* Secondary Info */
-      engineTemp: 182,
-      enginePower: 32,
-      engineSpeed: 194,
-      power: 13.6,
-      driveHours: 7.8,
-      systemTime: "09:36",
+      engineTemp: this.$store.state.engineTemp,
+      enginePower: this.$store.state.enginePower,
+      engineSpeed: this.$store.state.engineSpeed,
+      power: this.$store.state.power,
+      driveHours: this.$store.state.driveHours,
+      systemTime: this.$store.state.systemTime,
     }
   },
   computed: {

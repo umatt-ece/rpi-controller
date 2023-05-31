@@ -61,20 +61,20 @@ export default {
   components: { BasicInfo },
   data() {
     return {
-      genericInfo: "Unknown",
-      voltage: 13.9,
-      gslPosition: 0,
-      diffLockPosition: "unlocked",
-      brakeInterlock: "off",
-      seatInterlock: "on",
-      neutralInterlock: "off",
-      engineSpeed: 3590,
-      oilPressure: 50.0,
-      highVoltageSystem: "on",
-      electricMotorSpeed: 2000,
-      implementInterlock: "NA",
-      brakeAwayInterlock: "on",
-      throttleInterlock: "off"
+      genericInfo: this.$store.state.genericInfo,
+      voltage: this.$store.state.voltage,
+      gslPosition: this.$store.state.gslPosition,
+      diffLockPosition: this.$store.state.diffLockPosition,
+      brakeInterlock: this.$store.state.brakeInterlock,
+      seatInterlock: this.$store.state.seatInterlock,
+      neutralInterlock: this.$store.state.neutralInterlock,
+      engineSpeed: this.$store.state.engineSpeed,
+      oilPressure: this.$store.state.oilPressure,
+      highVoltageSystem: this.$store.state.highVoltageSystem,
+      electricMotorSpeed: this.$store.state.electricMotorSpeed,
+      implementInterlock: this.$store.state.implementInterlock,
+      brakeAwayInterlock: this.$store.state.brakeAwayInterlock,
+      throttleInterlock: this.$store.state.throttleInterlock,
     }
   }
 }
