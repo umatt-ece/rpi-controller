@@ -6,7 +6,7 @@
       <!-- Speed Info -->
       <div class="home-primary-grid-item">
         <span class="umatt-text speed-info">
-          {{ speed }}
+          {{ this.$store.state.speed }}
         </span>
         <span class="umatt-text speed-unit">
           Km/Hr
@@ -16,7 +16,7 @@
       <!-- Torque Info -->
       <div class="home-primary-grid-item">
         <span class="umatt-text torque-info">
-          {{ torque }}
+          {{ this.$store.state.torque }}
         </span>
         <span class="umatt-text torque-unit">
           RPM
