@@ -129,28 +129,28 @@ class DriveStateMachine:
                 print("DRIVE: transitioning to NEUTRAL (interlock triggered)")
 
         else:
-            if inputs["gear_bit_1"] == 0 and inputs["gear_bit_2"] == 0:
+            if inputs["forwards"] == 1 and inputs["reverse"] == 1:
                 if self._state != DriveState.PARK:
                     print("DRIVE: transitioning to PARK")
                     self._state = DriveState.PARK
                 
-            elif inputs["gear_bit_1"] == 0 and inputs["gear_bit_2"] == 1:
+            elif inputs["forwards"] == 0 and inputs["reverse"] == 1:
                 if self._state != DriveState.REVERSE:
                     print("DRIVE: transitioning to REVERSE")
                     self._state = DriveState.REVERSE
                 
-            elif inputs["gear_bit_1"] == 1 and inputs["gear_bit_2"] == 0:
+            elif inputs["forwards"] == 0 and inputs["reverse"] == 0:
                 if self._state != DriveState.NEUTRAL:
                     print("DRIVE: transitioning to NEUTRAL")
                     self._state = DriveState.NEUTRAL
             
-            elif inputs["gear_bit_1"] == 1 and inputs["gear_bit_2"] == 1:
+            elif inputs["forwards"] == 1 and inputs["reverse"] == 0:
                 if self._state != DriveState.FORWARD:
                     print("DRIVE: transitioning to FORWARD")
                     self._state = DriveState.FORWARD
     
                 elif inputs["seat"] == 1 and inputs["diff_lock"] == 0 and (1 not in self.gear_lockout) and self.bounce_timer != 0 and time.perf_counter() > self.bounce_timer + self._bounce_time_thresh_n:
-                    if inputs["gear_bit_1"] == 0 and inputs["gear_bit_2"] == 1:
+                    if inputs["forwards"] == 0 and inputs["reverse"] == 1:
                         print("DRIVE: transitioning to REVERSE")
 
     def pulse_count(self):
@@ -174,8 +174,8 @@ class DriveStateMachine:
             "diff_lock": gpio1a_values[3],
             "oil_pressure": gpio1a_values[6],
             "oil_temp": gpio1a_values[7],
-            "gear_bit_1": gpio1a_values[6],
-            "gear_bit_2": gpio1a_values[7],
+            "forwards": gpio1a_values[6],
+            "reverse": gpio1a_values[7],
         }
 
         if self._state == DriveState.NEUTRAL or self._state == DriveState.PARK:
@@ -340,67 +340,85 @@ class DriveStateMachine:
         # GPIO 4 (B) [ R_TURN,   L_TURN,  HAZARD, LIGHTS,   RUN_LIGHT, _,       COUNTER1_RS, COUNTER2_RS ]
         #              FORWARD,  REVERSE
 
-        self._xpndr.write_gpio(1, "A", [1, 0, 0, 0, 0, 0, 0, 0])
+        self._xpndr.write_gpio(3, "B", [1, 0, 0, 0, 0, 0, 0, 0])  # D_IN1
         time.sleep(1)
-        self._xpndr.write_gpio(1, "A", [0, 1, 0, 0, 0, 0, 0, 0])
+        self._xpndr.write_gpio(3, "B", [0, 1, 0, 0, 0, 0, 0, 0])  # D_IN2
         time.sleep(1)
-        self._xpndr.write_gpio(1, "A", [0, 0, 0, 1, 0, 0, 0, 0])
+        self._xpndr.write_gpio(3, "B", [0, 0, 1, 0, 0, 0, 0, 0])  # D_IN3
         time.sleep(1)
-        self._xpndr.write_gpio(1, "A", [0, 0, 0, 0, 1, 0, 0, 0])
+        self._xpndr.write_gpio(3, "B", [0, 0, 0, 1, 0, 0, 0, 0])  # D_IN4
         time.sleep(1)
-        self._xpndr.write_gpio(1, "A", [0, 0, 0, 0, 0, 1, 0, 0])
+        self._xpndr.write_gpio(3, "B", [0, 0, 0, 0, 1, 0, 0, 0])  # D_IN5
         time.sleep(1)
-        self._xpndr.write_gpio(1, "A", [0, 0, 0, 0, 0, 0, 1, 0])
+        self._xpndr.write_gpio(3, "B", [0, 0, 0, 0, 0, 1, 0, 0])  # D_IN6
         time.sleep(1)
-        self._xpndr.write_gpio(1, "A", [0, 0, 0, 0, 0, 0, 0, 1])
+        self._xpndr.write_gpio(3, "B", [0, 0, 0, 0, 0, 0, 1, 0])  # D_IN7
         time.sleep(1)
-        self._xpndr.write_gpio(1, "A", [0, 0, 0, 0, 0, 0, 0, 0])
-
-        self._xpndr.write_gpio(3, "A", [1, 0, 0, 0, 0, 0, 0, 0])
+        self._xpndr.write_gpio(1, "B", [1, 0, 0, 0, 0, 0, 0, 0])  # FAN
         time.sleep(1)
-        self._xpndr.write_gpio(3, "A", [0, 1, 0, 0, 0, 0, 0, 0])
+        self._xpndr.write_gpio(1, "B", [0, 1, 0, 0, 0, 0, 0, 0])  # PUMP
         time.sleep(1)
-        self._xpndr.write_gpio(3, "A", [0, 0, 1, 0, 0, 0, 0, 0])
+        self._xpndr.write_gpio(1, "B", [0, 0, 0, 0, 0, 0, 1, 0])  # CLUTCH
         time.sleep(1)
-        self._xpndr.write_gpio(3, "A", [0, 0, 0, 1, 0, 0, 0, 0])
+        self._xpndr.write_gpio(1, "B", [0, 0, 0, 0, 0, 0, 0, 1])  # BRAKE
         time.sleep(1)
-        self._xpndr.write_gpio(3, "A", [0, 0, 0, 0, 1, 0, 0, 0])
-        time.sleep(1)
-        self._xpndr.write_gpio(3, "A", [0, 0, 0, 0, 0, 1, 0, 0])
-        time.sleep(1)
-        self._xpndr.write_gpio(3, "A", [0, 0, 0, 0, 0, 0, 1, 0])
-        time.sleep(1)
-        self._xpndr.write_gpio(3, "A", [0, 0, 0, 0, 0, 0, 0, 1])
-        time.sleep(1)
-        self._xpndr.write_gpio(3, "A", [0, 0, 0, 0, 0, 0, 0, 0])
-
-        self._xpndr.write_gpio(4, "A", [1, 0, 0, 0, 0, 0, 0, 0])
-        time.sleep(1)
-        self._xpndr.write_gpio(4, "A", [0, 1, 0, 0, 0, 0, 0, 0])
-        time.sleep(1)
-        self._xpndr.write_gpio(4, "A", [0, 0, 0, 1, 0, 0, 0, 0])
-        time.sleep(1)
-        self._xpndr.write_gpio(4, "A", [0, 0, 0, 0, 1, 0, 0, 0])
-        time.sleep(1)
-        self._xpndr.write_gpio(4, "A", [0, 0, 0, 0, 0, 1, 0, 0])
-        time.sleep(1)
-        self._xpndr.write_gpio(4, "A", [0, 0, 0, 0, 0, 0, 1, 0])
-        time.sleep(1)
-        self._xpndr.write_gpio(4, "A", [0, 0, 0, 0, 0, 0, 0, 1])
-        time.sleep(1)
-        self._xpndr.write_gpio(4, "A", [0, 0, 0, 0, 0, 0, 0, 0])
-
-        self._xpndr.write_gpio(4, "B", [1, 0, 0, 0, 0, 0, 0, 0])
-        time.sleep(1)
-        self._xpndr.write_gpio(4, "B", [0, 1, 0, 0, 0, 0, 0, 0])
-        time.sleep(1)
-        self._xpndr.write_gpio(4, "B", [0, 0, 1, 0, 0, 0, 0, 0])
-        time.sleep(1)
-        self._xpndr.write_gpio(4, "B", [0, 0, 0, 1, 0, 0, 0, 0])
-        time.sleep(1)
-        self._xpndr.write_gpio(4, "B", [0, 0, 0, 0, 1, 0, 0, 0])
-        time.sleep(1)
-        self._xpndr.write_gpio(4, "B", [0, 0, 0, 0, 0, 0, 0, 0])
+        # self._xpndr.write_gpio(1, "A", [0, 0, 0, 1, 0, 0, 0, 0])
+        # time.sleep(1)
+        # self._xpndr.write_gpio(1, "A", [0, 0, 0, 0, 1, 0, 0, 0])
+        # time.sleep(1)
+        # self._xpndr.write_gpio(1, "A", [0, 0, 0, 0, 0, 1, 0, 0])
+        # time.sleep(1)
+        # self._xpndr.write_gpio(1, "A", [0, 0, 0, 0, 0, 0, 1, 0])
+        # time.sleep(1)
+        # self._xpndr.write_gpio(1, "A", [0, 0, 0, 0, 0, 0, 0, 1])
+        # time.sleep(1)
+        # self._xpndr.write_gpio(1, "A", [0, 0, 0, 0, 0, 0, 0, 0])
+        #
+        # self._xpndr.write_gpio(3, "A", [1, 0, 0, 0, 0, 0, 0, 0])
+        # time.sleep(1)
+        # self._xpndr.write_gpio(3, "A", [0, 1, 0, 0, 0, 0, 0, 0])
+        # time.sleep(1)
+        # self._xpndr.write_gpio(3, "A", [0, 0, 1, 0, 0, 0, 0, 0])
+        # time.sleep(1)
+        # self._xpndr.write_gpio(3, "A", [0, 0, 0, 1, 0, 0, 0, 0])
+        # time.sleep(1)
+        # self._xpndr.write_gpio(3, "A", [0, 0, 0, 0, 1, 0, 0, 0])
+        # time.sleep(1)
+        # self._xpndr.write_gpio(3, "A", [0, 0, 0, 0, 0, 1, 0, 0])
+        # time.sleep(1)
+        # self._xpndr.write_gpio(3, "A", [0, 0, 0, 0, 0, 0, 1, 0])
+        # time.sleep(1)
+        # self._xpndr.write_gpio(3, "A", [0, 0, 0, 0, 0, 0, 0, 1])
+        # time.sleep(1)
+        # self._xpndr.write_gpio(3, "A", [0, 0, 0, 0, 0, 0, 0, 0])
+        #
+        # self._xpndr.write_gpio(4, "A", [1, 0, 0, 0, 0, 0, 0, 0])
+        # time.sleep(1)
+        # self._xpndr.write_gpio(4, "A", [0, 1, 0, 0, 0, 0, 0, 0])
+        # time.sleep(1)
+        # self._xpndr.write_gpio(4, "A", [0, 0, 0, 1, 0, 0, 0, 0])
+        # time.sleep(1)
+        # self._xpndr.write_gpio(4, "A", [0, 0, 0, 0, 1, 0, 0, 0])
+        # time.sleep(1)
+        # self._xpndr.write_gpio(4, "A", [0, 0, 0, 0, 0, 1, 0, 0])
+        # time.sleep(1)
+        # self._xpndr.write_gpio(4, "A", [0, 0, 0, 0, 0, 0, 1, 0])
+        # time.sleep(1)
+        # self._xpndr.write_gpio(4, "A", [0, 0, 0, 0, 0, 0, 0, 1])
+        # time.sleep(1)
+        # self._xpndr.write_gpio(4, "A", [0, 0, 0, 0, 0, 0, 0, 0])
+        #
+        # self._xpndr.write_gpio(4, "B", [1, 0, 0, 0, 0, 0, 0, 0])
+        # time.sleep(1)
+        # self._xpndr.write_gpio(4, "B", [0, 1, 0, 0, 0, 0, 0, 0])
+        # time.sleep(1)
+        # self._xpndr.write_gpio(4, "B", [0, 0, 1, 0, 0, 0, 0, 0])
+        # time.sleep(1)
+        # self._xpndr.write_gpio(4, "B", [0, 0, 0, 1, 0, 0, 0, 0])
+        # time.sleep(1)
+        # self._xpndr.write_gpio(4, "B", [0, 0, 0, 0, 1, 0, 0, 0])
+        # time.sleep(1)
+        # self._xpndr.write_gpio(4, "B", [0, 0, 0, 0, 0, 0, 0, 0])
 
 
 DRIVE_STEP_INTERVAL = 1
