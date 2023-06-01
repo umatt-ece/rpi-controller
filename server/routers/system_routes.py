@@ -23,9 +23,14 @@ class SystemRoutes:
     @router.get(f"{sys_route}/data", tags=["data"])
     async def get_all_data(self):
         values = {}
+        i = 1
         for param in Parameters:
             values[param.name.lower()] = self._data_store.get(param)
         return values
+
+    @router.post(f"{sys_route}/toggle-diff-lock", tags=["diff-lock"])
+    async def toggle_diff_lock(self):
+        self._data_store.set(Parameters.DIFFERENTIAL_LOCK, False if self._data_store.get(Parameters.DIFFERENTIAL_LOCK) else True)
 
     @router.post(f"{sys_route}/toggle-headlight-left", tags=["lights"])
     async def toggle_headlight_left(self):
