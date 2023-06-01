@@ -1,6 +1,6 @@
 import time
 
-from controller import GpioHandler
+from controller import GpioHandler, Expander
 from database import DataStore, Parameters as Param
 
 
@@ -8,11 +8,16 @@ class LightsStateMachine:
     def __init__(self):
         self._data_store = DataStore()
         self._gpio = GpioHandler()
+        self._xpndr = Expander()
 
         self._last_runtime = time.perf_counter()
 
         self._headlight_left_state = False
         self._headlight_right_state = False
+
+    def initialize(self):
+        print("INFO: toggling tail lights")
+        self._xpndr.write_gpio(4, "B", [1, 1, 0, 0, 0, 0, 0, 0])  # tail lights
 
     def step(self):
         if self._data_store.get(Param.HEADLIGHT_LEFT) != self._headlight_left_state:

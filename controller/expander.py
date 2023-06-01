@@ -26,15 +26,15 @@ class Expander:
         self._spi.write(select, SpiByte.GPIO_OPCODE_WRITE.value + SpiByte.GPIO_SELECT_DIRA.value + config_a)  # configure pins on side A
         self._spi.write(select, SpiByte.GPIO_OPCODE_WRITE.value + SpiByte.GPIO_SELECT_DIRB.value + config_b)  # configure pins on side B
 
-    def read_gpio(self, select: int, side: str):
+    def read_gpio(self, select: int, side: str) -> list[int]:
         spi_info = self.get_pin_and_port(select, side)
         return self._spi.read(spi_info[0], SpiByte.GPIO_OPCODE_READ.value + spi_info[1].value, 8)
 
-    def write_gpio(self, select: int, side: str, message: list[int]) -> list[int]:
+    def write_gpio(self, select: int, side: str, message: list[int]):
         if len(message) != 8:
             raise Exception(f"ERROR: message must be of size {8} bits but got {len(message)} bits instead")
         spi_info = self.get_pin_and_port(select, side)
-        return self._spi.write(spi_info[0], SpiByte.GPIO_OPCODE_WRITE.value + spi_info[1].value + message)
+        self._spi.write(spi_info[0], SpiByte.GPIO_OPCODE_WRITE.value + spi_info[1].value + message)
 
     @staticmethod
     def get_pin_and_port(pin: int, port: str) -> [Pin, SpiByte]:
