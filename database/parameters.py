@@ -10,7 +10,7 @@ docker exec -it rpi-controller_database_1 redis-cli FLUSHALL
 """
 
 
-class Parameters(namedtuple("parameter", "datatype default"), enum.Enum):
+class Parameters(namedtuple("parameter", "datatype default description"), enum.Enum):
     """
     ...
     """
@@ -18,253 +18,281 @@ class Parameters(namedtuple("parameter", "datatype default"), enum.Enum):
     INITIALIZED = (
         bool,
         True,
+        "init",
     )
 
     HEADLIGHT_LEFT = (
         bool,
         False,
+        "head_l",
     )
     HEADLIGHT_RIGHT = (
         bool,
         False,
+        "head_r",
     )
 
     CONTROLLER_ONLINE = (
         bool,
         False,
+        "contr_online",
     )
 
-    INCHING = (
-        bool,
-        False,
-    )
+    # INCHING = (
+    #     bool,
+    #     False,
+    # )
 
-    BRAKE = (
-        bool,
-        False,
-    )
+    # BRAKE = (
+    #     bool,
+    #     False,
+    # )
 
-    CLUTCH = (
-        bool,
-        False,
-    )
+    # CLUTCH = (
+    #     bool,
+    #     False,
+    # )
 
-    THROTTLE = (
-        bool,
-        False,
-    )
+    # THROTTLE = (
+    #     bool,
+    #     False,
+    # )
+    #
+    # ENABLE_MOTOR = (
+    #     bool,
+    #     False,
+    # )
 
-    ENABLE_MOTOR = (
-        bool,
-        False,
-    )
+    # FORWARDS = (
+    #     bool,
+    #     False,
+    # )
+    #
+    # REVERSE = (
+    #     bool,
+    #     False,
+    # )
+    #
+    # NEUTRAL = (
+    #     bool,
+    #     True,
+    # )
+    #
+    # FANS = (
+    #     bool,
+    #     False,
+    # )
+    #
+    # PUMP = (
+    #     bool,
+    #     False,
+    # )
+    #
+    # LA_EXTEND = (
+    #     bool,
+    #     False,
+    # )
+    #
+    # LA_RETRACT = (
+    #     bool,
+    #     False,
+    # )
 
-    FORWARDS = (
-        bool,
-        False,
-    )
-
-    REVERSE = (
-        bool,
-        False,
-    )
-
-    NEUTRAL = (
-        bool,
-        True,
-    )
-
-    FANS = (
-        bool,
-        False,
-    )
-
-    PUMP = (
-        bool,
-        False,
-    )
-
-    LA_EXTEND = (
-        bool,
-        False,
-    )
-
-    LA_RETRACT = (
-        bool,
-        False,
-    )
-
-    BOUNCE_TIMER = (
-        bool,
-        False,
-    )
+    # BOUNCE_TIMER = (
+    #     bool,
+    #     False,
+    # )
 
     DIFF_SPEED = (
         bool,
         False,
+        "diff_speed",
     )
 
     MODE_MANEUVERABILITY = (
         bool,
         True,
+        "mode_maneuverability",
     )
 
     MODE_PULLING = (
         bool,
         False,
+        "mode_pulling",
     )
 
     DIFF_LOCK_REQUEST = (
         bool,
         False,
+        "diff_lock_request",
     )
 
     DIFF_UNLOCK_REQUEST = (
         bool,
         False,
+        "diff_unlock_request",
     )
 
-    JOYSTICK_MAPPING = (
-        int,
-        0,  # 0 = linear
-    )
+    # JOYSTICK_MAPPING = (
+    #     int,
+    #     0,  # 0 = linear
+    # )
 
     ACCELERATION = (
         int,
         0,  # 0 = no limitation
+        "acc",
     )
 
     DECELERATION = (
         int,
         0,  # 0 = no limitation
+        "decel",
     )
 
     INTERLOCK_OVERRIDE = (
         bool,
         False,
+        "interlock_override",
     )
 
 
     SPEED = (
         float,
         0.0,
-        # "km/h",
+        "speed",
     )
 
     RPM = (
         float,
         0.0,
-        # "RPM",
+        "rpm",
     )
 
     GEAR = (
         int,
         0,
-        # "unitless",
+        "gear",
     )
 
     OIL_TEMP = (
         float,
         0.0,
-        # "unitless",
+        "oil_temp",
     )
 
-    ELECTRIC_MOTOR_POWER = (
+    OIL_PRESSURE = (
         float,
         0.0,
-        # "unitless",
+        "oil_pressure",
     )
+
+    # ELECTRIC_MOTOR_POWER = (
+    #     float,
+    #     0.0,
+    #     # "unitless",
+    # )
 
     DIFFERENTIAL_SPEED = (
         float,
         0.0,
-        # "unitless",
+        "differential_speed",
     )
 
-    BATTERY_VOLTAGE = (
+    GSL_POSITION = (
         float,
         0.0,
-        # "unitless",
+        "gsl",
     )
+
+    # BATTERY_VOLTAGE = (
+    #     float,
+    #     0.0,
+    #     # "unitless",
+    # )
 
     TURN_SIGNAL_LEFT = (
         bool,
         False,
-        # "unitless",
+        "turn_signal_l",
     )
 
     TURN_SIGNAL_RIGHT = (
         bool,
         False,
-        # "unitless",
+        "turn_signal_r",
     )
 
     TOW_MODE_LOCK = (
         bool,
         False,
-        # "unitless",
+        "tow_mode_lock",
     )
 
-    HEADLIGHTS = (
-        bool,
-        False,
-        # "unitless",
-    )
+    # HEADLIGHTS = (
+    #     bool,
+    #     False,
+    #     # "unitless",
+    # )
 
     DIFFERENTIAL_LOCK = (
         bool,
         False,
-        # "unitless",
+        "differential_lock",
     )
 
-    ACC_POWER = (
-        bool,
-        True,
-    )
+    # ACC_POWER = (
+    #     bool,
+    #     True,
+    # )
 
-    BOUNCE_TIME_THRESHOLD_N = (
-        int,
-        1,
-    )
+    # BOUNCE_TIME_THRESHOLD_N = (
+    #     int,
+    #     1,
+    # )
+    #
+    # BOUNCE_TIME_THRESHOLD = (
+    #     int,
+    #     1,
+    # )
 
-    BOUNCE_TIME_THRESHOLD = (
-        int,
-        1,
-    )
-
-    MOTOR_ENABLE_SUCCESS = (
-        bool,
-        False,
-    )
+    # MOTOR_ENABLE_SUCCESS = (
+    #     bool,
+    #     False,
+    # )
 
     ACCELERATION_MAX = (
         int,
         1,
+        "acc_max",
     )
 
     ACCELERATION_MIN = (
         int,
         1,
+        "acc_min",
     )
 
-    DIFF_MIN_TIME = (
-        float,
-        0.5,
-    )
+    # DIFF_MIN_TIME = (
+    #     float,
+    #     0.5,
+    # )
 
-    PULL_MODE_THRESHOLD = (
-        float,
-        1.0,  # arbitrary for rn
-        # "unknown",
-    )
+    # PULL_MODE_THRESHOLD = (
+    #     float,
+    #     1.0,  # arbitrary for rn
+    #     # "unknown",
+    # )
 
     MACHINE_HOURS = (
         float,
         0.0,
+        "hours",
     )
 
     POWER_DOWN = (
         bool,
         False,
+        "power_down",
     )
 
