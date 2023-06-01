@@ -13,8 +13,8 @@ const store = createStore({
       /* ------ Home ------ */
       /* Primary Info */
       speed: 0,
-      torque: 1849,
-      gear: 1,  // 0: 'park', 1: 'drive', 2: 'reverse'
+      torque: 0,
+      gear: 0,  // 0: 'park', 1: 'reverse', 2: 'neutral', 3: 'drive'
       /* Secondary Info */
       engineTemp: 182,
       enginePower: 32,
@@ -32,6 +32,7 @@ const store = createStore({
       neutralInterlock: "off",
       //engineSpeed: 3590,
       oilPressure: 50.0,
+      oilTemp: 0.0,
       highVoltageSystem: "on",
       electricMotorSpeed: 2000,
       implementInterlock: "NA",
@@ -47,6 +48,10 @@ const store = createStore({
     updateAll(state, data) {
       this.state.speed = data.speed;
       this.state.torque = data.rpm;
+      this.state.gear = data.gear;
+      this.state.oilTemp = data.oil_temp;
+      this.state.oilPressure = data.oil_pressure;
+      this.state.gslPosition = data.gsl_position;
     }
   },
   actions: {
