@@ -16,7 +16,7 @@ class Expander:
         for pin in [Pin.GPIO1_SELECT, Pin.GPIO2_SELECT, Pin.GPIO3_SELECT, Pin.GPIO4_SELECT]:
             self._gpio.set(pin, 1)
 
-        self.init_gpio(Pin.GPIO1_SELECT, SpiByte.ALL_OUTPUT.value, SpiByte.ALL_INPUT.value)  # peripherals 'A' and 'B'
+        self.init_gpio(Pin.GPIO1_SELECT, SpiByte.ALL_INPUT.value, SpiByte.ALL_OUTPUT.value)  # peripherals 'A' and 'B'
         # self.init_gpio(Pin.GPIO2_SELECT, SpiByte.ALL_INPUT.value, SpiByte.ALL_INPUT.value)
         self.init_gpio(Pin.GPIO3_SELECT, SpiByte.ALL_OUTPUT.value, SpiByte.ALL_OUTPUT.value)  # sevcon on 'A'
         self.init_gpio(Pin.GPIO4_SELECT, SpiByte.ALL_OUTPUT.value, [0, 0, 1, 1, 1, 1, 1, 1])  # peripherals 'A' and 'B'
