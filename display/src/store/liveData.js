@@ -2,7 +2,7 @@
 const liveData = {
   namespaced: true,
   state: {
-    data1: 0,
+    data1: 14,
     data2: "",
     data3: []
   },
@@ -17,7 +17,7 @@ const liveData = {
       state.data3 = value
     }
   },
-  actions: { }
+  actions: {}
 }
 
 export default liveData
