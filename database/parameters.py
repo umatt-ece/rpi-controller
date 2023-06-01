@@ -119,6 +119,11 @@ class Parameters(namedtuple("parameter", "datatype default"), enum.Enum):
         False,
     )
 
+    DIFF_UNLOCK_REQUEST = (
+        bool,
+        False,
+    )
+
     JOYSTICK_MAPPING = (
         int,
         0,  # 0 = linear
@@ -139,12 +144,10 @@ class Parameters(namedtuple("parameter", "datatype default"), enum.Enum):
         False,
     )
 
-
-    # SPEED = (
-    #     float,
-    #     0.0,
-    #     "km/h",
-    # )
+    SPEED = (
+        float,
+        0.0,
+    )
     #
     # RPM = (
     #     float,
@@ -256,5 +259,10 @@ class Parameters(namedtuple("parameter", "datatype default"), enum.Enum):
     MACHINE_HOURS = (
         float,
         0.0,
+    )
+
+    POWER_DOWN = (
+        bool,
+        False,
     )
 
