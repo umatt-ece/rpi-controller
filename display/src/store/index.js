@@ -2,6 +2,7 @@ import { createStore } from "vuex"
 
 import liveData from "@/store/liveData"
 import storedData from "@/store/storedData"
+// import BaseService from "@/services/baseService";
 
 const store = createStore({
   modules: {
@@ -11,7 +12,7 @@ const store = createStore({
     title: "Vuex Store",
       /* ------ Home ------ */
       /* Primary Info */
-      speed: liveData.state.data1,
+      speed: 0,
       torque: 1849,
       gear: 1,  // 0: 'park', 1: 'drive', 2: 'reverse'
       /* Secondary Info */
@@ -43,19 +44,20 @@ const store = createStore({
     }
   },
   mutations: {
-    updateSpeed(state, speed) {
-      state.speed = speed;
+    updateAll(state, data) {
+      this.state.speed = data.speed;
+      this.state.torque = data.rpm;
     }
   },
   actions: {
-    fetchSpeed({ commit }) {
-      fetch('/sys/get_speed')
+    fetchAll({ commit }) {
+      fetch('http://localhost:8577/sys/data')
           .then(response => response.json())
           .then(data => {
-            commit('updateSpeed', data);
+            commit('updateAll', data);
           })
           .catch(error => {
-            console.error('Error fetching speed:', error);
+            console.error('Error fetching data:', error);
           });
     },
   },
