@@ -258,7 +258,8 @@ class DriveStateMachine:
 
         # set outputs
         self._xpndr.write_gpio(1, "B", [self.brake, self.clutch, 0, 0, 0, 0, self.pump, self.fan])
-        self._xpndr.write_gpio(4, "B", [0, self.inching, 0, self.reverse, self.forward, self.enable_motor, 0, 0])
+        # self._xpndr.write_gpio(4, "B", [0, self.inching, 0, self.reverse, self.forward, self.enable_motor, 0, 0])
+        self._xpndr.write_gpio(4, "B", [self.inching, 0, 0, 0, self.enable_motor, 0, self.reverse, self.forward])
         self._pot.set(self.throttle)
 
         # set values
