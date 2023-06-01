@@ -112,7 +112,7 @@ export default {
       this.towMode = (this.towMode + 1) % 2
     },
     DiffLockButtonClicked() {
-      console.log('button 5 clicked...')
+      fetch('http://localhost:8577/sys/toggle-diff-lock')
       this.diffLock = !this.diffLock
     },
     TestButton() {
