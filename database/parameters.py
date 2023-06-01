@@ -144,76 +144,78 @@ class Parameters(namedtuple("parameter", "datatype default"), enum.Enum):
         False,
     )
 
+
     SPEED = (
         float,
         0.0,
+        # "km/h",
     )
-    #
-    # RPM = (
-    #     float,
-    #     0.0,
-    #     "RPM",
-    # )
-    #
-    # GEAR = (
-    #     int,
-    #     0,
-    #     "unitless",
-    # )
-    #
-    # OIL_TEMP = (
-    #     float,
-    #     0.0,
-    #     "unitless",
-    # )
-    #
-    # ELECTRIC_MOTOR_POWER = (
-    #     float,
-    #     0.0,
-    #     "unitless",
-    # )
-    #
-    # DIFFERENTIAL_SPEED = (
-    #     float,
-    #     0.0,
-    #     "unitless",
-    # )
-    #
-    # BATTERY_VOLTAGE = (
-    #     float,
-    #     0.0,
-    #     "unitless",
-    # )
-    #
-    # TURN_SIGNAL_LEFT = (
-    #     bool,
-    #     False,
-    #     "unitless",
-    # )
-    #
-    # TURN_SIGNAL_RIGHT = (
-    #     bool,
-    #     False,
-    #     "unitless",
-    # )
-    #
-    # TOW_MODE_LOCK = (
-    #     bool,
-    #     False,
-    #     "unitless",
-    # )
-    #
-    # HEADLIGHTS = (
-    #     bool,
-    #     False,
-    #     "unitless",
-    # )
-    #
-    # DIFFERENTIAL_LOCK = (
-    #     bool,
-    #     False,
-    #     "unitless",
-    # )
+
+    RPM = (
+        float,
+        0.0,
+        # "RPM",
+    )
+
+    GEAR = (
+        int,
+        0,
+        # "unitless",
+    )
+
+    OIL_TEMP = (
+        float,
+        0.0,
+        # "unitless",
+    )
+
+    ELECTRIC_MOTOR_POWER = (
+        float,
+        0.0,
+        # "unitless",
+    )
+
+    DIFFERENTIAL_SPEED = (
+        float,
+        0.0,
+        # "unitless",
+    )
+
+    BATTERY_VOLTAGE = (
+        float,
+        0.0,
+        # "unitless",
+    )
+
+    TURN_SIGNAL_LEFT = (
+        bool,
+        False,
+        # "unitless",
+    )
+
+    TURN_SIGNAL_RIGHT = (
+        bool,
+        False,
+        # "unitless",
+    )
+
+    TOW_MODE_LOCK = (
+        bool,
+        False,
+        # "unitless",
+    )
+
+    HEADLIGHTS = (
+        bool,
+        False,
+        # "unitless",
+    )
+
+    DIFFERENTIAL_LOCK = (
+        bool,
+        False,
+        # "unitless",
+    )
 
     ACC_POWER = (
         bool,
@@ -250,11 +252,11 @@ class Parameters(namedtuple("parameter", "datatype default"), enum.Enum):
         0.5,
     )
 
-    # PULL_MODE_THRESHOLD = (
-    #     float,
-    #     1.0,  # arbitrary for rn
-    #     "unknown",
-    # )
+    PULL_MODE_THRESHOLD = (
+        float,
+        1.0,  # arbitrary for rn
+        # "unknown",
+    )
 
     MACHINE_HOURS = (
         float,
