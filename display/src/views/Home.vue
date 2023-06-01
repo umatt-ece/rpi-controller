@@ -36,23 +36,23 @@
     <div class="home-secondary-grid home-secondary-container">
       <!-- Engine Temperature Info -->
       <div class="home-secondary-grid-item">
-        <BasicInfo icon="temp-half.png" description="Engine Temperature" :value="engineTemp" unit="°C" class="home-basic-info"/>
+        <BasicInfo icon="temp-half.png" description="Oil Temperature" :value="this.$store.state.oilTemp" unit="°C" class="home-basic-info"/>
       </div>
 
       <!-- Engine Power Info -->
       <div class="home-secondary-grid-item">
-        <BasicInfo icon="engine-battery.png" description="Engine Power" :value="enginePower" unit="%" class="home-basic-info"/>
+        <BasicInfo icon="engine-battery.png" description="Oil Pressure" :value="this.$store.state.oilPressure" unit="PSI" class="home-basic-info"/>
       </div>
 
       <!-- Engine Speed Info -->
       <div class="home-secondary-grid-item">
-        <BasicInfo icon="engine-belt.png" description="Engine Speed" :value="engineSpeed" unit="RPM" class="home-basic-info"/>
+        <BasicInfo icon="engine-belt.png" description="GSL Position" :value="this.$store.state.gslPosition" unit="°" class="home-basic-info"/>
       </div>
 
       <!-- Power Info -->
-      <div class="home-secondary-grid-item">
-        <BasicInfo icon="power-bolt.png" description="Power" :value="power" unit="V" class="home-basic-info"/>
-      </div>
+<!--      <div class="home-secondary-grid-item">-->
+<!--        <BasicInfo icon="power-bolt.png" description="Power" :value="power" unit="V" class="home-basic-info"/>-->
+<!--      </div>-->
 
       <!-- Drive Hours Info -->
       <div class="home-secondary-grid-item">
@@ -79,7 +79,7 @@ export default {
       /* Primary Info */
       speed: this.$store.state.speed,
       torque: this.$store.state.torque,
-      gear: this.$store.state.gear,  // 0: 'park', 1: 'drive', 2: 'reverse'
+      gear: this.$store.state.gear,  // 0: 'park', 1: 'reverse', 2: 'neutral', 3: 'drive'
       /* Secondary Info */
       engineTemp: this.$store.state.engineTemp,
       enginePower: this.$store.state.enginePower,
@@ -91,12 +91,14 @@ export default {
   },
   computed: {
     GearText() {
-      if (this.gear === 0) {
+      if (this.$store.state.gear === 0) {
         return "P"
-      } else if (this.gear === 1) {
-        return "D"
-      } else if (this.gear === 2) {
+      } else if (this.$store.state.gear === 1) {
         return "R"
+      } else if (this.$store.state.gear === 2) {
+        return "N"
+      } else if (this.$store.state.gear === 3) {
+        return "D"
       } else {
         return ""
       }
