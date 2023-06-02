@@ -112,7 +112,23 @@ export default {
       this.towMode = (this.towMode + 1) % 2
     },
     DiffLockButtonClicked() {
-      fetch('http://localhost:8577/sys/toggle-diff-lock')
+      fetch('http://localhost:8577/sys/toggle-diff-lock', {
+        method: 'POST',
+      })
+        .then(response => {
+          if (response.ok) {
+            // Success, handle the response
+            console.log('Differential lock toggled successfully');
+            // Perform any additional actions if needed
+          } else {
+            // Error, handle the response
+            console.error('Error toggling differential lock');
+          }
+        })
+        .catch(error => {
+          // Network or other error occurred
+          console.error('Request failed:', error);
+        });
       this.diffLock = !this.diffLock
     },
     TestButton() {
