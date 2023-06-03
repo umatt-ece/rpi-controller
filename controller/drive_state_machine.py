@@ -266,8 +266,8 @@ class DriveStateMachine:
 
     def run(self):
         if time.perf_counter() >= self._last_runtime + DRIVE_STEP_INTERVAL:
-            # self.step()
-            self.test_step()  # TODO: switch back to main step
+            self.step()
+            # self.test_step()  # TODO: switch back to main step
             self._last_runtime = time.perf_counter()
 
     def test_step(self):
