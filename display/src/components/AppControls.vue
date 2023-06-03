@@ -72,7 +72,7 @@ export default {
       headlightState: 0,  // 0: 'off', 1: 'low', 2: 'high'
       leftIndicatorActive: false,
       rightIndicatorActive: false,
-      towMode: 0,  // 0: 'manual', 1: 'automatic'
+      towMode: 1,  // 0: 'manual', 1: 'automatic'
       diffLock: false,
     }
   },
@@ -107,7 +107,24 @@ export default {
       console.log("unknown button function...")
     },
     TowModeButtonClicked() {
-      console.log("tow mode toggles")
+      fetch('http://localhost:8577/sys/toggle-tow-mode', {
+        method: 'POST',
+      })
+        .then(response => {
+          if (response.ok) {
+            // Success, handle the response
+            console.log('Tow mode toggled successfully');
+            // Perform any additional actions if needed
+          } else {
+            // Error, handle the response
+            console.error('Error toggling tow mode');
+          }
+        })
+        .catch(error => {
+          // Network or other error occurred
+          console.error('Request failed:', error);
+        });
+
       // cycle values between 0 -> 1 -> 0 ...
       this.towMode = (this.towMode + 1) % 2
     },
