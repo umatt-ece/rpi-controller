@@ -124,34 +124,23 @@ class DriveStateMachine:
         self._data_store.set(Parameters.SPEED, self.throttle)
 
     def transition(self, inputs: dict):
-        if inputs["seat"] == 0:  # TODO: add other interlocks
+        # if inputs["seat"] == 0:  # TODO: add other interlocks
+        #     if self._state != DriveState.NEUTRAL:
+        #         print("DRIVE: transitioning to NEUTRAL (interlock triggered)")
+        #
+        # else:
+        if inputs["forwards"] == 0 and inputs["reverse"] == 0:
             if self._state != DriveState.NEUTRAL:
-                print("DRIVE: transitioning to NEUTRAL (interlock triggered)")
-
-        else:
-            if inputs["forwards"] == 1 and inputs["reverse"] == 1:
-                if self._state != DriveState.PARK:
-                    print("DRIVE: transitioning to PARK")
-                    self._state = DriveState.PARK
-                
-            elif inputs["forwards"] == 0 and inputs["reverse"] == 1:
-                if self._state != DriveState.REVERSE:
-                    print("DRIVE: transitioning to REVERSE")
-                    self._state = DriveState.REVERSE
-                
-            elif inputs["forwards"] == 0 and inputs["reverse"] == 0:
-                if self._state != DriveState.NEUTRAL:
-                    print("DRIVE: transitioning to NEUTRAL")
-                    self._state = DriveState.NEUTRAL
-            
-            elif inputs["forwards"] == 1 and inputs["reverse"] == 0:
-                if self._state != DriveState.FORWARD:
-                    print("DRIVE: transitioning to FORWARD")
-                    self._state = DriveState.FORWARD
-    
-                elif inputs["seat"] == 1 and inputs["diff_lock"] == 0 and (1 not in self.gear_lockout) and self.bounce_timer != 0 and time.perf_counter() > self.bounce_timer + self._bounce_time_thresh_n:
-                    if inputs["forwards"] == 0 and inputs["reverse"] == 1:
-                        print("DRIVE: transitioning to REVERSE")
+                print("DRIVE: transitioning to NEUTRAL")
+                self._state = DriveState.NEUTRAL
+        elif inputs["forwards"] == 0 and inputs["reverse"] == 1:
+            if self._state != DriveState.REVERSE:
+                print("DRIVE: transitioning to REVERSE")
+                self._state = DriveState.REVERSE
+        elif inputs["forwards"] == 1 and inputs["reverse"] == 0:
+            if self._state != DriveState.FORWARD:
+                print("DRIVE: transitioning to FORWARD")
+                self._state = DriveState.FORWARD
 
     def pulse_count(self):
         if time.perf_counter() - self._last_runtime_diff > self._diff_min_time:
@@ -161,10 +150,15 @@ class DriveStateMachine:
             self._xpndr.write_gpio(3, "A", [0, 0, 0, 0, 0, 0, 0, 0])
             self._last_runtime_diff = time.perf_counter()
 
+    @staticmethod
+    def calc_throttle(ground_speed_lever: float):
+        return ground_speed_lever / 2800.0  # ((joystick - 584)/2802.)**4
+
     def step(self):
         self.update_values()
 
         gpio1a_values = self._xpndr.read_gpio(1, "A")
+        gpio4a_values = self._xpndr.read_gpio(4, "A")
         ground_speed_lever = self._adc.read(1)
 
         inputs = {
@@ -172,10 +166,9 @@ class DriveStateMachine:
             "brake_2": gpio1a_values[1],
             "seat": gpio1a_values[2],
             "diff_lock": gpio1a_values[3],
-            "oil_pressure": gpio1a_values[6],
-            "oil_temp": gpio1a_values[7],
-            "forwards": gpio1a_values[6],
-            "reverse": gpio1a_values[7],
+            "reverse": gpio4a_values[0],
+            "forwards": gpio4a_values[1],
+            "gsl": ground_speed_lever,
         }
 
         if self._state == DriveState.NEUTRAL or self._state == DriveState.PARK:
@@ -206,7 +199,7 @@ class DriveStateMachine:
             self.reverse = 0
 
             if ground_speed_lever >= 843:
-                self.throttle = (ground_speed_lever - 843) / 2507.
+                self.throttle = self.calc_throttle(ground_speed_lever)
                 self.enable_motor = 1
             else:
                 self.throttle = 0.0
@@ -224,7 +217,7 @@ class DriveStateMachine:
             self.reverse = 0
 
             if ground_speed_lever >= 548:
-                self.throttle = (ground_speed_lever - 584) / 2802.0  # ((joystick - 584)/2802.)**4
+                self.throttle = self.calc_throttle(ground_speed_lever)
                 self.enable_motor = 1
             else:
                 self.throttle = 0.0
@@ -249,7 +242,8 @@ class DriveStateMachine:
                 self.enable_motor = 0
 
             if ground_speed_lever >= 843:
-                self.throttle = ((ground_speed_lever - 843) / 2507.0) ** 2
+                self.throttle = self.calc_throttle(ground_speed_lever)
+                # self.throttle = ((ground_speed_lever - 843) / 2507.0) ** 2
             else:
                 self.throttle = 0.0
 
@@ -257,10 +251,11 @@ class DriveStateMachine:
         self.pulse_count()
 
         # set outputs
-        self._xpndr.write_gpio(1, "B", [self.brake, self.clutch, 0, 0, 0, 0, self.pump, self.fan])
+        # self._xpndr.write_gpio(1, "B", [self.brake, self.clutch, 0, 0, 0, 0, self.pump, self.fan])
         # self._xpndr.write_gpio(4, "B", [0, self.inching, 0, self.reverse, self.forward, self.enable_motor, 0, 0])
         # self._xpndr.write_gpio(4, "B", [self.inching, 0, 0, 0, self.enable_motor, 0, self.reverse, self.forward])  # bad maybe...
-        self._xpndr.write_gpio(4, "B", [0, self.inching, 0, self.reverse, self.forward, self.enable_motor, 0, 0])
+        self._xpndr.write_gpio(1, "B", [self.fan, self.pump, 0, self.la_extend, self.la_retract, 0, self.clutch, self.brake])
+        self._xpndr.write_gpio(3, "B", [0, self.inching, 0, self.reverse, self.forward, self.enable_motor, 0, 0])
         self._pot.set(self.throttle)
 
         # set values
