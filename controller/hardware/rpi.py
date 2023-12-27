@@ -3,7 +3,8 @@ from typing import Union, Any
 import logging
 import math
 
-from controller.hardware import Pin, SerialPeripheralInterface, SpiDevice
+from .peripherals import Pin
+from .spi import SerialPeripheralInterface, SpiDevice
 
 J_HEADER_PINS = 40
 
@@ -15,8 +16,8 @@ class RPiModel(Enum):
 
 class RaspberryPi:
     _pinout = {}
-    devices = {}
     _spi_config = {}
+    devices = {}
 
     def __init__(self, model: RPiModel, logger: logging.Logger = None) -> None:
         self._logger = logger or logging.getLogger("hardware")
@@ -156,3 +157,7 @@ pinout_mapping = {
         40: [21, "GPIO", "GPIO", "General Purpose I/O"],
     },
 }
+
+
+rpi = RaspberryPi(RPiModel.RPI4B)
+rpi.print_pinout()

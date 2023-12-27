@@ -19,7 +19,7 @@ class Pin:
     @staticmethod
     def configure():
         Gpio.setmode(Gpio.BOARD)  # Use BCM mapping
-        Gpio.setwarnings(False)  # Ignore warnings
+        Gpio.setwarnings(False)   # Ignore warnings
 
     def set_direction(self, direction: str) -> None:
         if direction == "input" or direction == "in":

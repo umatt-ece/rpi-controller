@@ -1,6 +1,6 @@
 import logging
 
-from controller.hardware import Pin
+from .peripherals import Pin
 
 
 # class SpiByte(Enum):
@@ -44,7 +44,7 @@ class SerialPeripheralInterface:
             if bit == "0":
                 self._mosi.write(0)
             elif bit == "1":
-                self._mosi.write(0)
+                self._mosi.write(1)
             # Toggle clock
             self._clock.write(1)
             self._clock.write(0)
@@ -81,7 +81,7 @@ class SerialPeripheralInterface:
 class SpiDevice:
     _interface = None
 
-    def __init__(self, name: str, address: str, logger: logging.Logger):
+    def __init__(self, name: str, address: str, logger: logging.Logger = None):
         self._logger = logger or logging.getLogger("hardware")
         self._name = name
         self._address = address

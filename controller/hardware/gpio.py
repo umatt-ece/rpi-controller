@@ -1,4 +1,4 @@
-from controller.hardware import SpiDevice
+from .spi import SpiDevice
 
 
 class GpioController(SpiDevice):
