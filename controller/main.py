@@ -1,24 +1,23 @@
-from controller import DriveStateMachine, LightsStateMachine
-from database import DataStore, Parameters
+import logging
+
+from hardware import RaspberryPi, RPiModel, SpiDevice
 
 
 def main():
     try:
-        print("Controller starting up...")
-        data_store = DataStore()
-        drive_state_machine = DriveStateMachine()
-        lights_state_machine = LightsStateMachine()
+        gpio = SpiDevice("gpio", "0101001")
 
-        data_store.set(Parameters.CONTROLLER_ONLINE, True)
-        print("Controller ONLINE")
-        while True:
-            drive_state_machine.run()
-            lights_state_machine.run()
+        rpi = RaspberryPi(RPiModel.RPI4B)
+        rpi.print_pinout()
+        rpi.configure_spi("GPIO11", "GPIO10", "GPIO9")
+        rpi.add_spi_device(gpio, "GPIO6")
+
+        rpi.spi_write("gpio", "0000111100110011")
+        rpi.spi_read("gpio", 1)
 
     except Exception as e:
         # TODO: log exceptions first...
-        data_store.set(Parameters.CONTROLLER_ONLINE, False)  # this may fail
-        raise e  # raise the error anyway so the system can crash
+        print("Oh no, something went wrong...")
 
 
 if __name__ == "__main__":

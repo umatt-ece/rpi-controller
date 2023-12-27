@@ -1,6 +1,4 @@
 
-from controller import GpioHandler, SerialPeripheralInterface, RpiPin as Pin, int_to_binary
-
 
 class Potentiometer:
     def __init__(self):

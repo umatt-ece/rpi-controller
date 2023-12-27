@@ -1,31 +1,32 @@
+import logging
 from typing import Union
+from random import randint
 
 
-class GpioDummy:
+class RPiGPIO:
     BCM = "BCM"
+    BOARD = "BOARD"
     IN = "IN"
     OUT = "OUT"
 
     def __init__(self):
-        print("WARNING: This is a dummy Gpio class for testing")
-        self.inputs = {}
-        self.outputs = {}
+        print("WARNING: You are currently using a dummy GPIO class `RPiGPIO` designed for integration testing")
 
     @staticmethod
     def setmode(mode: BCM):
-        print(f"GPIO: Mode: {mode}")
+        print(f"RPiGPIO: Mode: {mode}")
 
     @staticmethod
     def setwarnings(warnings: bool):
-        print(f"GPIO: Warnings: {warnings}")
+        print(f"RPiGPIO: Warnings: {warnings}")
 
     @staticmethod
     def setup(pin: int, pin_type: Union[IN, OUT]):
-        print(f"GPIO: Initializing pin {pin} to type '{pin_type}'")
+        print(f"RPiGPIO: Initializing pin {pin} to type '{pin_type}'")
 
     @staticmethod
     def input(pin: int):
-        return 0
+        return randint(0, 1)
 
     @staticmethod
     def output(spin: int, value: int):

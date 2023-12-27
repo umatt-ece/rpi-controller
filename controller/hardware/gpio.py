@@ -1,7 +1,4 @@
 
-from controller import RpiPin as Pin, SpiByte
-from controller import GpioHandler, SerialPeripheralInterface
-
 
 class Expander:
     def __init__(self):
