@@ -15,7 +15,7 @@ class RPiModel(Enum):
 
 class RaspberryPi:
     _pinout = {}
-    _devices = {}
+    devices = {}
     _spi_config = {}
 
     def __init__(self, model: RPiModel, logger: logging.Logger = None) -> None:
@@ -68,37 +68,20 @@ class RaspberryPi:
         if not self._spi_config:
             self._logger.error("No SPI configuration. Please ensure `configure_spi` has been called")
 
-        self._devices[device.name] = {
-            "name": device.name,
-            "address": device.address,
-            "select": self._parse_pin(select),
-            "interface": SerialPeripheralInterface(
-                self._pinout[self._parse_pin(select)]["pin"],
-                self._pinout[self._spi_config["miso"]]["pin"],
-                self._pinout[self._spi_config["miso"]]["pin"],
-                self._pinout[self._spi_config["miso"]]["pin"]
-            )
-        }
+        device.set_interface(SerialPeripheralInterface(
+            self._pinout[self._parse_pin(select)]["pin"],
+            self._pinout[self._spi_config["miso"]]["pin"],
+            self._pinout[self._spi_config["miso"]]["pin"],
+            self._pinout[self._spi_config["miso"]]["pin"]
+        ))
 
-    def spi_write(self, device_name: str, message: str) -> None:
-        for device in self._devices.values():
-            if device["name"] == device_name:
-                device["interface"].write(f"{device['address']}0{message}")
-                return
-        # Else could not find device
-        self._logger.error(f"Could not find device '{device_name}', please ensure it configured correctly")
-
-    def spi_read(self, device_name: str, num_bytes: int) -> Any:
-        for device in self._devices.values():
-            if device["name"] == device_name:
-                return device["interface"].read(device["address"], num_bytes)
-        # Else could not find device
-        self._logger.error(f"Could not find device '{device_name}', please ensure it configured correctly")
+        self.devices[device.name] = device
 
     def print_pin(self, pin: str):
         pin = self._parse_pin(pin)
 
-        print(f"{pin}: {self._pinout[pin]['pin_type']}{self._pinout[pin]['pin_bcm'] if self._pinout[pin]['pin_bcm'] else ''} ({self._pinout[pin]['pin_function']})")
+        print(
+            f"{pin}: {self._pinout[pin]['pin_type']}{self._pinout[pin]['pin_bcm'] if self._pinout[pin]['pin_bcm'] else ''} ({self._pinout[pin]['pin_function']})")
 
     def print_pinout(self, header: bool = False) -> None:
         margin = 30
@@ -122,6 +105,10 @@ class RaspberryPi:
                 line += f"{self._pinout[pin_number]['pin_bcm']}" if self._pinout[pin_number]['pin_bcm'] else ""
                 print(f"{line} [{self._pinout[pin_number]['pin_function']}]")
         print(f"{' ' * margin}┗━━━━━━━┛")
+
+    @property
+    def list_devices(self):
+        return [device for device in self.devices.keys()]
 
 
 pinout_mapping = {

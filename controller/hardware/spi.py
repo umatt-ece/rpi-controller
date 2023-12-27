@@ -54,7 +54,7 @@ class SerialPeripheralInterface:
         if not continue_message:
             self._select.write(1)  # Pull Chip Select high to end transmission
 
-    def read(self, address: str, num_bytes: int) -> str:
+    def read(self, address: str, num_bytes: int, message: str = "") -> str:
         # Validate Message
         if len(address) != 7:
             self._logger.error("SPI address must be 7 bits in length")
@@ -62,7 +62,7 @@ class SerialPeripheralInterface:
             self._logger.error(f"Cannot read '{num_bytes}' number of bytes")
 
         message = ""
-        self.write(address + "1", continue_message=True)
+        self.write(f"{address}1{message}", continue_message=True)
 
         for bit in range(num_bytes * 8):
             # Toggle clock HIGH
@@ -79,9 +79,21 @@ class SerialPeripheralInterface:
 
 
 class SpiDevice:
-    def __init__(self, name: str, address: str):
+    _interface = None
+
+    def __init__(self, name: str, address: str, logger: logging.Logger):
+        self._logger = logger or logging.getLogger("hardware")
         self._name = name
         self._address = address
+
+    def set_interface(self, interface: SerialPeripheralInterface):
+        self._interface = interface
+
+    def write(self, message: str) -> None:
+        self._interface.write(f"{self._address}0{message}")
+
+    def read(self, num_bytes: int, message: str = "") -> str:
+        return self._interface.read(self._address, num_bytes, message)
 
     @property
     def name(self) -> str:

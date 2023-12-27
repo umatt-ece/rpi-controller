@@ -9,11 +9,14 @@ def main():
 
         rpi = RaspberryPi(RPiModel.RPI4B)
         rpi.print_pinout()
+
         rpi.configure_spi("GPIO11", "GPIO10", "GPIO9")
         rpi.add_spi_device(gpio, "GPIO6")
 
-        rpi.spi_write("gpio", "0000111100110011")
-        rpi.spi_read("gpio", 1)
+        print(rpi.list_devices)
+
+        rpi.devices['gpio'].write("0000111100110011")
+        rpi.devices['gpio'].read(2)
 
     except Exception as e:
         # TODO: log exceptions first...
