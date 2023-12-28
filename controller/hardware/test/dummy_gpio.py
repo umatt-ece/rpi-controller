@@ -26,8 +26,9 @@ class RPiGPIO:
 
     @staticmethod
     def input(pin: int):
+        print(f"RPiGPIO: [read] pin {pin}")
         return randint(0, 1)
 
     @staticmethod
-    def output(spin: int, value: int):
-        pass
+    def output(pin: int, value: int):
+        print(f"RPiGPIO: [write] pin {pin} = {value}")

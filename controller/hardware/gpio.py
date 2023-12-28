@@ -1,22 +1,95 @@
+from enum import Enum
+
 from .spi import SpiDevice
 
 
-class GpioController(SpiDevice):
-    def __init__(self, name: str, address: str) -> None:
-        super().__init__(name, address)
+class MCP23S17Register(Enum):
+    IODIRA = "00000000"
+    IODIRB = "00010000"
+    GPIOA = "00001001"
+    GPIOB = "00011001"
 
-    def configure(self):
-        pass  # TODO: need to configure I/O directions
+
+class MCP23S17(SpiDevice):
+    """
+    Serial Interface (SPI) 16-bit I/O Expander
+    """
+    _config = {}
+    _pin_state = {
+        "A": "00000000",
+        "B": "00000000",
+    }
+
+    def __init__(self, name: str, address: str, config: dict = None) -> None:
+        super().__init__(name, f"0100{address}")
+
+        # Optionally, configure the device on initialization
+        if config:
+            self.configure(config)
+
+    def configure(self, config: dict) -> None:
+        message_byte_a = ""
+        message_byte_b = ""
+
+        for pin in range(8):
+            # Port A
+            if config["PORTA"][pin] == "input":
+                message_byte_a += "1"
+            elif config["PORTA"][pin] == "output":
+                message_byte_a += "0"
+            else:
+                self._logger.error(f"'{config['PORTA'][pin]}' is not a valid pin direction ('input'/'output')")
+                raise Exception(f"Invalid pin direction {config['PORTA'][pin]}")
+            # Port B
+            if config["PORTB"][pin] == "input":
+                message_byte_b += "1"
+            elif config["PORTB"][pin] == "output":
+                message_byte_b += "0"
+            else:
+                self._logger.error(f"'{config['PORTB'][pin]}' is not a valid pin direction ('input'/'output')")
+                raise Exception(f"Invalid pin direction {config['PORTB'][pin]}")
+
+        self.write(f"{MCP23S17Register.IODIRA.value}{message_byte_a}")  # Configure Port A
+        self.write(f"{MCP23S17Register.IODIRB.value}{message_byte_b}")  # Configure Port B
 
     def write_io(self, port: str, pin: int, value: bool) -> None:
-        port_byte = self._parse_port(port)
-        message_byte = "00000001" if value else "00000000"
-        self.write(f"{port_byte}{message_byte}")
+        self._logger.info(f"Writing '{'1' if value else '0'}' to {self.name} pin {port}{pin}")
+
+        if pin < 0 or pin > 7:
+            self._logger.error(f"'{pin}' is not a valid pin (must be between 0 and 7)")
+            raise Exception(f"Invalid pin number {pin}")
+        if port == "A":
+            register_byte = MCP23S17Register.GPIOA.value
+            message_byte = f"{self._pin_state['A'][:pin]}{'1' if value else '0'}{self._pin_state['A'][pin + 1:]}"
+            self._pin_state["A"] = message_byte  # update pin states
+        elif port == "B":
+            register_byte = MCP23S17Register.GPIOB.value
+            message_byte = f"{self._pin_state['B'][:pin]}{'1' if value else '0'}{self._pin_state['B'][pin + 1:]}"
+            self._pin_state["A"] = message_byte  # update pin states
+        else:
+            self._logger.error(f"'{port}' is not a valid port (must be 'A' or 'B')")
+            raise Exception(f"Invalid port value {port}")
+
+        self.write(f"{register_byte}{message_byte}")
 
     def read_io(self, port: str, pin: int) -> bool:
-        port_byte = self._parse_port(port)
-        value = self.read(1, port_byte)
-        return self._parse_value(value)
+        self._logger.info(f"Reading pin {port}{pin} of {self.name}")
+
+        if pin < 0 or pin > 7:
+            self._logger.error(f"'{pin}' is not a valid pin (must be between 0 and 7)")
+            raise Exception(f"Invalid pin number {pin}")
+        if port == "A":
+            register_byte = MCP23S17Register.GPIOA.value
+        elif port == "B":
+            register_byte = MCP23S17Register.GPIOB.value
+        else:
+            self._logger.error(f"'{port}' is not a valid port (must be 'A' or 'B')")
+            raise Exception(f"Invalid port value {port}")
+
+        value = self.read(1, register_byte)
+
+        self._logger.info(f"{self.name}: pin {port}{pin} = '{value[pin] == '1'}'")
+        return value[pin] == "1"  # return True if "1" or False if "0"
 
     def _parse_value(self, value: str) -> bool:
         if value == "00000000":
@@ -25,14 +98,6 @@ class GpioController(SpiDevice):
             return True
         else:
             self._logger.error(f"Invalid value '{value}'")
-
-    @staticmethod
-    def _parse_port(port: str) -> str:
-        if port == "A":
-            return "00010010"
-        elif port == "B":
-            return "00010011"
-
 
 
 # class Expander:

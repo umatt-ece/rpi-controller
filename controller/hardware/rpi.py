@@ -1,7 +1,6 @@
-from enum import Enum
-from typing import Union, Any
 import logging
 import math
+from enum import Enum
 
 from .peripherals import Pin
 from .spi import SerialPeripheralInterface, SpiDevice
@@ -17,7 +16,9 @@ class RPiModel(Enum):
 class RaspberryPi:
     _pinout = {}
     _spi_config = {}
-    devices = {}
+    _i2c_config = {}  # TODO: add I2C implementation
+    _can_config = {}  # TODO: add CAN implementation
+    _devices = {}
 
     def __init__(self, model: RPiModel, logger: logging.Logger = None) -> None:
         self._logger = logger or logging.getLogger("hardware")
@@ -60,56 +61,71 @@ class RaspberryPi:
             "miso": self._parse_pin(miso),
         }
 
-        # Initialize Pins
+        # Initialize Clock, MOSI, and MISO pins
         self._pinout[self._spi_config["clock"]]["pin"].set_direction("input")
         self._pinout[self._spi_config["mosi"]]["pin"].set_direction("input")
         self._pinout[self._spi_config["miso"]]["pin"].set_direction("output")
 
     def add_spi_device(self, device: SpiDevice, select: str) -> None:
+        # Verify that Clock, MOSI, and MISO have already been configured
         if not self._spi_config:
             self._logger.error("No SPI configuration. Please ensure `configure_spi` has been called")
 
+        # Configure an interface (SPI) for added device. Use RPi's Clock, MOSI, and MISO pins & device's Select pin
         device.set_interface(SerialPeripheralInterface(
             self._pinout[self._parse_pin(select)]["pin"],
-            self._pinout[self._spi_config["miso"]]["pin"],
-            self._pinout[self._spi_config["miso"]]["pin"],
+            self._pinout[self._spi_config["clock"]]["pin"],
+            self._pinout[self._spi_config["mosi"]]["pin"],
             self._pinout[self._spi_config["miso"]]["pin"]
         ))
 
-        self.devices[device.name] = device
+        # Initialize Select pin
+        self._pinout[self._parse_pin(select)]["pin"].set_direction("input")
+        # Add new SPI device to list of devices
+        self._devices[device.name] = device
 
-    def print_pin(self, pin: str):
+    def pin(self, pin: str) -> str:
+        # parse the string name to pin_number
         pin = self._parse_pin(pin)
 
-        print(
-            f"{pin}: {self._pinout[pin]['pin_type']}{self._pinout[pin]['pin_bcm'] if self._pinout[pin]['pin_bcm'] else ''} ({self._pinout[pin]['pin_function']})")
+        pin_string = f"{pin}: {self._pinout[pin]['pin_type']}"
+        pin_string += f"{self._pinout[pin]['pin_bcm'] if self._pinout[pin]['pin_bcm'] else ''} "
+        pin_string += f"({self._pinout[pin]['pin_function']})"
 
-    def print_pinout(self, header: bool = False) -> None:
-        margin = 30
-        header_length = (margin - 1) * 2 + 9
-        header_padding = (header_length - (len(self._model.value) + 30)) / 2
-        # Print HEADER
+        print(pin_string)  # print string to console
+        return pin_string  # additionally return it
+
+    def pinout(self, header: bool = False, margin: int = 30) -> str:
+        pinout_string = ""
+        # Print 'HEADER'
         if header:
-            print(f"┏{'━' * header_length}┓ ")
-            print(
-                f"┃{' ' * math.floor(header_padding)}Raspberry Pi ({self._model.value}) Pinout Mapping{' ' * math.ceil(header_padding)}┃")
-            print(f"┗{'━' * header_length}┛")
-        # Print PINOUT
-        print(f"{' ' * margin}┏━━━━━━━┓")
+            # determine header sizing
+            header_length = (margin - 1) * 2 + 9
+            header_padding = (header_length - (len(self._model.value) + 30)) / 2
+            #
+            pinout_string += f"┏{'━' * header_length}┓\n"
+            pinout_string += f"┃{' ' * math.floor(header_padding)}Raspberry Pi ({self._model.value})"
+            pinout_string += f" Pinout Mapping{' ' * math.ceil(header_padding)}┃\n"
+            pinout_string += f"┗{'━' * header_length}┛\n"
+        # Print 'PINOUT'
+        pinout_string += f"{' ' * margin}┏━━━━━━━┓\n"
         for pin_number in range(1, J_HEADER_PINS + 1):
             if pin_number % 2 == 1:  # odd pins (left)
                 line = f"[{self._pinout[pin_number]['pin_function']}] {self._pinout[pin_number]['pin_type']}"
                 line += f"{self._pinout[pin_number]['pin_bcm']}" if self._pinout[pin_number]['pin_bcm'] else ""
-                print(f"{' ' * (margin - len(line) - 1)}{line} ┃ {pin_number}{' ' if pin_number < 10 else ''} ", end="")
+                pinout_string += f"{' ' * (margin - len(line) - 1)}{line} ┃ {pin_number}{' ' if pin_number < 10 else ''} "
             else:  # even pins (right)
                 line = f"{' ' if pin_number < 10 else ''}{pin_number} ┃ {self._pinout[pin_number]['pin_type']}"
                 line += f"{self._pinout[pin_number]['pin_bcm']}" if self._pinout[pin_number]['pin_bcm'] else ""
-                print(f"{line} [{self._pinout[pin_number]['pin_function']}]")
-        print(f"{' ' * margin}┗━━━━━━━┛")
+                pinout_string += f"{line} [{self._pinout[pin_number]['pin_function']}]\n"
+        pinout_string += f"{' ' * margin}┗━━━━━━━┛\n"
+
+        print(pinout_string)  # print string to console
+        return pinout_string  # additionally return it
 
     @property
-    def list_devices(self):
-        return [device for device in self.devices.keys()]
+    def devices(self):
+        return self._devices
 
 
 pinout_mapping = {
@@ -157,7 +173,3 @@ pinout_mapping = {
         40: [21, "GPIO", "GPIO", "General Purpose I/O"],
     },
 }
-
-
-rpi = RaspberryPi(RPiModel.RPI4B)
-rpi.print_pinout()

@@ -13,10 +13,12 @@ hardware. Basically an 'emulator' if you're familiar with that terminology.
 
 ## Abbreviations:
 
-__API:__ **A**ppliaction **P**rogram **I**nterface. A common, defined set of rules that allow different programs (often
+**API:** **A**ppliaction **P**rogram **I**nterface. A common, defined set of rules that allow different programs (often
 written in different languages) to communicate with each other.
 
-__GUI:__ **G**raphical **U**ser **I**nterface. A device or piece of software that uses graphical icons and text that can
+**GUI:** **G**raphical **U**ser **I**nterface. A device or piece of software that uses graphical icons and text that can
 be manipulated in some form (ex. clicking a button) to allow a user (ie. human) to interact with the device/program.
 
-__OS:__ **O**perating **S**ystem.
+**OS:** **O**perating **S**ystem. Low-level system code that manages computer resources and how they are deligated to various processes running on a computer.
+
+**GSL:** **G**round **S**peed **L**ever.

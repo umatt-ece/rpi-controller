@@ -36,6 +36,10 @@ logging.config.dictConfig({
         "logic": {
             "level": "INFO",
             "handlers": ["console", "logic_file_handler"],
-        }
+        },
+        "controller": {
+            "level": "ERROR",
+            "handlers": ["console"],
+        },
     }
 })

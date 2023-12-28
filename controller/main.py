@@ -1,26 +1,65 @@
 import logging
 
-from hardware import RaspberryPi, RPiModel, SpiDevice
+from hardware import RPiModel, RaspberryPi, MCP23S17
+
+logger = logging.getLogger("controller")
+
+sample_config = {
+    "PORTA": {
+        0: "output",
+        1: "output",
+        2: "output",
+        3: "output",
+        4: "output",
+        5: "output",
+        6: "output",
+        7: "output",
+    },
+    "PORTB": {
+        0: "input",
+        1: "input",
+        2: "input",
+        3: "input",
+        4: "input",
+        5: "input",
+        6: "input",
+        7: "input",
+    }
+}
 
 
 def main():
     try:
-        gpio = SpiDevice("gpio", "0101001")
+        gpio = MCP23S17("gpio", "000")
 
         rpi = RaspberryPi(RPiModel.RPI4B)
-        rpi.print_pinout()
+        rpi.pinout()
 
         rpi.configure_spi("GPIO11", "GPIO10", "GPIO9")
         rpi.add_spi_device(gpio, "GPIO6")
 
-        print(rpi.list_devices)
-
-        rpi.devices['gpio'].write("0000111100110011")
-        rpi.devices['gpio'].read(2)
+        rpi.devices["gpio"].configure(sample_config)
+        rpi.devices["gpio"].write_io(port="A", pin=0, value=True)
+        rpi.devices["gpio"].write_io(port="A", pin=1, value=True)
+        rpi.devices["gpio"].write_io(port="A", pin=2, value=True)
+        rpi.devices["gpio"].write_io(port="A", pin=3, value=True)
+        rpi.devices["gpio"].write_io(port="A", pin=4, value=True)
+        rpi.devices["gpio"].write_io(port="A", pin=5, value=True)
+        rpi.devices["gpio"].write_io(port="A", pin=6, value=True)
+        rpi.devices["gpio"].write_io(port="A", pin=7, value=True)
+        rpi.devices["gpio"].read_io(port="B", pin=0)
+        rpi.devices["gpio"].read_io(port="B", pin=1)
+        rpi.devices["gpio"].read_io(port="B", pin=2)
+        rpi.devices["gpio"].read_io(port="B", pin=3)
+        rpi.devices["gpio"].read_io(port="B", pin=4)
+        rpi.devices["gpio"].read_io(port="B", pin=5)
+        rpi.devices["gpio"].read_io(port="B", pin=6)
+        rpi.devices["gpio"].read_io(port="B", pin=7)
 
     except Exception as e:
         # TODO: log exceptions first...
-        print("Oh no, something went wrong...")
+        logger.exception(e)
+        logger.error("Oh no, something went wrong...")
 
 
 if __name__ == "__main__":
