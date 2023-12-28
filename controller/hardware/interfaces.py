@@ -102,3 +102,23 @@ class SpiDevice:
     @property
     def address(self) -> str:
         return self._address
+
+
+class InterIntegratedCircuit:
+    # TODO: Implement I2C protocol
+    pass
+
+
+class I2cDevice:
+    # TODO: Implement I2C device
+    pass
+
+
+class ControllerAreaNetwork:
+    # TODO: Implement CAN protocol
+    pass
+
+
+class CanDevice:
+    # TODO: Implement CAN device
+    pass

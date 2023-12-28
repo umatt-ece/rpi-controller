@@ -3,7 +3,7 @@ import math
 from enum import Enum
 
 from .peripherals import Pin
-from .spi import SerialPeripheralInterface, SpiDevice
+from .interfaces import SerialPeripheralInterface, SpiDevice
 
 J_HEADER_PINS = 40
 

@@ -4,7 +4,7 @@ from hardware import RPiModel, RaspberryPi, MCP23S17
 
 logger = logging.getLogger("controller")
 
-sample_config = {
+sample_gpio_config = {
     "PORTA": {
         0: "output",
         1: "output",
@@ -30,31 +30,34 @@ sample_config = {
 
 def main():
     try:
-        gpio = MCP23S17("gpio", "000")
+        gpio_0 = MCP23S17("gpio_0", "000")
+        gpio_1 = MCP23S17("gpio_1", "001")
+        gpio_2 = MCP23S17("gpio_2", "010")
+        gpio_3 = MCP23S17("gpio_3", "011")
 
         rpi = RaspberryPi(RPiModel.RPI4B)
         rpi.pinout()
 
         rpi.configure_spi("GPIO11", "GPIO10", "GPIO9")
-        rpi.add_spi_device(gpio, "GPIO6")
+        rpi.add_spi_device(gpio_0, "GPIO6")
 
-        rpi.devices["gpio"].configure(sample_config)
-        rpi.devices["gpio"].write_io(port="A", pin=0, value=True)
-        rpi.devices["gpio"].write_io(port="A", pin=1, value=True)
-        rpi.devices["gpio"].write_io(port="A", pin=2, value=True)
-        rpi.devices["gpio"].write_io(port="A", pin=3, value=True)
-        rpi.devices["gpio"].write_io(port="A", pin=4, value=True)
-        rpi.devices["gpio"].write_io(port="A", pin=5, value=True)
-        rpi.devices["gpio"].write_io(port="A", pin=6, value=True)
-        rpi.devices["gpio"].write_io(port="A", pin=7, value=True)
-        rpi.devices["gpio"].read_io(port="B", pin=0)
-        rpi.devices["gpio"].read_io(port="B", pin=1)
-        rpi.devices["gpio"].read_io(port="B", pin=2)
-        rpi.devices["gpio"].read_io(port="B", pin=3)
-        rpi.devices["gpio"].read_io(port="B", pin=4)
-        rpi.devices["gpio"].read_io(port="B", pin=5)
-        rpi.devices["gpio"].read_io(port="B", pin=6)
-        rpi.devices["gpio"].read_io(port="B", pin=7)
+        rpi.devices["gpio_0"].configure(sample_gpio_config)
+        rpi.devices["gpio_0"].write_io(port="A", pin=0, value=True)
+        rpi.devices["gpio_0"].write_io(port="A", pin=1, value=True)
+        rpi.devices["gpio_0"].write_io(port="A", pin=2, value=True)
+        rpi.devices["gpio_0"].write_io(port="A", pin=3, value=True)
+        rpi.devices["gpio_0"].write_io(port="A", pin=4, value=True)
+        rpi.devices["gpio_0"].write_io(port="A", pin=5, value=True)
+        rpi.devices["gpio_0"].write_io(port="A", pin=6, value=True)
+        rpi.devices["gpio_0"].write_io(port="A", pin=7, value=True)
+        rpi.devices["gpio_0"].read_io(port="B", pin=0)
+        rpi.devices["gpio_0"].read_io(port="B", pin=1)
+        rpi.devices["gpio_0"].read_io(port="B", pin=2)
+        rpi.devices["gpio_0"].read_io(port="B", pin=3)
+        rpi.devices["gpio_0"].read_io(port="B", pin=4)
+        rpi.devices["gpio_0"].read_io(port="B", pin=5)
+        rpi.devices["gpio_0"].read_io(port="B", pin=6)
+        rpi.devices["gpio_0"].read_io(port="B", pin=7)
 
     except Exception as e:
         # TODO: log exceptions first...

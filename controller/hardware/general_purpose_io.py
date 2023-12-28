@@ -1,6 +1,6 @@
 from enum import Enum
 
-from .spi import SpiDevice
+from .interfaces import SpiDevice
 
 
 class MCP23S17Register(Enum):

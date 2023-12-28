@@ -2,6 +2,6 @@
 from .test.dummy_gpio import RPiGPIO
 
 from .peripherals import Pin
-from .spi import SerialPeripheralInterface, SpiDevice
-from .rpi import RaspberryPi, RPiModel
-from .gpio import MCP23S17
+from .interfaces import SerialPeripheralInterface, SpiDevice
+from .raspberry_pi import RaspberryPi, RPiModel
+from .general_purpose_io import MCP23S17

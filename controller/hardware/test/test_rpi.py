@@ -1,4 +1,4 @@
-from controller.hardware.rpi import RaspberryPi, pinout_mapping
+from controller.hardware.raspberry_pi import RaspberryPi, pinout_mapping
 
 
 def test_rpi_print_pinout():
