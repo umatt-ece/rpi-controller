@@ -5,9 +5,9 @@ from .interfaces import SpiDevice
 
 class MCP23S17Register(Enum):
     IODIRA = "00000000"
-    IODIRB = "00010000"
-    GPIOA = "00001001"
-    GPIOB = "00011001"
+    IODIRB = "00000001"
+    GPIOA = "00001010"
+    GPIOB = "00010011"
 
 
 class MCP23S17(SpiDevice):
@@ -85,6 +85,7 @@ class MCP23S17(SpiDevice):
         self._logger.info(f"Writing '{'1' if value else '0'}' to {self.name} pin {port}{pin}")
 
         # Validation
+        port = port.upper()
         self._validate_port_pin(port, pin)
 
         # Construct message
@@ -110,6 +111,7 @@ class MCP23S17(SpiDevice):
         self._logger.info(f"Reading pin {port}{pin} of {self.name}")
 
         # Validation
+        port = port.upper()
         self._validate_port_pin(port, pin)
 
         # Construct message
