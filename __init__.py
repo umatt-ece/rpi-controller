@@ -1,4 +1,5 @@
 import logging.config
+import logging
 
 
 # configure loggers for this project
@@ -19,12 +20,12 @@ logging.config.dictConfig({
         },
         "hardware_file_handler": {
             "class": "logging.FileHandler",
-            "filename": "./logs/hardware.log",
+            "filename": "./log/hardware.log",
             "formatter": "default",
         },
         "logic_file_handler": {
             "class": "logging.FileHandler",
-            "filename": "./logs/logic.log",
+            "filename": "./log/logic.log",
             "formatter": "default",
         }
     },
