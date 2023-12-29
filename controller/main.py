@@ -1,4 +1,5 @@
 import logging
+import time
 
 from hardware import RPiModel, RaspberryPi, MCP23S17
 

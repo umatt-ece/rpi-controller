@@ -19,13 +19,13 @@ logging.config.dictConfig({
         },
         "hardware_file_handler": {
             "class": "logging.FileHandler",
-            "formatter": "default",
             "filename": "./logs/hardware.log",
+            "formatter": "default",
         },
         "logic_file_handler": {
             "class": "logging.FileHandler",
-            "formatter": "default",
             "filename": "./logs/logic.log",
+            "formatter": "default",
         }
     },
     "loggers": {

@@ -42,14 +42,14 @@ class SerialPeripheralInterface:
         for bit in message:
             # Write next bit
             if bit == "0":
-                self._mosi.write(0)
+                self._miso.write(0)
             elif bit == "1":
-                self._mosi.write(1)
+                self._miso.write(1)
             # Toggle clock
             self._clock.write(1)
             self._clock.write(0)
 
-        self._mosi.write(0)  # Clear data line
+        self._miso.write(0)  # Clear data line
 
         if not continue_message:
             self._select.write(1)  # Pull Chip Select high to end transmission

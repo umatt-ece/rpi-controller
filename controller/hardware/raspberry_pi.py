@@ -62,7 +62,7 @@ class RaspberryPi:
         }
 
         # Initialize Clock, MOSI, and MISO pins
-        self._pinout[self._spi_config["clock"]]["pin"].set_direction("input")
+        self._pinout[self._spi_config["clock"]]["pin"].set_direction("output")
         self._pinout[self._spi_config["mosi"]]["pin"].set_direction("input")
         self._pinout[self._spi_config["miso"]]["pin"].set_direction("output")
 
@@ -76,11 +76,12 @@ class RaspberryPi:
             self._pinout[self._parse_pin(select)]["pin"],
             self._pinout[self._spi_config["clock"]]["pin"],
             self._pinout[self._spi_config["mosi"]]["pin"],
-            self._pinout[self._spi_config["miso"]]["pin"]
+            self._pinout[self._spi_config["miso"]]["pin"],
         ))
 
         # Initialize Select pin
-        self._pinout[self._parse_pin(select)]["pin"].set_direction("input")
+        self._pinout[self._parse_pin(select)]["pin"].set_direction("output")
+        self._pinout[self._parse_pin(select)]["pin"].write(1)
         # Add new SPI device to list of devices
         self._devices[device.name] = device
 
