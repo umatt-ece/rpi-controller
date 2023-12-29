@@ -12,7 +12,7 @@ class MCP23S17Register(Enum):
 
 class MCP23S17(SpiDevice):
     """
-    Serial Interface (SPI) 16-bit I/O Expander
+    MicroChip Serial Interface (SPI) 16-bit I/O Expander device implementation for Raspberry Pi.
     """
     _config = {}
     _pin_state = {
@@ -23,11 +23,14 @@ class MCP23S17(SpiDevice):
     def __init__(self, name: str, address: str, config: dict = None) -> None:
         super().__init__(name, f"0100{address}")
 
-        # Optionally, configure the device on initialization
+        # Optionally, configure the device on initialization (if `config` provided)
         if config:
             self.configure(config)
 
     def configure(self, config: dict) -> None:
+        """
+
+        """
         message_byte_a = ""
         message_byte_b = ""
 
@@ -49,56 +52,91 @@ class MCP23S17(SpiDevice):
                 self._logger.error(f"'{config['PORTB'][pin]}' is not a valid pin direction ('input'/'output')")
                 raise Exception(f"Invalid pin direction {config['PORTB'][pin]}")
 
-        self.write(f"{MCP23S17Register.IODIRA.value}{message_byte_a}")  # Configure Port A
-        self.write(f"{MCP23S17Register.IODIRB.value}{message_byte_b}")  # Configure Port B
+        self.write_io(MCP23S17Register.IODIRA, message_byte_a)  # Configure Port A
+        self.write_io(MCP23S17Register.IODIRB, message_byte_b)  # Configure Port B
 
-    def write_io(self, port: str, pin: int, value: bool) -> None:
+    def write_io(self, register: MCP23S17Register, message: str) -> None:
+        """
+        A wrapper function for SpiDevice.write(). No address  byte is required since that is automatically handled,
+        based on the class variable `_address`. Requires 2 position arguments:
+
+        :param register: Enum of type MCP23S17Register that defines the device's register to write to (8-bit address).
+        :param message: Message string of bits to write to the device register. String length must be only 1 byte.
+        """
+        self.write(f"{register.value}{message}")
+
+    def read_io(self, register: MCP23S17Register) -> str:
+        """
+        A wrapper function for SpiDevice.read(). No address  byte is required since that is automatically handled,
+        based on the class variable `_address`. Requires 1 position argument:
+
+        :param register: Enum of type MCP23S17Register that defines the device's register to read from (8-bit address).
+        """
+        return self.read(1, register.value)
+
+    def write_pin(self, port: str, pin: int, value: bool) -> None:
+        """
+        Write a value of "1" (True) or "0" (False) to an external GPIO pin. Requires 3 position arguments:
+
+        :param port: Port of MCP23S17 device to write to. Must be either "A" or "b".
+        :param pin: Pin number of GPIO port to write to. Must be between 0 and 7.
+        :param value: Value to write to GPIO pin. True corresponds to 1/ON and False corresponds to 0/OFF.
+        """
         self._logger.info(f"Writing '{'1' if value else '0'}' to {self.name} pin {port}{pin}")
 
-        if pin < 0 or pin > 7:
-            self._logger.error(f"'{pin}' is not a valid pin (must be between 0 and 7)")
-            raise Exception(f"Invalid pin number {pin}")
+        # Validation
+        self._validate_port_pin(port, pin)
+
+        # Construct message
         if port == "A":
-            register_byte = MCP23S17Register.GPIOA.value
+            register_byte = MCP23S17Register.GPIOA
             message_byte = f"{self._pin_state['A'][:pin]}{'1' if value else '0'}{self._pin_state['A'][pin + 1:]}"
             self._pin_state["A"] = message_byte  # update pin states
-        elif port == "B":
-            register_byte = MCP23S17Register.GPIOB.value
+        else:  # Assumed "B" because of previous validation
+            register_byte = MCP23S17Register.GPIOB
             message_byte = f"{self._pin_state['B'][:pin]}{'1' if value else '0'}{self._pin_state['B'][pin + 1:]}"
             self._pin_state["A"] = message_byte  # update pin states
-        else:
-            self._logger.error(f"'{port}' is not a valid port (must be 'A' or 'B')")
-            raise Exception(f"Invalid port value {port}")
 
-        self.write(f"{register_byte}{message_byte}")
+        # Send message
+        self.write_io(register_byte, message_byte)
 
-    def read_io(self, port: str, pin: int) -> bool:
+    def read_pin(self, port: str, pin: int) -> bool:
+        """
+        Read the current state ("1"/True or "0"/False) from an external GPIO pin. Requires 2 position arguments:
+
+        :param port: Port of MCP23S17 device to read from. Must be either "A" or "B".
+        :param pin: Pin number of GPIO port to read from. Must be between 0 and 7.
+        """
         self._logger.info(f"Reading pin {port}{pin} of {self.name}")
 
-        if pin < 0 or pin > 7:
-            self._logger.error(f"'{pin}' is not a valid pin (must be between 0 and 7)")
-            raise Exception(f"Invalid pin number {pin}")
-        if port == "A":
-            register_byte = MCP23S17Register.GPIOA.value
-        elif port == "B":
-            register_byte = MCP23S17Register.GPIOB.value
-        else:
-            self._logger.error(f"'{port}' is not a valid port (must be 'A' or 'B')")
-            raise Exception(f"Invalid port value {port}")
+        # Validation
+        self._validate_port_pin(port, pin)
 
-        value = self.read(1, register_byte)
+        # Construct message
+        if port == "A":
+            register_byte = MCP23S17Register.GPIOA
+        else:  # Assumed "B" because of previous validation
+            register_byte = MCP23S17Register.GPIOB
+
+        # Send message
+        value = self.read_io(register_byte)
 
         self._logger.info(f"{self.name}: pin {port}{pin} = '{value[pin] == '1'}'")
         return value[pin] == "1"  # return True if "1" or False if "0"
 
-    def _parse_value(self, value: str) -> bool:
-        if value == "00000000":
-            return False
-        elif value == "00000001":
-            return True
-        else:
-            self._logger.error(f"Invalid value '{value}'")
+    def _validate_port_pin(self, port: str, pin: int) -> None:
+        """
+        Validate given `port` and `pin` values and raise an exception if not within expected range.
 
+        :param port: Port value must be either "A" or "B".
+        :param pin: Pin value must be between 0 and 7.
+        """
+        if port != "A" and port != "B":
+            self._logger.error(f"'{port}' is not a valid port (must be 'A' or 'B')")
+            raise Exception(f"Invalid port value {port}")
+        if pin < 0 or pin > 7:
+            self._logger.error(f"'{pin}' is not a valid pin (must be between 0 and 7)")
+            raise Exception(f"Invalid pin number {pin}")
 
 # class Expander:
 #     def __init__(self):

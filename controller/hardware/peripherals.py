@@ -1,7 +1,7 @@
 import os
 import logging
 
-if os.getenv("TESTING", "false") == "false":
+if os.getenv("TESTING", "false") == "true":
     import RPi.GPIO as Gpio
 else:
     from controller.hardware import RPiGPIO as Gpio
