@@ -2,8 +2,7 @@ import logging
 import math
 from enum import Enum
 
-from .peripherals import Pin
-from .interfaces import SerialPeripheralInterface, SpiDevice
+from hardware import Pin, SerialPeripheralInterface, SpiDevice
 
 J_HEADER_PINS = 40
 
@@ -66,10 +65,13 @@ class RaspberryPi:
         self._pinout[self._spi_config["mosi"]]["pin"].set_direction("input")
         self._pinout[self._spi_config["miso"]]["pin"].set_direction("output")
 
-    def add_spi_device(self, device: SpiDevice, select: str) -> None:
+    def add_spi_device(self, device: SpiDevice, select: str, reset: Pin = None) -> None:
         # Verify that Clock, MOSI, and MISO have already been configured
         if not self._spi_config:
             self._logger.error("No SPI configuration. Please ensure `configure_spi` has been called")
+
+        if reset:
+            device.set_reset_pin(reset)
 
         # Configure an interface (SPI) for added device. Use RPi's Clock, MOSI, and MISO pins & device's Select pin
         device.set_interface(SerialPeripheralInterface(

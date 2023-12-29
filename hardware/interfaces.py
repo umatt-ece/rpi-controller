@@ -80,6 +80,7 @@ class SerialPeripheralInterface:
 
 class SpiDevice:
     _interface = None
+    _reset = None
 
     def __init__(self, name: str, address: str, logger: logging.Logger = None):
         self._logger = logger or logging.getLogger("hardware")
@@ -88,6 +89,9 @@ class SpiDevice:
 
     def set_interface(self, interface: SerialPeripheralInterface):
         self._interface = interface
+
+    def set_reset_pin(self, reset: Pin):
+        self._reset = reset
 
     def write(self, message: str) -> None:
         self._interface.write(f"{self._address}0{message}")

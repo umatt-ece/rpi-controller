@@ -1,6 +1,6 @@
 from enum import Enum
 
-from .interfaces import SpiDevice
+from hardware import Pin, SpiDevice
 
 
 class MCP23S17Register(Enum):
@@ -21,8 +21,12 @@ class MCP23S17(SpiDevice):
         "B": "00000000",
     }
 
-    def __init__(self, name: str, address: str, config: dict = None) -> None:
+    def __init__(self, name: str, address: str, reset: Pin = None, config: dict = None) -> None:
         super().__init__(name, f"0100{address}")
+
+        # Optionally, set rest pin (if `reset` provided)
+        if reset:
+            self.set_reset_pin(reset)
 
         # Optionally, configure the device on initialization (if `config` provided)
         if config:
@@ -35,6 +39,12 @@ class MCP23S17(SpiDevice):
         message_byte_a = ""
         message_byte_b = ""
 
+        # If a reset pin has been configured, reset the device (otherwise continue with initialization)
+        if self._reset:
+            self._reset.write(0)
+            self._reset.write(1)
+
+        # Construct IO direction bytes based on config
         for pin in range(8):
             # Port A
             if config["PORTA"][pin] == "input":
