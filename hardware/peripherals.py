@@ -4,7 +4,7 @@ import logging
 if os.getenv("TESTING", "false") == "false":
     import RPi.GPIO as Gpio
 else:
-    from controller.hardware import RPiGPIO as Gpio
+    from hardware import RPiGPIO as Gpio
 
 
 class Pin:
@@ -37,9 +37,12 @@ class Pin:
         self._logger.info(f"Direction for pin {self._pin_mapping} set to {self._pin_direction}")
 
     def read(self) -> int:
-        return Gpio.input(self._pin_mapping)
+        value = Gpio.input(self._pin_mapping)
+        self._logger.debug(f"{self._pin_mapping} ({self._pin_direction}): {value}")
+        return value
 
     def write(self, value: int) -> None:
+        self._logger.debug(f"{self._pin_mapping} ({self._pin_direction}): {value}")
         Gpio.output(self._pin_mapping, value)
     
     @property

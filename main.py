@@ -19,14 +19,14 @@ sample_gpio_config = {
         7: "output",
     },
     "PORTB": {
-        0: "input",
-        1: "input",
-        2: "input",
-        3: "input",
-        4: "input",
-        5: "input",
-        6: "input",
-        7: "input",
+        0: "output",
+        1: "output",
+        2: "output",
+        3: "output",
+        4: "output",
+        5: "output",
+        6: "output",
+        7: "output",
     }
 }
 
@@ -41,21 +41,12 @@ def main():
         rpi = RaspberryPi(RPiModel.RPI4B)
         rpi.pinout()
 
-        rpi.configure_spi("GPIO11", "GPIO10", "GPIO9")
-        rpi.add_spi_device(gpio_0, "GPIO6")
+        rpi.configure_spi(clock="GPIO11", mosi="GPIO10", miso="GPIO9")
+        rpi.add_spi_device(device=gpio_0, select="GPIO6")
 
         rpi.devices["gpio_0"].configure(sample_gpio_config)
-        rpi.devices["gpio_0"].write_pin(port="A", pin=7, value=True)
-        rpi.devices["gpio_0"].write_pin(port="A", pin=0, value=True)
 
-        # rpi.devices["gpio_0"].write_pin(port="A", pin=0, value=True)
-        # rpi.devices["gpio_0"].write_pin(port="A", pin=1, value=True)
-        # rpi.devices["gpio_0"].write_pin(port="A", pin=2, value=True)
-        # rpi.devices["gpio_0"].write_pin(port="A", pin=3, value=True)
-        # rpi.devices["gpio_0"].write_pin(port="A", pin=4, value=True)
-        # rpi.devices["gpio_0"].write_pin(port="A", pin=5, value=True)
-        # rpi.devices["gpio_0"].write_pin(port="A", pin=6, value=True)
-        # rpi.devices["gpio_0"].write_pin(port="A", pin=7, value=True)
+        rpi.devices["gpio_0"].write_pin(port="B", pin=7, value=True)
         # rpi.devices["gpio_0"].read_pin(port="B", pin=0)
         # rpi.devices["gpio_0"].read_pin(port="B", pin=1)
         # rpi.devices["gpio_0"].read_pin(port="B", pin=2)
