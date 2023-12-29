@@ -62,8 +62,8 @@ class RaspberryPi:
 
         # Initialize Clock, MOSI, and MISO pins
         self._pinout[self._spi_config["clock"]]["pin"].set_direction("output")
-        self._pinout[self._spi_config["mosi"]]["pin"].set_direction("input")
-        self._pinout[self._spi_config["miso"]]["pin"].set_direction("output")
+        self._pinout[self._spi_config["mosi"]]["pin"].set_direction("output")
+        self._pinout[self._spi_config["miso"]]["pin"].set_direction("input")
 
     def add_spi_device(self, device: SpiDevice, select: str, reset: Pin = None) -> None:
         # Verify that Clock, MOSI, and MISO have already been configured

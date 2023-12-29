@@ -7,7 +7,7 @@ class MCP23S17Register(Enum):
     IOCON = "00001010"
     IODIRA = "00000000"
     IODIRB = "00000001"
-    GPIOA = "00001010"
+    GPIOA = "00010010"
     GPIOB = "00010011"
 
 
@@ -33,7 +33,7 @@ class MCP23S17(SpiDevice):
             self.configure(config)
 
     def configure(self, config: dict) -> None:
-        """
+        """  
 
         """
         message_byte_a = ""
@@ -65,11 +65,11 @@ class MCP23S17(SpiDevice):
 
         self.write_io(MCP23S17Register.IOCON, "00000000")
 
-        self._logger.info(f"Configuring device {self._name} Port A: {message_byte_a} (0: output | 1: input | A7-A0)")
-        self._logger.info(f"Configuring device {self._name} Port B: {message_byte_a} (0: output | 1: input | B7-B0)")
+        self._logger.info(f"Configuring device {self._name} Port A: {message_byte_a} (0: output | 1: input | A0-A7)")
+        self._logger.info(f"Configuring device {self._name} Port B: {message_byte_b} (0: output | 1: input | B0-B7)")
 
-        self.write_io(MCP23S17Register.IODIRA, message_byte_a)  # Configure Port A
-        self.write_io(MCP23S17Register.IODIRB, message_byte_b)  # Configure Port B
+        self.write_io(MCP23S17Register.IODIRA, self.swap_endian(message_byte_a))  # Configure Port A
+        self.write_io(MCP23S17Register.IODIRB, self.swap_endian(message_byte_b))  # Configure Port B
 
     def write_io(self, register: MCP23S17Register, message: str) -> None:
         """
@@ -115,7 +115,7 @@ class MCP23S17(SpiDevice):
             self._pin_state["A"] = message_byte  # update pin states
 
         # Send message
-        self.write_io(register_byte, message_byte)
+        self.write_io(register_byte, self.swap_endian(message_byte))
 
     def read_pin(self, port: str, pin: int) -> bool:
         """
@@ -155,6 +155,10 @@ class MCP23S17(SpiDevice):
         if pin < 0 or pin > 7:
             self._logger.error(f"'{pin}' is not a valid pin (must be between 0 and 7)")
             raise Exception(f"Invalid pin number {pin}")
+    
+    @staticmethod
+    def swap_endian(byte_message: str) -> str:
+        return byte_message[::-1]
 
 # class Expander:
 #     def __init__(self):
