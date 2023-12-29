@@ -4,6 +4,7 @@ from .interfaces import SpiDevice
 
 
 class MCP23S17Register(Enum):
+    IOCON = "00001010"
     IODIRA = "00000000"
     IODIRB = "00010000"
     GPIOA = "00001001"
@@ -51,6 +52,11 @@ class MCP23S17(SpiDevice):
             else:
                 self._logger.error(f"'{config['PORTB'][pin]}' is not a valid pin direction ('input'/'output')")
                 raise Exception(f"Invalid pin direction {config['PORTB'][pin]}")
+
+        self.write_io(MCP23S17Register.IOCON, "00000000")
+
+        self._logger.info(f"Configuring device {self._name} Port A: {message_byte_a} (0: output | 1: input | A7-A0)")
+        self._logger.info(f"Configuring device {self._name} Port B: {message_byte_a} (0: output | 1: input | B7-B0)")
 
         self.write_io(MCP23S17Register.IODIRA, message_byte_a)  # Configure Port A
         self.write_io(MCP23S17Register.IODIRB, message_byte_b)  # Configure Port B
