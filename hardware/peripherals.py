@@ -34,7 +34,7 @@ class Pin:
 
         # Update class variables
         self._pin_direction = direction
-        self._logger.info(f"Direction for pin {self._pin_mapping} set to {self._pin_direction}")
+        self._logger.debug(f"Direction for pin {self._pin_mapping} set to {self._pin_direction}")
 
     def read(self) -> int:
         value = Gpio.input(self._pin_mapping)

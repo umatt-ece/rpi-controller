@@ -65,13 +65,15 @@ class RaspberryPi:
         self._pinout[self._spi_config["mosi"]]["pin"].set_direction("output")
         self._pinout[self._spi_config["miso"]]["pin"].set_direction("input")
 
-    def add_spi_device(self, device: SpiDevice, select: str, reset: Pin = None) -> None:
+    def add_spi_device(self, device: SpiDevice, select: str, reset: str = "") -> None:
         # Verify that Clock, MOSI, and MISO have already been configured
         if not self._spi_config:
             self._logger.error("No SPI configuration. Please ensure `configure_spi` has been called")
 
         if reset:
-            device.set_reset_pin(reset)
+            self._pinout[self._parse_pin(reset)]["pin"].set_direction("output")
+            self._pinout[self._parse_pin(reset)]["pin"].write(1)
+            device.set_reset_pin(self._pinout[self._parse_pin(reset)]["pin"])
 
         # Configure an interface (SPI) for added device. Use RPi's Clock, MOSI, and MISO pins & device's Select pin
         device.set_interface(SerialPeripheralInterface(

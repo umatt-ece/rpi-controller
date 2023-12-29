@@ -32,9 +32,9 @@ class SerialPeripheralInterface:
                 self._logger.error(f"Character '{bit}' is not a valid bit (ie. not '0' or '1')")
 
         if message[7] == "0":
-            self._logger.info(f"Sending Write Message  (address {message[0:7]}): {message}")
+            self._logger.debug(f"Sending Write Message  (address {message[0:7]}): {message}")
         else:
-            self._logger.info(f"Sending Read Request   (address {message[0:7]})")
+            self._logger.debug(f"Sending Read Request   (address {message[0:7]}): {message}")
 
         self._select.write(0)  # Pull Chip Select low to begin transmission
 
@@ -60,21 +60,23 @@ class SerialPeripheralInterface:
         if num_bytes <= 0:
             self._logger.error(f"Cannot read '{num_bytes}' number of bytes")
 
-        message = ""
+        # Send read request
         self.write(f"{address}1{message}", continue_message=True)
 
+        # Read device response
+        response = ""
         for bit in range(num_bytes * 8):
             # Toggle clock HIGH
             self._clock.write(1)
             # Read next bit
-            message += str(self._miso.read())
+            response += str(self._miso.read())
             # Toggle clock LOW
             self._clock.write(0)
 
         self._select.write(1)  # Pull Chip Select high to end transmission
 
-        self._logger.info(f"Received Read Response (address {address}): {message}")
-        return message
+        self._logger.debug(f"Received Read Response (address {address}): {response}")
+        return response
 
 
 class SpiDevice:
