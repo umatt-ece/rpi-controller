@@ -135,7 +135,7 @@ If you're using PyCharm, there is a very easy way to do this, just open up a _re
 
 ![install-all-packages.png](./images/install-all-packages.png)
 
-Alternatively, if you are on Windows, there is a batch file, [install-pip-requirements.bat](../scripts/install-pip-requirements.bat), to do this automatically for you.
+Alternatively, if you are on Windows, there is a batch file, [install-pip-requirements.bat](../scripts/windows/install-pip-requirements.bat), to do this automatically for you.
 
 ## JavaScript
 

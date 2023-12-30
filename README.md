@@ -17,8 +17,7 @@ For additional information, see [project structure](./documents/ProjectStructure
 
 ## Development
 
-Please use **development** branch (or feel free to make your own off of it). Any changes to **main** should be done via
-*pull request*.
+Please use **development** branch (or feel free to make your own off of it). Any changes to **main** should be done via *pull request*.
 
 See development [documentation](./documents/README.md) for more details.
 
