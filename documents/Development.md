@@ -42,7 +42,7 @@ Once you're python venv has been activated, we can run the backend server by run
 
 ```shell
 cd server
-python main.py
+python vue_server.py
 ```
 
 Alternatively, you can run uvicorn directly.

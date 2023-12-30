@@ -18,4 +18,3 @@ RUN pip install -r /controller/server/requirements.txt --disable-pip-version-che
 # Change working directory & start
 WORKDIR /controller
 CMD ["python", "main.py"]
-#CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8577"]  # to run server

@@ -1,8 +1,11 @@
 import logging
 import time
+import subprocess
+
 
 import __init__
 from hardware import RPiModel, RaspberryPi, MCP23S17, MCP3208, MCP42XXX
+from server import start_vue_server
 
 
 INTERVAL = 1  # seconds
@@ -63,6 +66,11 @@ def main():
         rpi.devices["gpio_1"].configure(sample_gpio_config, haen=True)
         rpi.devices["gpio_2"].configure(sample_gpio_config, haen=True)
         rpi.devices["gpio_3"].configure(sample_gpio_config, haen=True)
+
+        # Start Vue API web-server
+        start_vue_server(host="localhost", port=8577)
+
+        # Initialize State Machines
 
         while True:  # Main Program Loop
 

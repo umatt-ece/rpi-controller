@@ -1,3 +1,4 @@
+import logging
 import asyncio
 
 import uvicorn
@@ -6,7 +7,9 @@ from starlette.responses import FileResponse
 from starlette.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
 
-from server import ClientManager, WebsocketRoutes, system_router
+from server import ClientManager, WebsocketRoutes, SystemRoutes
+
+logger = logging.getLogger("server")
 
 
 def create_app() -> FastAPI:
@@ -18,7 +21,7 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    new_app.include_router(system_router)
+    new_app.include_router(SystemRoutes)
     new_app.add_websocket_route('/ws', WebsocketRoutes)
     new_app.mount("/", StaticFiles(directory="vue-app", html=True), name="VueJS App")
     return new_app
@@ -38,11 +41,6 @@ async def app_startup():
     asyncio.create_task(client_manager.run())
 
 
-def main():
-    # initialization
-    print('Starting UMATT Server Application')
-    uvicorn.run(app, host="localhost", port=8577)
-
-
-if __name__ == "__main__":
-    main()
+def start_vue_server(host: str = "localhost", port: int = 8577) -> None:
+    logger.info(f"Starting Vue Server on '{host}:{port}'")
+    uvicorn.run(app, host=host, port=port)

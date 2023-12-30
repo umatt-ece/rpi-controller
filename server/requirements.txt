@@ -1,3 +1,2 @@
 uvicorn
 fastapi
-fastapi_utils
