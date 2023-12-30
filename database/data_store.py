@@ -1,51 +1,54 @@
+import os
+from typing import Any, Union
+
 import redis
-from typing import Union, Any
-from database import LiveData, StoredData
+
+from database import Parameters
 
 
 class DataStore:
 
     def __init__(self):
-        self._live_redis = redis.Redis(host="localhost", port=6379, db=0)
-        self._stored_redis = redis.Redis(host="localhost", port=6379, db=1)
+        self._redis = redis.Redis(
+            host=os.environ.get("REDIS_HOST", "localhost"),
+            port=int(os.environ.get("REDIS_PORT", "6379")),
+        )
         # self._logger  # TODO: implement logging
 
         # Initialize
         self.initialize_database()
 
     def initialize_database(self):
-        # Initialize the Live Data Store if it has not been yet.
-        if not self.get(LiveData.INITIALIZED):
-            for entry in LiveData:
-                self.set(entry, entry.datatype())
-        # Initialize the Stored Data Store if it has not been yet.
-        if not self.get(StoredData.INITIALZED):
-            for entry in StoredData:
-                self.set(entry, entry.datatype())
+        # Initialize the Data Store if it has not been yet
+        if not self.get(Parameters.INITIALIZED):
+            print('Initializing Redis...')
+            for entry in Parameters:
+                self.set(entry, entry.default)
 
-    def set(self, key: Union[LiveData, StoredData], value: Any):
-        if isinstance(key, LiveData):
-            return self._live_redis.set(key.name, value)
-        elif isinstance(key, StoredData):
-            return self._stored_redis.set(key.name, value)
+    def get(self, param: Parameters):
+        try:
+            return self._convert_post_redis(param, self._redis.get(param.name))
+        except Exception as e:
+            raise Exception(f"Error: problem getting parameter '{param}' from redis.")
+
+    def set(self, param: Parameters, value: Any):
+        try:
+            return self._redis.set(param.name, self._convert_pre_redis(value))
+        except Exception as e:
+            raise Exception(f"Error: problem setting parameter '{param}' in redis.")
+
+    @staticmethod
+    def _convert_pre_redis(value):
+        if isinstance(value, bool):
+            return str(value)
         else:
-            raise KeyError(f"'{key}' is not a valid parameter")
+            return value
 
-    def get(self, key: Union[LiveData, StoredData]):
-        if isinstance(key, LiveData):
-            return self._live_redis.get(key.name)
-        elif isinstance(key, StoredData):
-            return self._stored_redis.get(key.name)
+    @staticmethod
+    def _convert_post_redis(param: Parameters, value):
+        if param.datatype == bool:
+            if param == Parameters.INITIALIZED and value is None:
+                return False
+            return value.decode("utf-8") == "True"
         else:
-            raise KeyError(f"'{key}' is not a valid parameter")
-
-    def get_many(self, keys: list):
-        pass
-
-    def set_many(self, key_values: dict):
-        pass
-
-
-# FOR TESTING...
-if __name__ == "__main__":
-    dataStore = DataStore()
+            return param.datatype(value)
