@@ -164,7 +164,7 @@ The backend web server facilitates communication between the frontend web-applic
 
 Using the python library FASTAPI, it hosts a API server on port 8577. This server contains a number of endpoints that
 called be called by the frontend (via a http websocket) and services these requests asynchronously. The various
-functions of these endpoints vary, more detailed information can be found [here](../server/ServerInfo.md).
+functions of these endpoints vary, more detailed information can be found [here](../src/server/ServerInfo.md).
 
 Additionally, the backend server has a separate thread that runs the _ClientManager_ python class. This class handles
 the various websocket connections made to the server (at the moment just one) and keeps track of the 'meta-data'
@@ -185,7 +185,7 @@ thus on start-up take a default value. Stored parameters are persisted to disk, 
 they will be read from memory and have the same value as when teh system was last shut down.
 
 To deploy our Redis "database", we use a pre-made Docker container that sets everything up for us. In order to actually
-read and set values in Redis, we use a python wrapper class [DataStore](../database/data_store.py). Each application
+read and set values in Redis, we use a python wrapper class [DataStore](../src/database/data_store.py). Each application
 that wants to access Redis creates their own instance of the DataStore class, which then provides them with functions
 to _get_ and _set_ values in Redis.
 
