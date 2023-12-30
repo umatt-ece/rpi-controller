@@ -27,7 +27,7 @@ class MCP23S17(SpiDevice):
 
     def __init__(self, name: str, address: str, reset: Pin = None, config: dict = None) -> None:
         super().__init__(name)
-        self.set_address(f"0100{address}")
+        self.set_address(f"0100{self.swap_endian(address)}")
 
         # Optionally, set rest pin (if `reset` provided)
         if reset:
@@ -37,7 +37,7 @@ class MCP23S17(SpiDevice):
         if config:
             self.configure(config)
 
-    def configure(self, config: dict) -> None:
+    def configure(self, config: dict, bank: bool = False, haen: bool = True) -> None:
         """  
 
         """
@@ -70,7 +70,10 @@ class MCP23S17(SpiDevice):
                                    "('{Pin.INPUT}'/'{Pin.OUTPUT}')")
                 raise Exception(f"Invalid pin direction {config[self.PORTB][pin]}")
 
-        self.write_io(MCP23S17Register.IOCON, "00000000")
+        # Construct IO configuration register byte
+        bank_bit = "1" if bank else "0"
+        haen_bit = "1" if haen else "0"
+        self.write_io(MCP23S17Register.IOCON, f"{bank_bit}00{haen_bit}0000")
 
         self._logger.info(f"Configuring device {self._name} {self.PORTA}: {message_byte_a} " +
                           "(0: {Pin.OUTPUT} | 1: {Pin.INPUT} | A0-A7)")
@@ -87,7 +90,7 @@ class MCP23S17(SpiDevice):
         :param register: Enum of type MCP23S17Register that defines the device's register to write to (8-bit address).
         :param message: Message string of bits to write to the device register. String length must be only 1 byte.
         """
-        self.write(f"{self.address}1{register.value}{message}")
+        self.write(f"{self.address}0{register.value}{message}")
 
     def read_io(self, register: MCP23S17Register) -> str:
         """

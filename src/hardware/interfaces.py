@@ -57,7 +57,7 @@ class SerialPeripheralInterface:
 
         self._select.write(1)  # Pull Chip Select high to end transmission
 
-        self._logger.debug(f"Received Read Response (address {address}): {response}")
+        self._logger.debug(f"Received Message: {response}")
         return response
 
 

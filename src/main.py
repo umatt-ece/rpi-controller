@@ -33,10 +33,10 @@ sample_gpio_config = {
 
 def main():
     try:
-        gpio_0 = MCP23S17("gpio_0", "000")
-        gpio_1 = MCP23S17("gpio_1", "001")
-        gpio_2 = MCP23S17("gpio_2", "010")
-        gpio_3 = MCP23S17("gpio_3", "011")
+        gpio_0 = MCP23S17("gpio_0", address="000")
+        gpio_1 = MCP23S17("gpio_1", address="001")
+        gpio_2 = MCP23S17("gpio_2", address="010")
+        gpio_3 = MCP23S17("gpio_3", address="011")
 
         rpi = RaspberryPi(RPiModel.RPI4B)
         rpi.pinout()
@@ -44,7 +44,7 @@ def main():
         rpi.configure_spi(clock="GPIO11", mosi="GPIO10", miso="GPIO9")
         rpi.add_spi_device(device=gpio_0, select="GPIO6", reset="GPIO5")
 
-        rpi.devices["gpio_0"].configure(sample_gpio_config)
+        rpi.devices["gpio_0"].configure(sample_gpio_config, haen=True)
 
         rpi.devices["gpio_0"].write_pin(port="A", pin=7, value=True)
 
