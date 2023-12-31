@@ -40,6 +40,6 @@ async def app_startup():
     pass
 
 
-def start_vue_server(host: str = "localhost", port: int = 8577) -> None:
+def start_vue_server(host: str = "0.0.0.0", port: int = 8577) -> None:
     logger.info(f"Starting Vue Server at {host}:{port}")
     uvicorn.run(app, host=host, port=port)
