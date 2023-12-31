@@ -5,6 +5,7 @@ Purpose: Root Python package for the project. This file also contains the loggin
 """
 import logging.config
 import logging
+from datetime import datetime
 
 
 # configure formatters, handlers, and loggers for the project
@@ -23,25 +24,28 @@ logging.config.dictConfig({
             "formatter": "default",
             "stream": "ext://sys.stdout",
         },
-        "hardware_file_handler": {
+        "file_handler": {
             "class": "logging.FileHandler",
-            "filename": "log/hardware.log",
+            "filename": f"log/{datetime.now().strftime('%Y-%m-%d')}.log",
             "formatter": "default",
         },
-        "logic_file_handler": {
-            "class": "logging.FileHandler",
-            "filename": "log/logic.log",
-            "formatter": "default",
-        }
     },
     "loggers": {
+        "database": {
+            "level": "INFO",
+            "handlers": ["console", "file_handler"],
+        },
+        "server": {
+            "level": "INFO",
+            "handlers": ["console", "file_handler"],
+        },
         "hardware": {
             "level": "INFO",
-            "handlers": ["console", "hardware_file_handler"],
+            "handlers": ["console", "file_handler"],
         },
         "logic": {
             "level": "INFO",
-            "handlers": ["console", "logic_file_handler"],
+            "handlers": ["console", "file_handler"],
         },
         "controller": {
             "level": "ERROR",

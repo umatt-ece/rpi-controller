@@ -1,15 +1,16 @@
 import logging
 import time
-import subprocess
-
+import threading
 
 import __init__
-from hardware import RPiModel, RaspberryPi, MCP23S17, MCP3208, MCP42XXX
-from server import start_vue_server
 
+from hardware import RPiModel, RaspberryPi, MCP23S17, MCP3208, MCP42XXX
+from database import DataStore
+from logic import EVTStateMachine
+# from server import start_vue_server
 
 INTERVAL = 1  # seconds
-
+stop_all_threads = False
 
 logger = logging.getLogger("controller")
 
@@ -35,6 +36,10 @@ sample_gpio_config = {
         7: "input",
     }
 }
+
+
+def stop_thread() -> bool:
+    return stop_all_threads
 
 
 def main():
@@ -67,10 +72,17 @@ def main():
         rpi.devices["gpio_2"].configure(sample_gpio_config, haen=True)
         rpi.devices["gpio_3"].configure(sample_gpio_config, haen=True)
 
-        # Start Vue API web-server
-        start_vue_server(host="localhost", port=8577)
+        # Initialize Date Store
+        date_store = DataStore()
 
-        # Initialize State Machines
+        # Initialize Drive State Machines
+        drive_state_machine = EVTStateMachine("evt", rpi, date_store)
+        drive_thread = threading.Thread(target=drive_state_machine.run, args=[stop_thread])
+        drive_thread.start()
+
+        # Start Vue API web-server
+        # vue_thread = threading.Thread(target=start_vue_server)
+        # vue_thread.start()
 
         while True:  # Main Program Loop
 
@@ -84,9 +96,13 @@ def main():
             time.sleep(INTERVAL)
 
     except Exception as e:
-        # TODO: log exceptions first...
+        # Attempt to stop all threads gracefully
+        global stop_all_threads
+        stop_all_threads = True
+        # Log the exception
         logger.exception(e)
-        logger.error("Oh no, something went wrong...")
+        # Throw it back so we can still crash
+        raise e
 
 
 if __name__ == "__main__":

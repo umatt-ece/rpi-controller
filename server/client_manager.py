@@ -1,7 +1,7 @@
 import asyncio
 import json
 
-from database import DataStore, Parameters
+from database import DataStore, Parameter
 
 
 class ClientManager:
@@ -46,7 +46,7 @@ class ClientManager:
             try:
                 msg = {
                     'type': 'live_data',
-                    'data': self._data_store.get(Parameters.CONTROLLER_ONLINE)
+                    'data': self._data_store.get(Parameter.CONTROLLER_ONLINE)
                 }
                 await self.broadcast(msg)
                 await asyncio.sleep(INTERVAL)

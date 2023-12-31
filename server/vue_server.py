@@ -37,8 +37,9 @@ async def vuejs_app():
 
 @app.on_event('startup')
 async def app_startup():
-    client_manager = ClientManager()
-    asyncio.create_task(client_manager.run())
+    logger.info("Starting Client Manager...")
+    # client_manager = ClientManager()
+    # asyncio.create_task(client_manager.run())
 
 
 def start_vue_server(host: str = "localhost", port: int = 8577) -> None:

@@ -9,7 +9,7 @@ if ! docker -v >/dev/null ; then
     case $choice in
       [Yy])
         sudo apt update
-        sudo apt install -y docker
+        sudo apt install -y docker docker-compose
         break
         ;;
       [Nn])

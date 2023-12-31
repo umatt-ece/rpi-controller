@@ -1,3 +1,7 @@
+"""
+Package: server
+Purpose:
+"""
 from .client_manager import ClientManager
 from .system_routes import SystemRoutes
 from .websocket_routes import WebsocketRoutes
