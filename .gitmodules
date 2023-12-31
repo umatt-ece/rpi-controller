@@ -1,0 +1,4 @@
+[submodule "server/vue-app"]
+	path = server/vue-app
+	url = git@github.com:umatt-ece/display-frontend.git
+	branch = deploy
