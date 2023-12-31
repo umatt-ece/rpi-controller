@@ -8,6 +8,7 @@
 # Envirnoment Files
 .env
 .venv
+__pycache__
 
 # Log Files
 *.log
