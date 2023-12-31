@@ -10,6 +10,7 @@ if ! docker -v >/dev/null ; then
       [Yy])
         sudo apt update
         sudo apt install -y docker docker-compose
+        sudo usermod -aG docker $USER
         break
         ;;
       [Nn])

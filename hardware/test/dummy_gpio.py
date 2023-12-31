@@ -2,6 +2,8 @@ import logging
 from typing import Union
 from random import randint
 
+print_info = False
+
 
 class RPiGPIO:
     BCM = "BCM"
@@ -14,21 +16,26 @@ class RPiGPIO:
 
     @staticmethod
     def setmode(mode: BCM):
-        print(f"RPiGPIO: Mode: {mode}")
+        if print_info:
+            print(f"RPiGPIO: Mode: {mode}")
 
     @staticmethod
     def setwarnings(warnings: bool):
-        print(f"RPiGPIO: Warnings: {warnings}")
+        if print_info:
+            print(f"RPiGPIO: Warnings: {warnings}")
 
     @staticmethod
     def setup(pin: int, pin_type: Union[IN, OUT]):
-        print(f"RPiGPIO: Initializing pin {pin} to type '{pin_type}'")
+        if print_info:
+            print(f"RPiGPIO: Initializing pin {pin} to type '{pin_type}'")
 
     @staticmethod
     def input(pin: int):
-        print(f"RPiGPIO: [read] pin {pin}")
+        if print_info:
+            print(f"RPiGPIO: [read] pin {pin}")
         return randint(0, 1)
 
     @staticmethod
     def output(pin: int, value: int):
-        print(f"RPiGPIO: [write] pin {pin} = {value}")
+        if print_info:
+            print(f"RPiGPIO: [write] pin {pin} = {value}")

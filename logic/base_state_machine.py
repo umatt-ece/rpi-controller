@@ -38,7 +38,7 @@ class BaseStateMachine:
 
     def transition(self) -> None:
         # Check all transition conditions for the current state
-        for transition, details in self.states[self._state]["transitions"].items():
+        for transition, details in self.states()[self._state]["transitions"].items():
             for condition in details["conditions"]:
                 if condition():
 
@@ -59,6 +59,8 @@ class BaseStateMachine:
 
     def run(self, stop_thread: callable = run_forever) -> None:
         try:
+            self._logger.info(f"Thread '{self.name}' started successfully")
+
             # The `stop_thread` function allows outside processes to stop this thread gracefully
             while not stop_thread():
                 # Record time at start of current step
@@ -80,13 +82,13 @@ class BaseStateMachine:
             raise e
 
     def validate_state(self, state: str) -> str:
-        if state not in self.states:
+        if state not in self.states():
             raise Exception(
                 f"'{state}' is not a valid state for '{self.name}' (states: {[state for state in self.states.keys()]})")
         return state
 
     @property
-    def states(self) -> dict:
+    def states(self):
         """
         Dictionary representation of the state machine. The `states` dictionary must follow a particular structure, as
         shown below. Every state MUST include at least 1 transition; however, the `on_enter` and `on_exit` properties

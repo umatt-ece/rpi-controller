@@ -8,13 +8,19 @@ from database import Parameter
 
 
 class DataStore:
+    """
+
+    """
 
     def __init__(self, logger: logging.Logger = None):
         self._logger = logger or logging.getLogger("database")
+
+        # Connect to Redis
         self._redis = redis.Redis(
             host=os.environ.get("REDIS_HOST", "localhost"),
             port=int(os.environ.get("REDIS_PORT", "6379")),
         )
+        self._logger.info("Redis connection established")
 
         # Initialize
         self.initialize_database()

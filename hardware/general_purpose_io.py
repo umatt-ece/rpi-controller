@@ -75,10 +75,10 @@ class MCP23S17(SpiDevice):
         haen_bit = "1" if haen else "0"
         self.write_io(MCP23S17Register.IOCON, f"{bank_bit}00{haen_bit}0000")
 
-        self._logger.info(f"Configuring device {self._name} {self.PORTA}: {message_byte_a} " +
-                          "(0: {Pin.OUTPUT} | 1: {Pin.INPUT} | A0-A7)")
-        self._logger.info(f"Configuring device {self._name} {self.PORTB}: {message_byte_b} " +
-                          "(0: {Pin.OUTPUT} | 1: {Pin.INPUT} | B0-B7)")
+        self._logger.debug(f"Configuring device {self._name} {self.PORTA}: {message_byte_a} " +
+                           "(0: {Pin.OUTPUT} | 1: {Pin.INPUT} | A0-A7)")
+        self._logger.debug(f"Configuring device {self._name} {self.PORTB}: {message_byte_b} " +
+                           "(0: {Pin.OUTPUT} | 1: {Pin.INPUT} | B0-B7)")
 
         self.write_io(MCP23S17Register.IODIRA, swap_string_endian(message_byte_a))  # Configure Port A
         self.write_io(MCP23S17Register.IODIRB, swap_string_endian(message_byte_b))  # Configure Port B
@@ -108,7 +108,7 @@ class MCP23S17(SpiDevice):
         :param pin: Pin number of GPIO port to write to. Must be between 0 and 7.
         :param value: Value to write to GPIO pin. True corresponds to 1/ON and False corresponds to 0/OFF.
         """
-        self._logger.info(f"{self.name}: Writing '{'1' if value else '0'}' to pin {port}{pin}")
+        self._logger.debug(f"{self.name}: Writing '{'1' if value else '0'}' to pin {port}{pin}")
 
         # Validation
         port = port.upper()
@@ -149,7 +149,7 @@ class MCP23S17(SpiDevice):
         # Send/Receive message
         value = swap_string_endian(self.read_io(register_byte))
 
-        self._logger.info(f"{self.name}: Pin {port}{pin} state is '{value[pin] == '1'}'")
+        self._logger.debug(f"{self.name}: Pin {port}{pin} state is '{value[pin] == '1'}'")
         return value[pin] == "1"  # return True if "1" or False if "0"
 
     def _validate_port_pin(self, port: str, pin: int) -> None:

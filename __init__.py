@@ -14,7 +14,7 @@ logging.config.dictConfig({
     "disable_existing_loggers": False,
     "formatters": {
         "default": {
-            "format": "%(asctime)s | %(filename)s | %(levelname)s | %(message)s",
+            "format": "%(asctime)s | %(name)s | %(levelname)s | %(filename)s | %(message)s",
             "datefmt": "%Y-%m-%d %H:%M:%S",
         }
     },
@@ -48,8 +48,8 @@ logging.config.dictConfig({
             "handlers": ["console", "file_handler"],
         },
         "controller": {
-            "level": "ERROR",
-            "handlers": ["console"],
+            "level": "INFO",
+            "handlers": ["console", "file_handler"],
         },
     }
 })

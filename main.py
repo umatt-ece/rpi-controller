@@ -4,10 +4,11 @@ import threading
 
 import __init__
 
+from common import get_data_store
 from hardware import RPiModel, RaspberryPi, MCP23S17, MCP3208, MCP42XXX
 from database import DataStore
 from logic import EVTStateMachine
-# from server import start_vue_server
+from server import start_vue_server
 
 INTERVAL = 1  # seconds
 stop_all_threads = False
@@ -45,6 +46,8 @@ def stop_thread() -> bool:
 def main():
     try:  # Setup & Initialization
 
+        logger.info("Initializing RPi-Controller Software...")
+
         # Configure devices
         gpio_0 = MCP23S17("gpio_0", address="000")
         gpio_1 = MCP23S17("gpio_1", address="001")
@@ -56,7 +59,7 @@ def main():
         # Configure Raspberry Pi
         rpi = RaspberryPi(RPiModel.RPI4B)
         rpi.configure_spi(clock="GPIO11", mosi="GPIO10", miso="GPIO9")
-        rpi.pinout()  # print pinout for reference
+        # rpi.pinout()  # print pinout for reference
 
         # Add devices to Raspberry Pi
         rpi.add_spi_device(device=gpio_0, select="GPIO6", reset="GPIO5")
@@ -73,24 +76,24 @@ def main():
         rpi.devices["gpio_3"].configure(sample_gpio_config, haen=True)
 
         # Initialize Date Store
-        date_store = DataStore()
+        data_store = get_data_store()
 
         # Initialize Drive State Machines
-        drive_state_machine = EVTStateMachine("evt", rpi, date_store)
+        drive_state_machine = EVTStateMachine(name="evt", rpi=rpi, datastore=data_store)
         drive_thread = threading.Thread(target=drive_state_machine.run, args=[stop_thread])
         drive_thread.start()
 
         # Start Vue API web-server
-        # vue_thread = threading.Thread(target=start_vue_server)
-        # vue_thread.start()
+        vue_thread = threading.Thread(target=start_vue_server)
+        vue_thread.start()
 
         while True:  # Main Program Loop
 
             # Example Usage of RPi device functions
-            rpi.devices["gpio_0"].write_pin(port="A", pin=7, value=True)
-            rpi.devices["gpio_0"].read_pin(port="B", pin=0)
-            rpi.devices["adc"].read_analog(channel=0)
-            rpi.devices["pot"].write_pot(resistance=100, pot_select=0)
+            # rpi.devices["gpio_0"].write_pin(port="A", pin=7, value=True)
+            # rpi.devices["gpio_0"].read_pin(port="B", pin=0)
+            # rpi.devices["adc"].read_analog(channel=0)
+            # rpi.devices["pot"].write_pot(resistance=100, pot_select=0)
 
             # Delay processor execution (not necessary to run as fast as possible)
             time.sleep(INTERVAL)

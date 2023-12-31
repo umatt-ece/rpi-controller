@@ -73,6 +73,7 @@ for platform, details in config.items():
               - "{CWD}/database:/controller/database"        # Module 'database'
               - "{CWD}/hardware:/controller/hardware"        # Module 'hardware'
               - "{CWD}/logic:/controller/logic"              # Module 'logic'
+              - "{CWD}/server:/controller/server"            # Module 'server'
               - "{CWD}/log:/controller/log"                  # Mapped in log folder
               - "{CWD}/__init__.py:/controller/__init__.py"  # rpi-controller __init__.py
               - "{CWD}/main.py:/controller/main.py"          # rpi-controller main.py
