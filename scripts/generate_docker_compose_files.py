@@ -85,6 +85,9 @@ for platform, details in config.items():
         # Split-up file contents by line (and remove first empty line)
         file_contents = file_contents.splitlines()[1:]
 
+        if platform == "Raspberry Pi":
+            file_contents.insert(21, f'{" " * TAB_SIZE}    privileged: true')
+
         with open(f"{details['filename']}", "w") as file:
             for line in file_contents:
                 # Write line contents to file (and remove leading indent)

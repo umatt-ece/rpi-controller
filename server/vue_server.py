@@ -13,6 +13,15 @@ from server import router, websockets
 _logger = logging.getLogger("server")
 
 
+def inject_logging_config() -> dict:
+    """
+    In order to avoid circular imports, the logging_config must be imported after initialization
+    """
+    from common import logging_config
+    return logging_config
+
+
+
 def inject_client_manager(logger: logging.Logger = None):
     """
     In order to avoid circular imports during initialization, the get_client_manager function must be imported later
@@ -58,4 +67,4 @@ async def app_startup():
 
 def start_vue_server(host: str = "0.0.0.0", port: int = 8577) -> None:
     _logger.info(f"Starting Vue Server at {host}:{port}")
-    uvicorn.run(app, host=host, port=port)
+    uvicorn.run(app, host=host, port=port, log_config=inject_logging_config())

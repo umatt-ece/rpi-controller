@@ -49,9 +49,14 @@ class MCP3208(SpiDevice):
         if self.mode == self.DIFFERENTIAL and (channel < 0 or channel > 3):
             raise Exception(f"Channel '{channel}' is invalid for mode '{self.mode}' (must be between 0 to 3")
 
+        self._logger.debug(f"{self.name}: Reading analog value from channel {channel} (Mode: {self.mode})")
+
         # Read analog value
         command_message = f"01{'1' if self._mode == self.SINGLE else '0'}{integer_to_binary_string(channel)}00"
-        return binary_string_to_integer(self.read(12, message=command_message))
+        value = binary_string_to_integer(self.read(12, message=command_message))
+
+        self._logger.info(f"{self.name}: Channel {channel} value is '{value}'")
+        return value
 
     def validate_mode(self, mode: str) -> str:
         """

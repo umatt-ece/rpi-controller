@@ -19,7 +19,7 @@ class SerialPeripheralInterface:
                 self._logger.error(f"Character '{bit}' is not a valid bit (ie. not '0' or '1')")
                 raise Exception(f"Character '{bit}' is not a valid bit (ie. not '0' or '1')")
 
-        self._logger.debug(f"Sending Message: {message}")
+        self._logger.info(f"Sending Message: {message}")
         self._select.write(0)  # Pull Chip Select low to begin transmission
 
         for bit in message:

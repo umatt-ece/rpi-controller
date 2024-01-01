@@ -75,15 +75,15 @@ def main():
         # Configure Raspberry Pi
         rpi = inject_raspberry_pi(RaspberryPi.RPI4B)
         rpi.configure_spi(clock="GPIO11", mosi="GPIO10", miso="GPIO9")
-        # rpi.pinout()  # print pinout for reference
+        rpi.pinout()  # print pinout for reference
 
         # Add devices to Raspberry Pi
         rpi.add_spi_device(device=gpio_0, select="GPIO6", reset="GPIO5")
         rpi.add_spi_device(device=gpio_1, select="GPIO6", reset="GPIO5")
         rpi.add_spi_device(device=gpio_2, select="GPIO6", reset="GPIO5")
         rpi.add_spi_device(device=gpio_3, select="GPIO6", reset="GPIO5")
-        rpi.add_spi_device(device=adc_0, select="GPIO6")
-        rpi.add_spi_device(device=pot_0, select="GPIO6", reset="GPIO5", shutdown="GPIO13")
+        # rpi.add_spi_device(device=adc_0, select="GPIO6")
+        # rpi.add_spi_device(device=pot_0, select="GPIO6", reset="GPIO5", shutdown="GPIO13")
 
         # Configure GPIO devices for Hardware Addressing (HAEN)
         rpi.devices["gpio_0"].configure(sample_gpio_config, haen=True)

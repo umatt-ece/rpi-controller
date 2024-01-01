@@ -2,7 +2,7 @@ import os
 import logging
 
 # The ENV variable is configured via Docker, otherwise defaults to 'false'
-if os.getenv("RPI", "false") == "true":
+if os.getenv("LOCAL", "true") == "false":
     # If we are running on a Raspberry Pi import `RPi.GPIO`
     import RPi.GPIO as Gpio
 else:
@@ -25,7 +25,7 @@ class Pin:
     @staticmethod
     def configure():
         Gpio.setmode(Gpio.BOARD)  # Use BCM mapping
-        Gpio.setwarnings(False)   # Ignore warnings
+        Gpio.setwarnings(True)   # Ignore warnings
 
     def set_direction(self, direction: str) -> None:
         # Validation

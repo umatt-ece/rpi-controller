@@ -51,6 +51,8 @@ class MCP42XXX(SpiDevice):
         if pot_select != 0 and pot_select != 1:
             raise Exception(f"Invalid potentiometer selection '{pot_select}' (must be either 0 or 1).")
 
+        self._logger.info(f"{self.name}: Writing '{resistance}' to potentiometer {pot_select}")
+
         # Write to device
         cmd_select_bits = "01"  # For 'write' operation
         pot_select_bits = "10" if pot_select == 1 else "01"  # Assumes pot_select equals either 0 or 1

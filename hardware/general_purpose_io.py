@@ -108,11 +108,11 @@ class MCP23S17(SpiDevice):
         :param pin: Pin number of GPIO port to write to. Must be between 0 and 7.
         :param value: Value to write to GPIO pin. True corresponds to 1/ON and False corresponds to 0/OFF.
         """
-        self._logger.debug(f"{self.name}: Writing '{'1' if value else '0'}' to pin {port}{pin}")
-
         # Validation
         port = port.upper()
         self._validate_port_pin(port, pin)
+
+        self._logger.info(f"{self.name}: Writing '{'1' if value else '0'}' to pin {port}{pin}")
 
         # Construct message
         if port == "A":
@@ -134,11 +134,11 @@ class MCP23S17(SpiDevice):
         :param port: Port of MCP23S17 device to read from. Must be either "A" or "B".
         :param pin: Pin number of GPIO port to read from. Must be between 0 and 7.
         """
-        self._logger.debug(f"{self.name}: Reading current state of pin {port}{pin}")
-
         # Validation
         port = port.upper()
         self._validate_port_pin(port, pin)
+
+        self._logger.debug(f"{self.name}: Reading current state of pin {port}{pin}")
 
         # Construct message
         if port == "A":
@@ -149,7 +149,7 @@ class MCP23S17(SpiDevice):
         # Send/Receive message
         value = swap_string_endian(self.read_io(register_byte))
 
-        self._logger.debug(f"{self.name}: Pin {port}{pin} state is '{value[pin] == '1'}'")
+        self._logger.info(f"{self.name}: Pin {port}{pin} state is '{value[pin] == '1'}'")
         return value[pin] == "1"  # return True if "1" or False if "0"
 
     def _validate_port_pin(self, port: str, pin: int) -> None:
