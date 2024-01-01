@@ -5,28 +5,43 @@
 > This repository contains backend code for operating the tractor, designed to run on a Raspberry Pi microcontroller (or some equivalent Linux-based microcontroller). It features a web-based, Vue app interface (see the [display-frontend](https://github.com/umatt-ece/display-frontend) repository for more info).
 
 ### Table of Contents
-[Overview]()  
+[Structure]()  
 [Development]()  
 
 
-## Overview
+## Structure
 
-The controller code follows the structure shown below:
-
-![Project Structure]()
-
-- frontend web application GUI (display)
-- backend api server (server)
-- redis parameter store (database)
-- logic and sensor/output control (controller)
-
-For additional information, see [project structure](./documents/ProjectStructure.md) documentation.
+![Project Structure](documents/images/modules.png)
 
 ## Development
 
-Please use **development** branch (or feel free to make your own off of it). Any changes to **main** should be done via *pull request*.
+### Dependencies
 
-See development [documentation](./documents/README.md) for more details.
+- [Python]()
+- [Docker]()
+
+### Setup
+
+Clone repository from git
+```shell
+git clone git@github.com:umatt-ece/rpi-controller.git
+git checkout development
+git submodule init
+git submodule update
+```
+
+Generate the _docker-compose_ files
+```shell
+python3 scripts/generate_docker_compose_files.py
+```
+
+Start Project
+```shell
+docker-compose -f docker-compose-rpi.yml up --build -d      # Raspberry Pi
+docker-compose -f docker-compose-linux.yml up --build -d    # Linux
+docker-compose -f docker-compose-windows.yml up --build -d  # Windows
+```
+
 
 ## Contributors
 
