@@ -1,8 +1,6 @@
 # Glossary
 
-For a lot of students joining the project, it can be overwhelming just how many words/abbreviations get thrown around.
-Thus, this document serves as a look-up for common terms and phrases in hopes to help clarify some confusion and provide
-some insight.
+For a lot of students joining the project, it can be overwhelming just how many words/abbreviations get thrown around. Thus, this document serves as a look-up for common terms and phrases in hopes to help clarify some confusion and provide some insight.
 
 ## Terms:
 

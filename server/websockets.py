@@ -1,33 +1,48 @@
+import logging
+import uuid
+
 from fastapi import APIRouter
 from starlette.endpoints import WebSocketEndpoint
 from starlette.types import Scope, Receive, Send
 from starlette.websockets import WebSocket
 
-from server import ClientManager
-
-router = APIRouter()
+websockets = APIRouter()
 
 
-# TODO: sort out this file lol... it's a mess
+def inject_client_manager(logger: logging.Logger = None):
+    """
+    In order to avoid circular imports during initialization, the get_client_manager function must be imported later
+    and called within this function.
+    """
+    from common.dependency_handler import get_client_manager
+    return get_client_manager(logger=logger)
 
-@router.websocket_route('/ws')
+
+@websockets.websocket_route('/ws')
 class WebsocketRoutes(WebSocketEndpoint):
-    def __init__(self, scope: Scope, receive: Receive, send: Send):
+    """
+
+    """
+
+    def __init__(self, scope: Scope, receive: Receive, send: Send, logger: logging.Logger = None):
         super().__init__(scope, receive, send)
+        self._logger = logger or logging.getLogger("server")
 
         self._client_id = None
-        self._client_manager = ClientManager()  # TODO: dependency inject the ClientManager in here
+        self._client_manager = inject_client_manager()
 
-    async def on_connect(self, websocket):
+    async def on_connect(self, websocket: WebSocket) -> None:
         """
         handle new connection
         """
-        # self._client_id = str(uuid.uuid4())  # TODO: uuids???
-        print("new websocket connection...")
+        self._client_id = str(uuid.uuid4())  # Generate an unique identifier (UUID)
+        self._logger.info(f"New WebSocket connected, assigning it ID: {self._client_id}")
+
+        # Accept the connection and add it to the list of connected clients
         await websocket.accept()
         await self._client_manager.add_client(self._client_id, websocket)
 
-    async def on_disconnect(self, _websocket: WebSocket, _close_code: int):
+    async def on_disconnect(self, websocket: WebSocket, close_code: int) -> None:
         """
         disconnect client
         """

@@ -8,19 +8,20 @@ from .interfaces import SerialPeripheralInterface, SpiDevice
 J_HEADER_PINS = 40
 
 
-class RPiModel(Enum):
+class RaspberryPi:
+    """
+
+    """
     RPI3B = "RPI3B"
     RPI4B = "RPI4B"
 
-
-class RaspberryPi:
     _pinout = {}
     _spi_config = {}
     _i2c_config = {}  # TODO: add I2C implementation
     _can_config = {}  # TODO: add CAN implementation
     _devices = {}
 
-    def __init__(self, model: RPiModel, logger: logging.Logger = None) -> None:
+    def __init__(self, model: str, logger: logging.Logger = None) -> None:
         self._logger = logger or logging.getLogger("hardware")
         self._model = model
 
@@ -140,7 +141,7 @@ class RaspberryPi:
 
 
 pinout_mapping = {
-    RPiModel.RPI4B: {
+    RaspberryPi.RPI4B: {
         # BOARD: [BCM, TYPE, FUNTION, DESCRIPTION]
         1: [None, "PWR", "3V3", "3.3V Power"],
         2: [None, "PWR", "5V", "5V Power"],

@@ -1,4 +1,5 @@
 import logging
+import threading
 import asyncio
 
 import uvicorn
@@ -7,9 +8,18 @@ from starlette.responses import FileResponse
 from starlette.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
 
-from server import ClientManager, system_router
+from server import router, websockets
 
-logger = logging.getLogger("server")
+_logger = logging.getLogger("server")
+
+
+def inject_client_manager(logger: logging.Logger = None):
+    """
+    In order to avoid circular imports during initialization, the get_client_manager function must be imported later
+    and called within this function.
+    """
+    from common.dependency_handler import get_client_manager
+    return get_client_manager(logger=logger)
 
 
 def create_app() -> FastAPI:
@@ -21,7 +31,7 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    new_app.include_router(system_router)
+    new_app.include_router(router)
     new_app.mount("/", StaticFiles(directory="server/vue-app", html=True), name="VueJS App")
     return new_app
 
@@ -36,10 +46,16 @@ async def vuejs_app():
 
 @app.on_event('startup')
 async def app_startup():
-    logger.info("Starting Client Manager...")
-    pass
+    _logger.info("Starting Client Manager...")
+
+    client_manager = inject_client_manager()
+
+    # Due to the 'asynchronous' nature of the `client_manager`, the run() method needs to be called using `asyncio.run`
+    # In order for it to execute in a separate thread.
+    client_manager_broadcast_thread = threading.Thread(target=asyncio.run, args=[client_manager.run()])
+    client_manager_broadcast_thread.start()
 
 
 def start_vue_server(host: str = "0.0.0.0", port: int = 8577) -> None:
-    logger.info(f"Starting Vue Server at {host}:{port}")
+    _logger.info(f"Starting Vue Server at {host}:{port}")
     uvicorn.run(app, host=host, port=port)

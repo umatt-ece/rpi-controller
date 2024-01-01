@@ -7,6 +7,8 @@ import logging.config
 import logging
 from datetime import datetime
 
+import common  # Required that 'common' be imported first (for dependency injection)
+
 
 # configure formatters, handlers, and loggers for the project
 logging.config.dictConfig({
