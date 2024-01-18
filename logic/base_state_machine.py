@@ -40,10 +40,11 @@ class BaseStateMachine:
         # Check all transition conditions for the current state
         for transition, details in self.states()[self._state]["transitions"].items():
             for condition in details["conditions"]:
+                self._logger.info(f"checking condition {condition.__name__}: {condition()}")
                 if condition():
 
                     # Call "on_exit" function of previous state (optional)
-                    if on_exit_functions := self.states[self._state]['on_exit']:
+                    if on_exit_functions := self.states()[self._state]['on_exit']:
                         for function in on_exit_functions:
                             function()
 
@@ -53,7 +54,7 @@ class BaseStateMachine:
                     self._state = details["next_state"]
 
                     # Call "on_enter" function of next state (optional)
-                    if on_enter_functions := self.states[self._state]['on_enter']:
+                    if on_enter_functions := self.states()[self._state]['on_enter']:
                         for function in on_enter_functions:
                             function()
 

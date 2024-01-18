@@ -25,6 +25,11 @@ def inject_raspberry_pi(model: str, logger: logging.Logger = None):
     return get_raspberry_pi(model=model, logger=logger)
 
 
+def inject_demo_state_machine(logger: logging.Logger = None):
+    from common.dependency_handler import get_demo_state_machine
+    return get_demo_state_machine(logger=logger)
+
+
 @cbv(router)
 class SystemRoutes:
     def __init__(self):
@@ -32,6 +37,7 @@ class SystemRoutes:
 
         self._data_store = inject_data_store()
         self._rpi = inject_raspberry_pi(RaspberryPi.RPI4B)
+        self._demo_state_machine = inject_demo_state_machine()
 
     @router.post("/api/test", tags=["Testing"])
     async def test_route(self, value: dict = Body(...)) -> None:
@@ -106,6 +112,8 @@ class SystemRoutes:
     @router.post("/api/demo/green", tags=["Demo"])
     async def demo_green_route(self) -> None:
         """
+        Toggles `green` LED.
+
         ***This route is intended for demonstration purposes, and should not be called by production code.***
         """
         try:
@@ -153,15 +161,32 @@ class SystemRoutes:
             self._logger.exception(e)
 
     @router.get("/api/demo/switch", tags=["Demo"])
-    async def demo_switch_route(self) -> None:
+    async def demo_switch_route(self):
         """
         Returns the current state of the toggle switch.
 
         ***This route is intended for demonstration purposes, and should not be called by production code.***
         """
         try:
-            self._logger.info("DEMO: switch")
-            return self._rpi.devices["gpio_1"].read_pin(port="B", pin=0)
+            results = [
+                self._rpi.devices["gpio_1"].read_pin(port="B", pin=0),
+                self._rpi.devices["gpio_1"].read_pin(port="B", pin=0),
+            ]
+            return results
         except Exception as e:
             self._logger.error(f"Exception occurred during handling of '/api/demo/switch'...")
+            self._logger.exception(e)
+
+    @router.post("/api/demo/blink", tags=["Demo"])
+    async def demo_blink_route(self) -> None:
+        """
+        ***This route is intended for demonstration purposes, and should not be called by production code.***
+        """
+        try:
+            if self._demo_state_machine.is_blinking():
+                self._demo_state_machine.stop_blinking()
+            else:
+                self._demo_state_machine.start_blinking()
+        except Exception as e:
+            self._logger.error(f"Exception occurred during handling of '/api/demo/red'...")
             self._logger.exception(e)

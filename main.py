@@ -148,6 +148,11 @@ def inject_raspberry_pi(model: str, logger: logging.Logger = None):
     return get_raspberry_pi(model=model, logger=logger)
 
 
+def inject_demo_state_machine(logger: logging.Logger = None):
+    from common.dependency_handler import get_demo_state_machine
+    return get_demo_state_machine(logger=logger)
+
+
 def stop_thread() -> bool:
     return stop_all_threads
 
@@ -184,7 +189,7 @@ def main():
         data_store = inject_data_store()
 
         # Initialize Demo State Machine
-        demo_state_machine = DemoStateMachine(name="demo", rpi=rpi, datastore=data_store)
+        demo_state_machine = inject_demo_state_machine()
         demo_thread = threading.Thread(target=demo_state_machine.run, args=[stop_thread])
         demo_thread.start()
 
