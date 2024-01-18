@@ -21,7 +21,6 @@ def inject_logging_config() -> dict:
     return logging_config
 
 
-
 def inject_client_manager(logger: logging.Logger = None):
     """
     In order to avoid circular imports during initialization, the get_client_manager function must be imported later

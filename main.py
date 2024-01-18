@@ -1,10 +1,8 @@
 import logging
-import time
 import threading
+import time
 
-import __init__
-
-from hardware import RaspberryPi, MCP23S17, MCP3208, MCP42XXX
+from hardware import MCP23S17, RaspberryPi
 from logic import EVTStateMachine
 from server import start_vue_server
 
@@ -13,27 +11,120 @@ stop_all_threads = False
 
 _logger = logging.getLogger("controller")
 
-sample_gpio_config = {
-    "PORTA": {
-        0: "output",
-        1: "output",
-        2: "output",
-        3: "output",
-        4: "output",
-        5: "output",
-        6: "output",
-        7: "output",
-    },
-    "PORTB": {
-        0: "input",
-        1: "input",
-        2: "input",
-        3: "input",
-        4: "input",
-        5: "input",
-        6: "input",
-        7: "input",
-    }
+demo_config = {
+    "name": "demo",
+    "gpio": [
+        {
+            "name": "gpio_0",
+            "address": "000",
+            "select": "GPIO6",
+            "reset": "GPIO5",
+            "port_config": {
+                "PORTA": {
+                    0: "output",
+                    1: "output",
+                    2: "output",
+                    3: "output",
+                    4: "output",
+                    5: "output",
+                    6: "output",
+                    7: "output",
+                },
+                "PORTB": {
+                    0: "input",
+                    1: "input",
+                    2: "input",
+                    3: "input",
+                    4: "input",
+                    5: "input",
+                    6: "input",
+                    7: "input",
+                }
+            },
+        }, {
+            "name": "gpio_1",
+            "address": "001",
+            "select": "GPIO6",
+            "reset": "GPIO5",
+            "port_config": {
+                "PORTA": {
+                    0: "output",
+                    1: "output",
+                    2: "output",
+                    3: "output",
+                    4: "output",
+                    5: "output",
+                    6: "output",
+                    7: "output",
+                },
+                "PORTB": {
+                    0: "input",
+                    1: "input",
+                    2: "input",
+                    3: "input",
+                    4: "input",
+                    5: "input",
+                    6: "input",
+                    7: "input",
+                }
+            },
+        }, {
+            "name": "gpio_2",
+            "address": "010",
+            "select": "GPIO6",
+            "reset": "GPIO5",
+            "port_config": {
+                "PORTA": {
+                    0: "output",
+                    1: "output",
+                    2: "output",
+                    3: "output",
+                    4: "output",
+                    5: "output",
+                    6: "output",
+                    7: "output",
+                },
+                "PORTB": {
+                    0: "input",
+                    1: "input",
+                    2: "input",
+                    3: "input",
+                    4: "input",
+                    5: "input",
+                    6: "input",
+                    7: "input",
+                }
+            },
+        }, {
+            "name": "gpio_3",
+            "address": "011",
+            "select": "GPIO6",
+            "reset": "GPIO5",
+            "port_config": {
+                "PORTA": {
+                    0: "output",
+                    1: "output",
+                    2: "output",
+                    3: "output",
+                    4: "output",
+                    5: "output",
+                    6: "output",
+                    7: "output",
+                },
+                "PORTB": {
+                    0: "input",
+                    1: "input",
+                    2: "input",
+                    3: "input",
+                    4: "input",
+                    5: "input",
+                    6: "input",
+                    7: "input",
+                }
+            },
+        }
+    ]
+
 }
 
 
@@ -64,35 +155,36 @@ def main():
 
         _logger.info("Initializing RPi-Controller Software...")
 
-        # Configure devices
-        gpio_0 = MCP23S17("gpio_0", address="000")
-        gpio_1 = MCP23S17("gpio_1", address="001")
-        gpio_2 = MCP23S17("gpio_2", address="010")
-        gpio_3 = MCP23S17("gpio_3", address="011")
-        adc_0 = MCP3208("adc_0", mode=MCP3208.SINGLE)
-        pot_0 = MCP42XXX("pot_0")
+        config = demo_config
+        _logger.info(f"Using Config: {config['name']}")
 
         # Configure Raspberry Pi
         rpi = inject_raspberry_pi(RaspberryPi.RPI4B)
         rpi.configure_spi(clock="GPIO11", mosi="GPIO10", miso="GPIO9")
         rpi.pinout()  # print pinout for reference
 
-        # Add devices to Raspberry Pi
-        rpi.add_spi_device(device=gpio_0, select="GPIO6", reset="GPIO5")
-        rpi.add_spi_device(device=gpio_1, select="GPIO6", reset="GPIO5")
-        rpi.add_spi_device(device=gpio_2, select="GPIO6", reset="GPIO5")
-        rpi.add_spi_device(device=gpio_3, select="GPIO6", reset="GPIO5")
+        # Configure GPIO devices
+        gpio_devices = []
+        for gpio_config in config["gpio"]:
+            gpio_device = MCP23S17(gpio_config["name"], address=gpio_config["address"])
+            gpio_devices.append(gpio_device)
+
+            rpi.add_spi_device(device=gpio_device, select=gpio_config["select"], reset=gpio_config["reset"])
+            rpi.devices[gpio_config["name"]].configure(gpio_config["port_config"], haen=True)
+
+        # adc_0 = MCP3208("adc_0", mode=MCP3208.SINGLE)
+        # pot_0 = MCP42XXX("pot_0")
+
         # rpi.add_spi_device(device=adc_0, select="GPIO6")
         # rpi.add_spi_device(device=pot_0, select="GPIO6", reset="GPIO5", shutdown="GPIO13")
 
-        # Configure GPIO devices for Hardware Addressing (HAEN)
-        rpi.devices["gpio_0"].configure(sample_gpio_config, haen=True)
-        rpi.devices["gpio_1"].configure(sample_gpio_config, haen=True)
-        rpi.devices["gpio_2"].configure(sample_gpio_config, haen=True)
-        rpi.devices["gpio_3"].configure(sample_gpio_config, haen=True)
-
         # Initialize Date Store
         data_store = inject_data_store()
+
+        # Initialize Demo State Machine
+        demo_state_machine = DemoStateMachine(name="demo", rpi=rpi, datastore=data_store)
+        demo_thread = threading.Thread(target=demo_state_machine.run, args=[stop_thread])
+        demo_thread.start()
 
         # Initialize Drive State Machines
         drive_state_machine = EVTStateMachine(name="evt", rpi=rpi, datastore=data_store)

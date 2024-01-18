@@ -102,3 +102,47 @@ class SystemRoutes:
         except Exception as e:
             self._logger.error(f"Exception occurred during handling of '/api/write-pot'...")
             self._logger.exception(e)
+
+    @router.post("/api/demo/green", tags=["Demo"])
+    async def write_pin_route(self) -> None:
+        """
+        ***This route is intended for demonstration purposes, and should not be called by production code.***
+        """
+        try:
+            self._rpi.devices["gpio_1"].write_pin(port="A", pin=1, value=True)
+        except Exception as e:
+            self._logger.error(f"Exception occurred during handling of '/api/demo/green'...")
+            self._logger.exception(e)
+
+    @router.post("/api/demo/blue", tags=["Demo"])
+    async def write_pin_route(self) -> None:
+        """
+        ***This route is intended for demonstration purposes, and should not be called by production code.***
+        """
+        try:
+            self._rpi.devices["gpio_1"].write_pin(port="A", pin=4, value=True)
+        except Exception as e:
+            self._logger.error(f"Exception occurred during handling of '/api/demo/blue'...")
+            self._logger.exception(e)
+
+    @router.post("/api/demo/red", tags=["Demo"])
+    async def write_pin_route(self) -> None:
+        """
+        ***This route is intended for demonstration purposes, and should not be called by production code.***
+        """
+        try:
+            self._rpi.devices["gpio_1"].write_pin(port="A", pin=7, value=True)
+        except Exception as e:
+            self._logger.error(f"Exception occurred during handling of '/api/demo/red'...")
+            self._logger.exception(e)
+
+    @router.post("/api/demo/switch", tags=["Demo"])
+    async def write_pin_route(self) -> None:
+        """
+        ***This route is intended for demonstration purposes, and should not be called by production code.***
+        """
+        try:
+            return self._rpi.devices["gpio_1"].read_pin(port="B", pin=0)
+        except Exception as e:
+            self._logger.error(f"Exception occurred during handling of '/api/demo/switch'...")
+            self._logger.exception(e)
