@@ -109,8 +109,11 @@ class SystemRoutes:
         ***This route is intended for demonstration purposes, and should not be called by production code.***
         """
         try:
-            self._logger.info("DEMO: green")
-            self._rpi.devices["gpio_1"].write_pin(port="A", pin=1, value=True)
+            current_value = self._rpi.devices["gpio_1"].read_pin(port="A", pin=1)
+            if current_value:
+                self._rpi.devices["gpio_1"].write_pin(port="A", pin=1, value=False)
+            else:
+                self._rpi.devices["gpio_1"].write_pin(port="A", pin=1, value=True)
         except Exception as e:
             self._logger.error(f"Exception occurred during handling of '/api/demo/green'...")
             self._logger.exception(e)
@@ -118,11 +121,16 @@ class SystemRoutes:
     @router.post("/api/demo/blue", tags=["Demo"])
     async def demo_blue_route(self) -> None:
         """
+        Toggles `blue` LED.
+
         ***This route is intended for demonstration purposes, and should not be called by production code.***
         """
         try:
-            self._logger.info("DEMO: blue")
-            self._rpi.devices["gpio_1"].write_pin(port="A", pin=4, value=True)
+            current_value = self._rpi.devices["gpio_1"].read_pin(port="A", pin=4)
+            if current_value:
+                self._rpi.devices["gpio_1"].write_pin(port="A", pin=4, value=False)
+            else:
+                self._rpi.devices["gpio_1"].write_pin(port="A", pin=4, value=True)
         except Exception as e:
             self._logger.error(f"Exception occurred during handling of '/api/demo/blue'...")
             self._logger.exception(e)
@@ -130,11 +138,16 @@ class SystemRoutes:
     @router.post("/api/demo/red", tags=["Demo"])
     async def demo_red_route(self) -> None:
         """
+        Toggles `red` LED.
+
         ***This route is intended for demonstration purposes, and should not be called by production code.***
         """
         try:
-            self._logger.info("DEMO: red")
-            self._rpi.devices["gpio_1"].write_pin(port="A", pin=7, value=True)
+            current_value = self._rpi.devices["gpio_1"].read_pin(port="A", pin=7)
+            if current_value:
+                self._rpi.devices["gpio_1"].write_pin(port="A", pin=7, value=False)
+            else:
+                self._rpi.devices["gpio_1"].write_pin(port="A", pin=7, value=True)
         except Exception as e:
             self._logger.error(f"Exception occurred during handling of '/api/demo/red'...")
             self._logger.exception(e)
@@ -142,6 +155,8 @@ class SystemRoutes:
     @router.get("/api/demo/switch", tags=["Demo"])
     async def demo_switch_route(self) -> None:
         """
+        Returns the current state of the toggle switch.
+
         ***This route is intended for demonstration purposes, and should not be called by production code.***
         """
         try:
