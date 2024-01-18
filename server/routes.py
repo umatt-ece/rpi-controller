@@ -109,6 +109,7 @@ class SystemRoutes:
         ***This route is intended for demonstration purposes, and should not be called by production code.***
         """
         try:
+            self._logger.info("DEMO: green")
             self._rpi.devices["gpio_1"].write_pin(port="A", pin=1, value=True)
         except Exception as e:
             self._logger.error(f"Exception occurred during handling of '/api/demo/green'...")
@@ -120,6 +121,7 @@ class SystemRoutes:
         ***This route is intended for demonstration purposes, and should not be called by production code.***
         """
         try:
+            self._logger.info("DEMO: blue")
             self._rpi.devices["gpio_1"].write_pin(port="A", pin=4, value=True)
         except Exception as e:
             self._logger.error(f"Exception occurred during handling of '/api/demo/blue'...")
@@ -131,6 +133,7 @@ class SystemRoutes:
         ***This route is intended for demonstration purposes, and should not be called by production code.***
         """
         try:
+            self._logger.info("DEMO: red")
             self._rpi.devices["gpio_1"].write_pin(port="A", pin=7, value=True)
         except Exception as e:
             self._logger.error(f"Exception occurred during handling of '/api/demo/red'...")
@@ -142,6 +145,7 @@ class SystemRoutes:
         ***This route is intended for demonstration purposes, and should not be called by production code.***
         """
         try:
+            self._logger.info("DEMO: switch")
             return self._rpi.devices["gpio_1"].read_pin(port="B", pin=0)
         except Exception as e:
             self._logger.error(f"Exception occurred during handling of '/api/demo/switch'...")
