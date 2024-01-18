@@ -170,7 +170,7 @@ class SystemRoutes:
         try:
             results = [
                 self._rpi.devices["gpio_1"].read_pin(port="B", pin=0),
-                self._rpi.devices["gpio_1"].read_pin(port="B", pin=0),
+                self._rpi.devices["gpio_0"].read_pin(port="B", pin=0),
             ]
             return results
         except Exception as e:
