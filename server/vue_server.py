@@ -3,7 +3,7 @@ import threading
 import asyncio
 
 import uvicorn
-from fastapi import FastAPI
+from fastapi_offline import FastAPIOffline
 from starlette.responses import FileResponse
 from starlette.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
@@ -30,8 +30,8 @@ def inject_client_manager(logger: logging.Logger = None):
     return get_client_manager(logger=logger)
 
 
-def create_app() -> FastAPI:
-    new_app = FastAPI()
+def create_app() -> FastAPIOffline:
+    new_app = FastAPIOffline()
     new_app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],
