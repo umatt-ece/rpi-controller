@@ -104,7 +104,7 @@ class SystemRoutes:
             self._logger.exception(e)
 
     @router.post("/api/demo/green", tags=["Demo"])
-    async def write_pin_route(self) -> None:
+    async def demo_green_route(self) -> None:
         """
         ***This route is intended for demonstration purposes, and should not be called by production code.***
         """
@@ -115,7 +115,7 @@ class SystemRoutes:
             self._logger.exception(e)
 
     @router.post("/api/demo/blue", tags=["Demo"])
-    async def write_pin_route(self) -> None:
+    async def demo_blue_route(self) -> None:
         """
         ***This route is intended for demonstration purposes, and should not be called by production code.***
         """
@@ -126,7 +126,7 @@ class SystemRoutes:
             self._logger.exception(e)
 
     @router.post("/api/demo/red", tags=["Demo"])
-    async def write_pin_route(self) -> None:
+    async def demo_red_route(self) -> None:
         """
         ***This route is intended for demonstration purposes, and should not be called by production code.***
         """
@@ -136,8 +136,8 @@ class SystemRoutes:
             self._logger.error(f"Exception occurred during handling of '/api/demo/red'...")
             self._logger.exception(e)
 
-    @router.post("/api/demo/switch", tags=["Demo"])
-    async def write_pin_route(self) -> None:
+    @router.get("/api/demo/switch", tags=["Demo"])
+    async def demo_switch_route(self) -> None:
         """
         ***This route is intended for demonstration purposes, and should not be called by production code.***
         """
