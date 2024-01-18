@@ -5,3 +5,4 @@ Purpose: This module contains all the 'logical' code for the controller - the st
 """
 from .base_state_machine import BaseStateMachine, DEFAULT_INTERVAL
 from .evt_state_machine import EVTStateMachine
+from .demo_state_machine import DemoStateMachine

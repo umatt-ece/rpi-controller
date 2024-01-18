@@ -2,8 +2,10 @@ import logging
 import threading
 import time
 
+import common
+
 from hardware import MCP23S17, RaspberryPi
-from logic import EVTStateMachine
+from logic import EVTStateMachine, DemoStateMachine
 from server import start_vue_server
 
 INTERVAL = 1  # seconds
